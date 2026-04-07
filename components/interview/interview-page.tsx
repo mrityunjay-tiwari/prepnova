@@ -20,7 +20,7 @@ export default function InterviewPage({
   useEffect(() => {
     if (!role) return;
 
-    fetch("http://localhost:8000/start-agent", {
+    fetch("https://mrityunjay18-ai-interview-agent.hf.space/start-agent", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({

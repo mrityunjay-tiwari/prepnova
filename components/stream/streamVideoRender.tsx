@@ -52,7 +52,7 @@ export default function StreamVideoCallRender({
   // Step 1: Create session
   useEffect(() => {
     const createSession = async () => {
-      const res = await fetch("http://localhost:8000/create-session", {
+      const res = await fetch("https://mrityunjay18-ai-interview-agent.hf.space/create-session", {
         method: "POST",
       });
 
@@ -241,7 +241,7 @@ const MyUILayout = ({
     const startAgentWithDelay = async () => {
       await new Promise((res) => setTimeout(res, 1000));
 
-      await fetch("http://localhost:8000/start-agent", {
+      await fetch("https://mrityunjay18-ai-interview-agent.hf.space/start-agent", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
@@ -262,7 +262,7 @@ const MyUILayout = ({
     const interval = setInterval(async () => {
       try {
         const res = await fetch(
-          `http://localhost:8000/latest-feedback/${callId}`,
+          `https://mrityunjay18-ai-interview-agent.hf.space/latest-feedback/${callId}`,
         );
 
         if (!res.ok) return;
@@ -312,7 +312,7 @@ const MyUILayout = ({
       const generateReport = async () => {
         try {
           console.log(`📡 Fetching segments for call: ${callId}...`);
-          const res = await fetch(`http://localhost:8000/segments/${callId}`);
+          const res = await fetch(`https://mrityunjay18-ai-interview-agent.hf.space/segments/${callId}`);
 
           if (!res.ok) {
             console.error(
