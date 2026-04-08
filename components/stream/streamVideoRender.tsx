@@ -309,6 +309,13 @@ const MyUILayout = ({
 
       console.log("User left the call. Starting finalization flow...");
 
+      // Tell the backend to stop the AI Agent loop gracefully
+      fetch("https://mrityunjay18-ai-interview-agent.hf.space/end-call", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ call_id: callId }),
+      }).catch((err) => console.error("Failed to stop agent:", err));
+
       const generateReport = async () => {
         try {
           console.log(`📡 Fetching segments for call: ${callId}...`);
