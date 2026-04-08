@@ -90,7 +90,8 @@ export default function StreamVideoCallRender({
 
       await streamCall.join({create: true});
 
-      await streamCall.camera.enable();
+      // STOP sending video to Stream to prevent Hugging Face UDP timeout!
+      // await streamCall.camera.enable();
       await streamCall.microphone.enable();
 
       setIsReady(true);
@@ -155,6 +156,28 @@ const MyUILayout = ({
   const postureHistory = useRef<number[]>([]);
   const {canvasRef, postureScore, nudgeMessage} = usePose(videoRef);
   const router = useRouter();
+
+  // Step 2b: Setup local video manually since we skipped Stream video
+  useEffect(() => {
+    const attachLocalCamera = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      } catch (err) {
+        console.error("Failed to start local camera", err);
+      }
+    };
+    attachLocalCamera();
+    
+    return () => {
+      if (videoRef.current && videoRef.current.srcObject) {
+         (videoRef.current.srcObject as MediaStream).getTracks().forEach(t => t.stop());
+      }
+    };
+  }, []);
+
   const {submit} = useObject({
     api: "/api/structured-data",
     schema: InterviewReportSchema,
@@ -358,17 +381,6 @@ const MyUILayout = ({
   }, [callingState, callId, router, submit]);
 
   // console.log("The final object after processing : ",{object})
-  // Attach video reference
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const video = document.querySelector("video") as HTMLVideoElement | null;
-      if (video && video.readyState >= 2) {
-        videoRef.current = video;
-      }
-    }, 500);
-
-    return () => clearInterval(interval);
-  }, []);
 
   if (callingState !== CallingState.JOINED) {
     return (
@@ -417,12 +429,21 @@ const MyUILayout = ({
                 Posture & Presence
               </p>
 
-              <canvas
-                ref={canvasRef}
-                width={400}
-                height={300}
-                className="w-full h-auto"
-              />
+              <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-gray-100">
+                <video 
+                  ref={videoRef} 
+                  autoPlay 
+                  playsInline 
+                  muted 
+                  className="absolute inset-0 w-full h-full object-cover" 
+                />
+                <canvas
+                  ref={canvasRef}
+                  width={400}
+                  height={300}
+                  className="absolute inset-0 w-full h-full object-cover z-10"
+                />
+              </div>
 
               <div className="mt-3 text-sm font-medium">
                 Score: {postureScore} —{" "}
