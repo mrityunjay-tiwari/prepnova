@@ -7,9 +7,11 @@ export const dynamic = "force-dynamic";
 
 export default function InterviewPage({
   userId,
+  userName,
   userToken,
 }: {
   userId: string;
+  userName: string;
   userToken: string;
 }) {
   const searchParams = useSearchParams();
@@ -22,6 +24,7 @@ export default function InterviewPage({
       <StreamVideoCallRender
         role={role ?? "react-developer"}
         userId={userId}
+        userName={userName}
         userToken={userToken}
       />
     </div>

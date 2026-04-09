@@ -1,108 +1,53 @@
 "use client";
 
 import {
-  Call,
   CallingState,
-  SpeakerLayout,
   StreamCall,
   StreamTheme,
   StreamVideo,
-  StreamVideoClient,
+  ParticipantView,
+  type StreamVideoParticipant,
   useCallStateHooks,
   ToggleAudioPublishingButton,
   CancelCallButton,
-  type User,
 } from "@stream-io/video-react-sdk";
-import {
-  ParticipantView,
-  type StreamVideoParticipant,
-} from "@stream-io/video-react-sdk";
-import {useEffect, useRef, useState} from "react";
-import {usePose} from "@/hooks/usePose";
-import {useRouter} from "next/navigation";
-import {Spinner} from "@/components/ui/spinner";
 import {motion} from "motion/react";
-import type {FinalizeInterviewRequest, PostureStats} from "@/utils/types";
+import {useInterviewSession} from "@/hooks/useInterviewSession";
+import {useInterviewAgent} from "@/hooks/useInterviewAgent";
+import {useLiveFeedback} from "@/hooks/useLiveFeedback";
+import {useInterviewPosture} from "@/hooks/useInterviewPosture";
+import {useInterviewFinalization} from "@/hooks/useInterviewFinalization";
+import {Spinner} from "@/components/ui/spinner";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import {PanelLeft, Sparkles, ScanEye, UserRound, Bot} from "lucide-react";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
-
-const apiKey = process.env.NEXT_PUBLIC_STREAM_API_KEY!;
-const NETWORK_DISCONNECT_TIMEOUT_MS = 30_000;
-
-type MidFeedback = {
-  short_feedback: string;
-  score: number;
-};
 
 export default function StreamVideoCallRender({
   role,
   userId,
+  userName,
   userToken,
 }: {
   role: string;
   userId: string;
+  userName: string;
   userToken: string;
 }) {
-  const [client, setClient] = useState<StreamVideoClient | null>(null);
-  const [call, setCall] = useState<Call | null>(null);
-  const [dynamicCallId, setDynamicCallId] = useState<string | null>(null);
-  const [isReady, setIsReady] = useState(false);
-
-  const hasJoined = useRef(false);
-
-  useEffect(() => {
-    const createSession = async () => {
-      const res = await fetch(
-        "https://mrityunjay18-ai-interview-agent.hf.space/create-session",
-        {
-          method: "POST",
-        },
-      );
-
-      const data = await res.json();
-      setDynamicCallId(data.call_id);
-    };
-
-    createSession();
-  }, []);
-
-  useEffect(() => {
-    if (!dynamicCallId) return;
-    if (hasJoined.current) return;
-
-    hasJoined.current = true;
-
-    const user: User = {
-      id: userId,
-      name: "Oliver",
-      image: "https://getstream.io/random_svg/?id=oliver&name=Oliver",
-    };
-
-    const startCall = async () => {
-      const streamClient = new StreamVideoClient({
-        apiKey,
-        user,
-        token: userToken,
-      });
-
-      const streamCall = streamClient.call("default", dynamicCallId);
-
-      setClient(streamClient);
-      setCall(streamCall);
-
-      await streamCall.join({create: true});
-
-      try {
-        await streamCall.camera.disable();
-      } catch (error) {
-        console.log("Camera already disabled", error);
-      }
-
-      await streamCall.microphone.enable();
-      setIsReady(true);
-    };
-
-    startCall();
-  }, [dynamicCallId, userId, userToken]);
+  const {client, call, callId, isReady} = useInterviewSession({
+    userId,
+    userName,
+    userToken,
+  });
 
   if (!client || !call || !isReady) {
     return (
@@ -128,7 +73,12 @@ export default function StreamVideoCallRender({
   return (
     <StreamVideo client={client}>
       <StreamCall call={call}>
-        <InterviewLayout callId={dynamicCallId} role={role} userId={userId} />
+        <InterviewLayout
+          callId={callId}
+          role={role}
+          userId={userId}
+          userName={userName}
+        />
       </StreamCall>
     </StreamVideo>
   );
@@ -138,288 +88,40 @@ const InterviewLayout = ({
   callId,
   role,
   userId,
+  userName,
 }: {
   callId: string | null;
   role: string;
   userId: string;
+  userName: string;
 }) => {
-  const {useCallCallingState} = useCallStateHooks();
+  const {
+    useCallCallingState,
+    useLocalParticipant,
+    useRemoteParticipants,
+  } = useCallStateHooks();
   const callingState = useCallCallingState();
-  const [midFeedback, setMidFeedback] = useState<MidFeedback | null>(null);
-  const [hasCamera, setHasCamera] = useState<boolean | null>(null);
-  const agentStarted = useRef(false);
-  const isFinalizing = useRef(false);
-  const hasRedirected = useRef(false);
-  const offlineTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const postureHistory = useRef<number[]>([]);
-  const {canvasRef, postureScore, nudgeMessage} = usePose(videoRef);
-  const currentPoseScoreRef = useRef(postureScore);
-  const router = useRouter();
+  const localParticipant = useLocalParticipant();
+  const remoteParticipants = useRemoteParticipants();
+  const coachParticipant = remoteParticipants[0];
+  const midFeedback = useLiveFeedback({callId, callingState});
+  const {
+    videoRef,
+    canvasRef,
+    postureScore,
+    nudgeMessage,
+    hasCamera,
+    getPostureStats,
+  } = useInterviewPosture(callingState);
 
-  useEffect(() => {
-    currentPoseScoreRef.current = postureScore;
-  }, [postureScore]);
-
-  useEffect(() => {
-    let activeStream: MediaStream | null = null;
-
-    const attachLocalCamera = async () => {
-      try {
-        activeStream = await navigator.mediaDevices.getUserMedia({video: true});
-        if (videoRef.current) {
-          videoRef.current.srcObject = activeStream;
-        }
-        setHasCamera(true);
-      } catch (error) {
-        console.error("Failed to start local camera", error);
-        setHasCamera(false);
-      }
-    };
-
-    attachLocalCamera();
-
-    return () => {
-      if (activeStream) {
-        activeStream.getTracks().forEach((track) => track.stop());
-      }
-    };
-  }, []);
-
-  const getPostureStats = (): PostureStats => {
-    const scores = postureHistory.current;
-
-    if (scores.length === 0) {
-      return {min: 0, max: 0, avg: 0};
-    }
-
-    return {
-      min: Math.min(...scores),
-      max: Math.max(...scores),
-      avg: scores.reduce((sum, score) => sum + score, 0) / scores.length,
-    };
-  };
-
-  const buildFinalizePayload = (
-    reason: FinalizeInterviewRequest["reason"],
-  ): FinalizeInterviewRequest | null => {
-    if (!callId || !userId || !role) {
-      return null;
-    }
-
-    return {
-      callId,
-      userId,
-      role,
-      postureStats: getPostureStats(),
-      reason,
-    };
-  };
-
-  const finalizeInterview = async (
-    reason: FinalizeInterviewRequest["reason"],
-    options?: {redirectToDashboard?: boolean; useBeacon?: boolean},
-  ) => {
-    const payload = buildFinalizePayload(reason);
-
-    if (!payload) {
-      return;
-    }
-
-    if (options?.useBeacon) {
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon(
-          "/api/finalize-interview",
-          new Blob([JSON.stringify(payload)], {type: "application/json"}),
-        );
-      } else {
-        fetch("/api/finalize-interview", {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify(payload),
-          keepalive: true,
-        }).catch((error) => {
-          console.error(
-            "Failed to finalize interview during page unload",
-            error,
-          );
-        });
-      }
-
-      return;
-    }
-
-    if (isFinalizing.current) {
-      return;
-    }
-
-    isFinalizing.current = true;
-
-    try {
-      const response = await fetch("/api/finalize-interview", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        throw new Error(await response.text());
-      }
-    } catch (error) {
-      isFinalizing.current = false;
-      console.error("Interview finalization failed", error);
-    } finally {
-      if (options?.redirectToDashboard && !hasRedirected.current) {
-        hasRedirected.current = true;
-        router.push("/dashboard");
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (!callId) return;
-    if (callingState !== CallingState.JOINED) return;
-    if (agentStarted.current) return;
-
-    agentStarted.current = true;
-
-    const startAgentWithDelay = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      await fetch(
-        "https://mrityunjay18-ai-interview-agent.hf.space/start-agent",
-        {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({
-            role,
-            call_id: callId,
-          }),
-        },
-      );
-    };
-
-    startAgentWithDelay();
-  }, [callingState, callId, role]);
-
-  useEffect(() => {
-    if (!callId) return;
-    if (callingState !== CallingState.JOINED) return;
-
-    const interval = setInterval(async () => {
-      try {
-        const res = await fetch(
-          `https://mrityunjay18-ai-interview-agent.hf.space/latest-feedback/${callId}?t=${Date.now()}`,
-          {
-            cache: "no-store",
-            headers: {
-              Pragma: "no-cache",
-              "Cache-Control": "no-cache",
-            },
-          },
-        );
-
-        if (!res.ok) return;
-
-        const data = await res.json();
-
-        if (data?.feedback) {
-          setMidFeedback(data.feedback);
-        }
-      } catch (error) {
-        console.error("Feedback polling error:", error);
-      }
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [callId, callingState]);
-
-  useEffect(() => {
-    if (callingState !== CallingState.JOINED) return;
-
-    const interval = setInterval(() => {
-      const score = currentPoseScoreRef.current;
-      postureHistory.current.push(score);
-      console.log(
-        `Posture sample: ${score.toFixed(2)} (History size: ${postureHistory.current.length})`,
-      );
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [callingState]);
-
-  useEffect(() => {
-    if (!callId) return;
-
-    const handlePageHide = () => {
-      finalizeInterview("page_hidden", {useBeacon: true});
-    };
-
-    const handleBeforeUnload = () => {
-      finalizeInterview("tab_closed", {useBeacon: true});
-    };
-
-    window.addEventListener("pagehide", handlePageHide);
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("pagehide", handlePageHide);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [callId, role, userId]);
-
-  useEffect(() => {
-    return () => {
-      finalizeInterview("route_change", {useBeacon: true});
-    };
-  }, [callId, role, userId]);
-
-  useEffect(() => {
-    if (callingState !== CallingState.JOINED || !callId) {
-      if (offlineTimeoutRef.current) {
-        clearTimeout(offlineTimeoutRef.current);
-        offlineTimeoutRef.current = null;
-      }
-      return;
-    }
-
-    const handleOffline = () => {
-      if (offlineTimeoutRef.current) {
-        clearTimeout(offlineTimeoutRef.current);
-      }
-
-      offlineTimeoutRef.current = setTimeout(() => {
-        finalizeInterview("offline_timeout", {redirectToDashboard: true});
-      }, NETWORK_DISCONNECT_TIMEOUT_MS);
-    };
-
-    const handleOnline = () => {
-      if (offlineTimeoutRef.current) {
-        clearTimeout(offlineTimeoutRef.current);
-        offlineTimeoutRef.current = null;
-      }
-    };
-
-    window.addEventListener("offline", handleOffline);
-    window.addEventListener("online", handleOnline);
-
-    return () => {
-      window.removeEventListener("offline", handleOffline);
-      window.removeEventListener("online", handleOnline);
-
-      if (offlineTimeoutRef.current) {
-        clearTimeout(offlineTimeoutRef.current);
-        offlineTimeoutRef.current = null;
-      }
-    };
-  }, [callingState, callId, role, userId]);
-
-  useEffect(() => {
-    if (!callId) return;
-    if (callingState === CallingState.LEFT) {
-      finalizeInterview("call_left", {redirectToDashboard: true});
-    }
-  }, [callingState, callId, role, userId]);
+  useInterviewAgent({callId, role, callingState});
+  useInterviewFinalization({
+    callId,
+    role,
+    userId,
+    callingState,
+    getPostureStats,
+  });
 
   if (callingState === CallingState.LEFT) {
     return (
@@ -448,7 +150,7 @@ const InterviewLayout = ({
 
   if (callingState !== CallingState.JOINED) {
     return (
-      <div className="flex flex-col items-center justify-center h-full w-full gap-4">
+    <div className="flex flex-col items-center justify-center h-full w-full gap-4">
         <Spinner className="h-6 w-6 text-blue-950" />
         <p className="text-sm font-bold text-blue-950 uppercase tracking-widest">
           Joining Call...
@@ -458,129 +160,188 @@ const InterviewLayout = ({
   }
 
   return (
-    <div className="flex w-full h-[calc(100vh-100px)]">
-      <div className="flex-1 relative">
-        <StreamTheme>
-          <SpeakerLayout participantsBarPosition="top" />
-          <div className="str-video__call-controls">
-            <ToggleAudioPublishingButton />
-            <CancelCallButton />
-          </div>
-        </StreamTheme>
-      </div>
-
-      <div className="p-0.5 border-l border-gray-200 mt-16">
-        <div className="w-[360px] border-l-2 border-gray-200 bg-white/70 backdrop-blur-xl p-6 flex flex-col gap-6">
-          {midFeedback && (
-            <div className="p-0.5 border bg-accent/50 border-gray-200 rounded-2xl">
-              <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-                <div className="flex justify-between items-center mb-2">
-                  <p className="font-semibold text-gray-800">
-                    Live AI Feedback
+    <SidebarProvider defaultOpen>
+      <div className="h-[calc(100vh-96px)] w-full overflow-hidden">
+        <SidebarInset className="bg-transparent">
+          <div className="flex h-full">
+            <div className="flex min-w-0 flex-1 flex-col px-4 pb-4 pt-5 md:px-6">
+              <div className="mb-3 flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.28em] text-blue-900/55">
+                    Interview Stage
                   </p>
-                  <span className="text-xs bg-amber-100 text-amber-700 px-3 py-1 rounded-full">
-                    {midFeedback.score}/10
-                  </span>
+                  <h2 className="text-xl font-bold text-blue-950">
+                    {role.replace(/-/g, " ")}
+                  </h2>
                 </div>
-
-                <p className="text-sm text-gray-600">
-                  {midFeedback.short_feedback}
-                </p>
+                <SidebarTrigger className="inline-flex rounded-full border border-blue-950/10 bg-white/80 px-4 py-2 text-sm font-semibold text-blue-950 shadow-sm backdrop-blur">
+                  <PanelLeft className="mr-2 h-4 w-4" />
+                  Analysis
+                </SidebarTrigger>
               </div>
-            </div>
-          )}
 
-          <div className="p-0.5 border bg-accent/50 border-gray-200 rounded-2xl">
-            <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-              <p className="font-semibold text-gray-800 mb-3">
-                Posture & Presence
-              </p>
-
-              {hasCamera === false ? (
-                <div className="flex items-center justify-center w-full aspect-video rounded-lg bg-gray-100 text-sm text-gray-500 font-medium border border-dashed border-gray-300">
-                  Camera disabled
-                </div>
-              ) : (
-                <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-gray-100">
-                  <video
-                    ref={videoRef}
-                    autoPlay
-                    playsInline
-                    muted
-                    className="absolute inset-0 w-full h-full object-cover"
+              <StreamTheme className="flex flex-1 flex-col bg-transparent">
+                <div className="mx-auto grid flex-1 max-w-[1100px] grid-cols-1 gap-4 lg:grid-cols-2">
+                  <InterviewStageTile
+                    icon={UserRound}
+                    label={userName || "You"}
+                    participant={localParticipant}
+                    accent="from-sky-500/30 via-cyan-500/15 to-transparent"
                   />
-                  <canvas
-                    ref={canvasRef}
-                    width={400}
-                    height={300}
-                    className="absolute inset-0 w-full h-full object-cover z-10"
+                  <InterviewStageTile
+                    icon={Bot}
+                    label="Interview Coach"
+                    participant={coachParticipant}
+                    accent="from-blue-950/40 via-blue-800/20 to-transparent"
                   />
                 </div>
-              )}
 
-              <div className="mt-3 text-sm font-medium">
-                Score: {postureScore} -{" "}
-                <span
-                  className={
-                    postureScore < 0.5 ? "text-red-500" : "text-emerald-600"
-                  }
-                >
-                  {postureScore < 0.5 ? "Poor" : "Good"} {nudgeMessage}
-                </span>
-              </div>
+                <div className="mt-10 flex items-center justify-center gap-4 pb-20">
+                  <ToggleAudioPublishingButton />
+                  <CancelCallButton />
+                </div>
+              </StreamTheme>
             </div>
+
+            <Sidebar
+              side="right"
+              variant="floating"
+              collapsible="offcanvas"
+              className="top-20 h-[calc(100vh-170px)]"
+            >
+              <SidebarHeader className="gap-3 border-b border-sidebar-border/70 px-4 py-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-sidebar-foreground/55">
+                      Analysis
+                    </p>
+                    <h3 className="text-lg font-bold text-sidebar-foreground">
+                      Interview Signals
+                    </h3>
+                  </div>
+                </div>
+              </SidebarHeader>
+
+              <SidebarContent className="px-3 py-4">
+                <SidebarGroup className="p-0">
+                  <SidebarGroupLabel className="px-2 text-sidebar-foreground/65">
+                    Live Guidance
+                  </SidebarGroupLabel>
+                  <SidebarGroupContent className="px-1">
+                    {midFeedback ? (
+                      <div className="rounded-3xl border border-sidebar-border/70 bg-white/80 p-4 shadow-sm">
+                        <div className="mb-2 flex items-center justify-between">
+                          <div className="flex items-center gap-2 text-sm font-semibold text-slate-800">
+                            <Sparkles className="h-4 w-4 text-amber-500" />
+                            Live AI Feedback
+                          </div>
+                          <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-700">
+                            {midFeedback.score}/10
+                          </span>
+                        </div>
+                        <p className="text-sm leading-relaxed text-slate-600">
+                          {midFeedback.short_feedback}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="rounded-3xl border border-dashed border-sidebar-border/80 bg-white/55 p-4 text-sm text-slate-500">
+                        Live feedback will appear here once the conversation is underway.
+                      </div>
+                    )}
+                  </SidebarGroupContent>
+                </SidebarGroup>
+
+                <SidebarGroup className="p-0 pt-4">
+                  <SidebarGroupLabel className="px-2 text-sidebar-foreground/65">
+                    Presence Tracking
+                  </SidebarGroupLabel>
+                  <SidebarGroupContent className="px-1">
+                    <div className="rounded-lg border border-sidebar-border/70 bg-white/85 p-3 shadow-sm">
+                      <div className="mb-2 flex items-center gap-2 text-base font-semibold text-slate-800">
+                        <ScanEye className="h-4 w-4 text-emerald-600" />
+                        Posture & Presence
+                      </div>
+
+                      {hasCamera === false ? (
+                        <div className="flex items-center justify-center w-full aspect-video rounded-md bg-gray-100 text-sm text-gray-500 font-medium border border-dashed border-gray-300">
+                          Camera disabled
+                        </div>
+                      ) : (
+                        <div className="relative mx-auto w-full max-w-[280px] aspect-video rounded-md overflow-hidden bg-gray-100">
+                          <video
+                            ref={videoRef}
+                            autoPlay
+                            playsInline
+                            muted
+                            className="absolute inset-0 w-full h-full object-cover"
+                          />
+                          <canvas
+                            ref={canvasRef}
+                            width={400}
+                            height={300}
+                            className="absolute inset-0 w-full h-full object-cover z-10"
+                          />
+                        </div>
+                      )}
+
+                      <div className="mt-2 text-sm leading-relaxed font-medium text-slate-700">
+                        Score: {postureScore} -{" "}
+                        <span
+                          className={
+                            postureScore < 0.5
+                              ? "text-red-500"
+                              : "text-emerald-600"
+                          }
+                        >
+                          {postureScore < 0.5 ? "Poor" : "Good"} {nudgeMessage}
+                        </span>
+                      </div>
+                    </div>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              </SidebarContent>
+            </Sidebar>
           </div>
+        </SidebarInset>
+      </div>
+    </SidebarProvider>
+  );
+};
+
+const InterviewStageTile = ({
+  participant,
+  label,
+  icon: Icon,
+  accent,
+}: {
+  participant?: StreamVideoParticipant;
+  label: string;
+  icon: typeof UserRound;
+  accent: string;
+}) => {
+  return (
+    <div className="relative aspect-square min-h-120 max-h-[min(62vh,540px)] overflow-hidden rounded-xl border border-blue-950/10 bg-blue-950 shadow-[0_24px_60px_-28px_rgba(15,23,42,0.55)]">
+      <div className={`pointer-events-none absolute inset-0 bg-linear-to-br ${accent}`} />
+      <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-5 py-4">
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs font-semibold tracking-wide text-white/90 backdrop-blur">
+          <Icon className="h-3.5 w-3.5" />
+          {label}
         </div>
       </div>
-    </div>
-  );
-};
 
-export const MyParticipantList = (props: {
-  participants: StreamVideoParticipant[];
-}) => {
-  const {participants} = props;
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        gap: "8px",
-        width: "100vw",
-      }}
-    >
-      {participants.map((participant) => (
-        <ParticipantView
-          muteAudio
-          participant={participant}
-          key={participant.sessionId}
-        />
-      ))}
-    </div>
-  );
-};
-
-export const MyFloatingLocalParticipant = (props: {
-  participant?: StreamVideoParticipant;
-}) => {
-  const {participant} = props;
-  if (!participant) {
-    return <p>Error: No local participant</p>;
-  }
-
-  return (
-    <div
-      style={{
-        position: "absolute",
-        top: "15px",
-        left: "15px",
-        width: "240px",
-        height: "135px",
-        boxShadow: "rgba(0, 0, 0, 0.1) 0px 0px 10px 3px",
-        borderRadius: "12px",
-      }}
-    >
-      {participant && <ParticipantView muteAudio participant={participant} />}
+      <div className="relative h-full w-full">
+        {participant ? (
+          <ParticipantView
+            participant={participant}
+            className="h-full w-full"
+            muteAudio={participant.isLocalParticipant}
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center text-sm font-medium text-white/60">
+            Waiting for participant...
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -12,7 +12,11 @@ export default async function InterviewMainPage() {
   return (
     <div>
       <BgGradient />
-      <InterviewPage userId={user.user?.id || ""} userToken={token} />
+      <InterviewPage
+        userId={user.user?.id || ""}
+        userName={user.user?.name || "You"}
+        userToken={token}
+      />
     </div>
   );
 }

@@ -3,6 +3,11 @@ export type InterviewSegment = {
   answer: string;
 };
 
+export type MidFeedback = {
+  short_feedback: string;
+  score: number;
+};
+
 export type PostureStats = {
   min: number;
   max: number;
