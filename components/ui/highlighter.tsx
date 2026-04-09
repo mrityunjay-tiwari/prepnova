@@ -15,7 +15,7 @@ type AnnotationAction =
   | "crossed-off"
   | "bracket"
 
-interface HighlighterProps {
+type HighlighterProps = {
   children: React.ReactNode
   action?: AnnotationAction
   color?: string

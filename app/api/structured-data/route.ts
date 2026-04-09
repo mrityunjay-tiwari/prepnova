@@ -6,8 +6,7 @@ import { INTERVIEW_EVALUATOR_SYSTEM_PROMPT } from "@/utils/system-prompt";
 export async function POST(req: Request) {
   try {
     const text = await req.text();
-    console.log("Raw body received in /api/structured-data:", text);
-    
+        
     if (!text) {
       return new Response("Empty request body", { status: 400 });
     }

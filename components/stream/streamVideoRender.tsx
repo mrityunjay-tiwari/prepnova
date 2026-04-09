@@ -2,7 +2,6 @@
 
 import {
   Call,
-  CallControls,
   CallingState,
   SpeakerLayout,
   StreamCall,
@@ -10,6 +9,8 @@ import {
   StreamVideo,
   StreamVideoClient,
   useCallStateHooks,
+  ToggleAudioPublishingButton,
+  CancelCallButton,
   type User,
 } from "@stream-io/video-react-sdk";
 import {
@@ -17,21 +18,20 @@ import {
   type StreamVideoParticipant,
 } from "@stream-io/video-react-sdk";
 import {useEffect, useRef, useState} from "react";
-import "@stream-io/video-react-sdk/dist/css/styles.css";
 import {usePose} from "@/hooks/usePose";
-import {InterviewReportSchema} from "@/app/api/structured-data/schema";
-import {experimental_useObject as useObject} from "@ai-sdk/react";
 import {useRouter} from "next/navigation";
 import {Spinner} from "@/components/ui/spinner";
 import {motion} from "motion/react";
+import type {FinalizeInterviewRequest, PostureStats} from "@/utils/types";
+import "@stream-io/video-react-sdk/dist/css/styles.css";
 
 const apiKey = process.env.NEXT_PUBLIC_STREAM_API_KEY!;
+const NETWORK_DISCONNECT_TIMEOUT_MS = 30_000;
 
 type MidFeedback = {
   short_feedback: string;
   score: number;
 };
-
 
 export default function StreamVideoCallRender({
   role,
@@ -49,12 +49,14 @@ export default function StreamVideoCallRender({
 
   const hasJoined = useRef(false);
 
-  // Step 1: Create session
   useEffect(() => {
     const createSession = async () => {
-      const res = await fetch("https://mrityunjay18-ai-interview-agent.hf.space/create-session", {
-        method: "POST",
-      });
+      const res = await fetch(
+        "https://mrityunjay18-ai-interview-agent.hf.space/create-session",
+        {
+          method: "POST",
+        },
+      );
 
       const data = await res.json();
       setDynamicCallId(data.call_id);
@@ -63,7 +65,6 @@ export default function StreamVideoCallRender({
     createSession();
   }, []);
 
-  // Step 2: Join Stream (only transport logic here)
   useEffect(() => {
     if (!dynamicCallId) return;
     if (hasJoined.current) return;
@@ -90,10 +91,13 @@ export default function StreamVideoCallRender({
 
       await streamCall.join({create: true});
 
-      // STOP sending video to Stream to prevent Hugging Face UDP timeout!
-      // await streamCall.camera.enable();
-      await streamCall.microphone.enable();
+      try {
+        await streamCall.camera.disable();
+      } catch (error) {
+        console.log("Camera already disabled", error);
+      }
 
+      await streamCall.microphone.enable();
       setIsReady(true);
     };
 
@@ -124,136 +128,154 @@ export default function StreamVideoCallRender({
   return (
     <StreamVideo client={client}>
       <StreamCall call={call}>
-        <MyUILayout
-          callId={dynamicCallId}
-          role={role}
-          userId={userId}
-          userToken={userToken}
-        />
+        <InterviewLayout callId={dynamicCallId} role={role} userId={userId} />
       </StreamCall>
     </StreamVideo>
   );
 }
 
-const MyUILayout = ({
+const InterviewLayout = ({
   callId,
   role,
   userId,
-  userToken,
 }: {
   callId: string | null;
   role: string;
   userId: string;
-  userToken: string;
 }) => {
   const {useCallCallingState} = useCallStateHooks();
   const callingState = useCallCallingState();
-  const finalUserId = userId;
   const [midFeedback, setMidFeedback] = useState<MidFeedback | null>(null);
+  const [hasCamera, setHasCamera] = useState<boolean | null>(null);
   const agentStarted = useRef(false);
   const isFinalizing = useRef(false);
+  const hasRedirected = useRef(false);
+  const offlineTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const postureHistory = useRef<number[]>([]);
   const {canvasRef, postureScore, nudgeMessage} = usePose(videoRef);
+  const currentPoseScoreRef = useRef(postureScore);
   const router = useRouter();
 
-  // Step 2b: Setup local video manually since we skipped Stream video
   useEffect(() => {
+    currentPoseScoreRef.current = postureScore;
+  }, [postureScore]);
+
+  useEffect(() => {
+    let activeStream: MediaStream | null = null;
+
     const attachLocalCamera = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        activeStream = await navigator.mediaDevices.getUserMedia({video: true});
         if (videoRef.current) {
-          videoRef.current.srcObject = stream;
+          videoRef.current.srcObject = activeStream;
         }
-      } catch (err) {
-        console.error("Failed to start local camera", err);
+        setHasCamera(true);
+      } catch (error) {
+        console.error("Failed to start local camera", error);
+        setHasCamera(false);
       }
     };
+
     attachLocalCamera();
-    
+
     return () => {
-      if (videoRef.current && videoRef.current.srcObject) {
-         (videoRef.current.srcObject as MediaStream).getTracks().forEach(t => t.stop());
+      if (activeStream) {
+        activeStream.getTracks().forEach((track) => track.stop());
       }
     };
   }, []);
 
-  const {submit} = useObject({
-    api: "/api/structured-data",
-    schema: InterviewReportSchema,
-    onFinish: async ({object: finalObject}) => {
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("[AI REPORT GENERATED]");
-      console.log(finalObject);
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log(
-        "[FE] AI Report generation finished. Object state:",
-        finalObject ? "Valid" : "Empty",
-      );
-      if (!finalObject) {
-        console.warn("[FE] No report object received from AI SDK");
-        console.log(
-          "[FE] AI Report generation failed or returned empty object. Not saving report.",
+  const getPostureStats = (): PostureStats => {
+    const scores = postureHistory.current;
+
+    if (scores.length === 0) {
+      return {min: 0, max: 0, avg: 0};
+    }
+
+    return {
+      min: Math.min(...scores),
+      max: Math.max(...scores),
+      avg: scores.reduce((sum, score) => sum + score, 0) / scores.length,
+    };
+  };
+
+  const buildFinalizePayload = (
+    reason: FinalizeInterviewRequest["reason"],
+  ): FinalizeInterviewRequest | null => {
+    if (!callId || !userId || !role) {
+      return null;
+    }
+
+    return {
+      callId,
+      userId,
+      role,
+      postureStats: getPostureStats(),
+      reason,
+    };
+  };
+
+  const finalizeInterview = async (
+    reason: FinalizeInterviewRequest["reason"],
+    options?: {redirectToDashboard?: boolean; useBeacon?: boolean},
+  ) => {
+    const payload = buildFinalizePayload(reason);
+
+    if (!payload) {
+      return;
+    }
+
+    if (options?.useBeacon) {
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(
+          "/api/finalize-interview",
+          new Blob([JSON.stringify(payload)], {type: "application/json"}),
         );
-        isFinalizing.current = false; // Reset finalizing state if report generation fails
-        router.push("/dashboard"); // Redirect even if report generation fails
-        return;
-      }
-
-      try {
-        if (!finalUserId || finalUserId === "Quilted_Check") {
-          console.error(
-            "[FE] Save blocked: User ID is invalid or missing. Are you logged in?",
-            {finalUserId},
-          );
-        }
-
-        const scores = postureHistory.current;
-        console.log(`Processing ${scores.length} posture data points...`);
-
-        const min = scores.length > 0 ? Math.min(...scores) : 0;
-        const max = scores.length > 0 ? Math.max(...scores) : 0;
-        const avg =
-          scores.length > 0
-            ? scores.reduce((sum, s) => sum + s, 0) / scores.length
-            : 0;
-
-        console.log("[FE] Sending final report to /api/save-report...");
-        console.log("FE] Final Payload:", {
-          report: finalObject,
-          userId: finalUserId,
-          role,
-          postureStats: {min, max, avg},
-        });
-
-        const res = await fetch("/api/save-report", {
+      } else {
+        fetch("/api/finalize-interview", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            report: finalObject,
-            userId: finalUserId,
-            role,
-            postureStats: {min, max, avg},
-          }),
-        });
-
-        if (res.ok) {
-          console.log(
-            "Report saved successfully. Redirecting to dashboard...",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(payload),
+          keepalive: true,
+        }).catch((error) => {
+          console.error(
+            "Failed to finalize interview during page unload",
+            error,
           );
-          router.push("/dashboard");
-        } else {
-          console.error("Failed to save report:", await res.text());
-        }
-      } catch (error) {
-        console.error("Save flow failed:", error);
+        });
       }
-    },
-  });
 
-  // Step 3: Start agent ONLY when fully joined
+      return;
+    }
+
+    if (isFinalizing.current) {
+      return;
+    }
+
+    isFinalizing.current = true;
+
+    try {
+      const response = await fetch("/api/finalize-interview", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+    } catch (error) {
+      isFinalizing.current = false;
+      console.error("Interview finalization failed", error);
+    } finally {
+      if (options?.redirectToDashboard && !hasRedirected.current) {
+        hasRedirected.current = true;
+        router.push("/dashboard");
+      }
+    }
+  };
+
   useEffect(() => {
     if (!callId) return;
     if (callingState !== CallingState.JOINED) return;
@@ -262,22 +284,24 @@ const MyUILayout = ({
     agentStarted.current = true;
 
     const startAgentWithDelay = async () => {
-      await new Promise((res) => setTimeout(res, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      await fetch("https://mrityunjay18-ai-interview-agent.hf.space/start-agent", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-          role,
-          call_id: callId,
-        }),
-      });
+      await fetch(
+        "https://mrityunjay18-ai-interview-agent.hf.space/start-agent",
+        {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            role,
+            call_id: callId,
+          }),
+        },
+      );
     };
 
     startAgentWithDelay();
   }, [callingState, callId, role]);
 
-  // Step 4: Poll feedback
   useEffect(() => {
     if (!callId) return;
     if (callingState !== CallingState.JOINED) return;
@@ -285,7 +309,14 @@ const MyUILayout = ({
     const interval = setInterval(async () => {
       try {
         const res = await fetch(
-          `https://mrityunjay18-ai-interview-agent.hf.space/latest-feedback/${callId}`,
+          `https://mrityunjay18-ai-interview-agent.hf.space/latest-feedback/${callId}?t=${Date.now()}`,
+          {
+            cache: "no-store",
+            headers: {
+              Pragma: "no-cache",
+              "Cache-Control": "no-cache",
+            },
+          },
         );
 
         if (!res.ok) return;
@@ -295,19 +326,13 @@ const MyUILayout = ({
         if (data?.feedback) {
           setMidFeedback(data.feedback);
         }
-      } catch (err) {
-        console.error("Feedback polling error:", err);
+      } catch (error) {
+        console.error("Feedback polling error:", error);
       }
     }, 5000);
 
     return () => clearInterval(interval);
   }, [callId, callingState]);
-
-  // ✅ Step 5: Collect posture stats every 5 seconds
-  const currentPoseScoreRef = useRef(postureScore);
-  useEffect(() => {
-    currentPoseScoreRef.current = postureScore;
-  }, [postureScore]);
 
   useEffect(() => {
     if (callingState !== CallingState.JOINED) return;
@@ -316,71 +341,110 @@ const MyUILayout = ({
       const score = currentPoseScoreRef.current;
       postureHistory.current.push(score);
       console.log(
-        `⏱️ Posture Sample: ${score.toFixed(2)} (History size: ${postureHistory.current.length})`,
+        `Posture sample: ${score.toFixed(2)} (History size: ${postureHistory.current.length})`,
       );
     }, 5000);
 
     return () => clearInterval(interval);
   }, [callingState]);
 
-  // Step 6: Fetch segments and trigger report generation when call ends
+  useEffect(() => {
+    if (!callId) return;
+
+    const handlePageHide = () => {
+      finalizeInterview("page_hidden", {useBeacon: true});
+    };
+
+    const handleBeforeUnload = () => {
+      finalizeInterview("tab_closed", {useBeacon: true});
+    };
+
+    window.addEventListener("pagehide", handlePageHide);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("pagehide", handlePageHide);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [callId, role, userId]);
+
+  useEffect(() => {
+    return () => {
+      finalizeInterview("route_change", {useBeacon: true});
+    };
+  }, [callId, role, userId]);
+
+  useEffect(() => {
+    if (callingState !== CallingState.JOINED || !callId) {
+      if (offlineTimeoutRef.current) {
+        clearTimeout(offlineTimeoutRef.current);
+        offlineTimeoutRef.current = null;
+      }
+      return;
+    }
+
+    const handleOffline = () => {
+      if (offlineTimeoutRef.current) {
+        clearTimeout(offlineTimeoutRef.current);
+      }
+
+      offlineTimeoutRef.current = setTimeout(() => {
+        finalizeInterview("offline_timeout", {redirectToDashboard: true});
+      }, NETWORK_DISCONNECT_TIMEOUT_MS);
+    };
+
+    const handleOnline = () => {
+      if (offlineTimeoutRef.current) {
+        clearTimeout(offlineTimeoutRef.current);
+        offlineTimeoutRef.current = null;
+      }
+    };
+
+    window.addEventListener("offline", handleOffline);
+    window.addEventListener("online", handleOnline);
+
+    return () => {
+      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener("online", handleOnline);
+
+      if (offlineTimeoutRef.current) {
+        clearTimeout(offlineTimeoutRef.current);
+        offlineTimeoutRef.current = null;
+      }
+    };
+  }, [callingState, callId, role, userId]);
+
   useEffect(() => {
     if (!callId) return;
     if (callingState === CallingState.LEFT) {
-      if (isFinalizing.current) return;
-      isFinalizing.current = true;
-
-      console.log("User left the call. Starting finalization flow...");
-
-      // Tell the backend to stop the AI Agent loop gracefully
-      fetch("https://mrityunjay18-ai-interview-agent.hf.space/end-call", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ call_id: callId }),
-      }).catch((err) => console.error("Failed to stop agent:", err));
-
-      const generateReport = async () => {
-        try {
-          console.log(`📡 Fetching segments for call: ${callId}...`);
-          const res = await fetch(`https://mrityunjay18-ai-interview-agent.hf.space/segments/${callId}`);
-
-          if (!res.ok) {
-            console.error(
-              "Failed to fetch segments from backend:",
-              res.status,
-            );
-            router.push("/dashboard");
-            return;
-          }
-
-          const data = await res.json();
-          console.log("Full Interview Segments retrieved:", data.segments);
-
-          if (!data?.segments?.length) {
-            console.warn(
-              "No segments found for this interview. Redirecting...",
-            );
-            router.push("/dashboard");
-            return;
-          }
-
-          console.log(
-            "Triggering AI report generation with Vercel AI SDK...",
-          );
-          submit({
-            questions: data.segments,
-          });
-        } catch (err) {
-          console.error("Finalization error:", err);
-          router.push("/dashboard");
-        }
-      };
-
-      generateReport();
+      finalizeInterview("call_left", {redirectToDashboard: true});
     }
-  }, [callingState, callId, router, submit]);
+  }, [callingState, callId, role, userId]);
 
-  // console.log("The final object after processing : ",{object})
+  if (callingState === CallingState.LEFT) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full w-full gap-4">
+        <Spinner className="h-6 w-6 text-blue-950" />
+        <p className="text-sm font-bold text-blue-950 uppercase tracking-widest">
+          Ending Call...
+        </p>
+      </div>
+    );
+  }
+
+  if (
+    callingState === CallingState.RECONNECTING ||
+    callingState === CallingState.MIGRATING
+  ) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full w-full gap-4">
+        <Spinner className="h-6 w-6 text-blue-950" />
+        <p className="text-sm font-bold text-blue-950 uppercase tracking-widest">
+          Reconnecting...
+        </p>
+      </div>
+    );
+  }
 
   if (callingState !== CallingState.JOINED) {
     return (
@@ -398,7 +462,10 @@ const MyUILayout = ({
       <div className="flex-1 relative">
         <StreamTheme>
           <SpeakerLayout participantsBarPosition="top" />
-          <CallControls />
+          <div className="str-video__call-controls">
+            <ToggleAudioPublishingButton />
+            <CancelCallButton />
+          </div>
         </StreamTheme>
       </div>
 
@@ -429,24 +496,30 @@ const MyUILayout = ({
                 Posture & Presence
               </p>
 
-              <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-gray-100">
-                <video 
-                  ref={videoRef} 
-                  autoPlay 
-                  playsInline 
-                  muted 
-                  className="absolute inset-0 w-full h-full object-cover" 
-                />
-                <canvas
-                  ref={canvasRef}
-                  width={400}
-                  height={300}
-                  className="absolute inset-0 w-full h-full object-cover z-10"
-                />
-              </div>
+              {hasCamera === false ? (
+                <div className="flex items-center justify-center w-full aspect-video rounded-lg bg-gray-100 text-sm text-gray-500 font-medium border border-dashed border-gray-300">
+                  Camera disabled
+                </div>
+              ) : (
+                <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-gray-100">
+                  <video
+                    ref={videoRef}
+                    autoPlay
+                    playsInline
+                    muted
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                  <canvas
+                    ref={canvasRef}
+                    width={400}
+                    height={300}
+                    className="absolute inset-0 w-full h-full object-cover z-10"
+                  />
+                </div>
+              )}
 
               <div className="mt-3 text-sm font-medium">
-                Score: {postureScore} —{" "}
+                Score: {postureScore} -{" "}
                 <span
                   className={
                     postureScore < 0.5 ? "text-red-500" : "text-emerald-600"

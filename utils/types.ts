@@ -3,13 +3,21 @@ export type InterviewSegment = {
   answer: string;
 };
 
+export type PostureStats = {
+  min: number;
+  max: number;
+  avg: number;
+};
+
 export type FinalizeInterviewRequest = {
-  questions: InterviewSegment[];
+  callId: string;
   userId: string;
   role: string;
-  postureStats: {
-    min: number;
-    max: number;
-    avg: number;
-  };
+  postureStats: PostureStats;
+  reason?:
+    | "call_left"
+    | "tab_closed"
+    | "page_hidden"
+    | "offline_timeout"
+    | "route_change";
 };

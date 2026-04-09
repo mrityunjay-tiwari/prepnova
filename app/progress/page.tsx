@@ -49,10 +49,10 @@ export default async function ProgressPage() {
   // Formatting data for charts (limiting to last 7 for trend)
   const chartData = sortedReports.map((report) => ({
     date: format(new Date(report.createdAt), "MMM d"),
-    overall: Math.round(report.overallScore),
-    technical: Math.round(report.technicalScore),
-    communication: Math.round(report.communicationScore),
-    confidence: Math.round(report.confidenceScore),
+    overall: Number(report.overallScore.toFixed(1)),
+    technical: Number(report.technicalScore.toFixed(1)),
+    communication: Number(report.communicationScore.toFixed(1)),
+    confidence: Number(report.confidenceScore.toFixed(1)),
   }));
 
   // Calculating aggregates
@@ -103,18 +103,18 @@ export default async function ProgressPage() {
           {[
             {
               label: "Average Score",
-              value: `${Math.round(avgOverall)}/100`,
+              value: `${avgOverall.toFixed(1)}/10`,
               icon: Award,
               improvement: scoreImprovement,
             },
             {
               label: "Tech. Average",
-              value: `${Math.round(avgTechnical)}%`,
+              value: `${avgTechnical.toFixed(1)}/10`,
               icon: Zap,
             },
             {
               label: "Comm. Average",
-              value: `${Math.round(avgCommunication)}%`,
+              value: `${avgCommunication.toFixed(1)}/10`,
               icon: MessageSquare,
             },
             {
@@ -143,7 +143,7 @@ export default async function ProgressPage() {
                           ) : (
                             <ArrowDownRight className="h-3 w-3 mr-1" />
                           )}
-                          {Math.abs(Math.round(stat.improvement))}%
+                          {Math.abs(stat.improvement).toFixed(1)} pts
                         </span>
                       )}
                   </div>
@@ -224,10 +224,10 @@ export default async function ProgressPage() {
                       {item.label}
                     </div>
                     <span className="font-mono font-black">
-                      {Math.round(item.score)}%
+                      {item.score.toFixed(1)}/10
                     </span>
                   </div>
-                  <Progress value={item.score} className="h-2" />
+                  <Progress value={item.score * 10} className="h-2" />
                 </div>
               ))}
             </CardContent>
@@ -270,7 +270,8 @@ export default async function ProgressPage() {
               <CardContent className="p-6">
                 <p className="text-xs text-muted-foreground leading-relaxed italic">
                   &ldquo;You have increased your overall interview performance
-                  by {Math.round(scoreImprovement > 0 ? scoreImprovement : 0)}%
+                  by {(scoreImprovement > 0 ? scoreImprovement : 0).toFixed(1)}{" "}
+                  points
                   since your last session. Keep the momentum going!&rdquo;
                 </p>
               </CardContent>

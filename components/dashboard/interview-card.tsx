@@ -21,7 +21,7 @@ import {format} from "date-fns";
 import Link from "next/link";
 import {motion} from "motion/react";
 
-interface InterviewReport {
+type InterviewReport = {
   id: string;
   role: string | null;
   overallScore: number;
@@ -30,7 +30,7 @@ interface InterviewReport {
   createdAt: Date | string;
 }
 
-interface InterviewCardProps {
+type InterviewCardProps = {
   report: InterviewReport;
 }
 
@@ -39,9 +39,9 @@ export function InterviewCard({report}: InterviewCardProps) {
 
   // Helper to determine score color
   const getScoreColor = (score: number) => {
-    if (score >= 80)
+    if (score >= 8)
       return "text-emerald-500 bg-emerald-500/10 border-emerald-500/20";
-    if (score >= 60)
+    if (score >= 6)
       return "text-amber-500 bg-amber-500/10 border-amber-500/20";
     return "text-rose-500 bg-rose-500/10 border-rose-500/20";
   };
@@ -65,7 +65,7 @@ export function InterviewCard({report}: InterviewCardProps) {
                 variant="outline"
                 className={`text-base font-bold px-3 py-1 border ${getScoreColor(report.overallScore)}`}
               >
-                {report.overallScore}%
+                {report.overallScore.toFixed(1)}/10
               </Badge>
             </div>
           </CardHeader>
@@ -78,12 +78,12 @@ export function InterviewCard({report}: InterviewCardProps) {
                   Technical
                 </div>
                 <div className="text-lg font-semibold">
-                  {report.technicalScore}%
+                  {report.technicalScore.toFixed(1)}/10
                 </div>
                 <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
                   <div
                     className="bg-primary h-full rounded-full transition-all duration-500"
-                    style={{width: `${report.technicalScore}%`}}
+                    style={{width: `${report.technicalScore * 10}%`}}
                   />
                 </div>
               </div>
@@ -94,12 +94,12 @@ export function InterviewCard({report}: InterviewCardProps) {
                   Communication
                 </div>
                 <div className="text-lg font-semibold">
-                  {report.communicationScore}%
+                  {report.communicationScore.toFixed(1)}/10
                 </div>
                 <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
                   <div
                     className="bg-primary h-full rounded-full transition-all duration-500"
-                    style={{width: `${report.communicationScore}%`}}
+                    style={{width: `${report.communicationScore * 10}%`}}
                   />
                 </div>
               </div>

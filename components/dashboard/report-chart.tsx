@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/card";
 import {TrendingUp} from "lucide-react";
 
-interface ReportChartProps {
+type ReportChartProps = {
   data: {
     technicalScore: number;
     problemSolvingScore: number;
@@ -31,11 +31,11 @@ interface ReportChartProps {
 
 export function ReportRadarChart({data}: ReportChartProps) {
   const chartData = [
-    {subject: "Technical", A: data.technicalScore, fullMark: 100},
-    {subject: "Problem Solving", A: data.problemSolvingScore, fullMark: 100},
-    {subject: "Communication", A: data.communicationScore, fullMark: 100},
-    {subject: "Confidence", A: data.confidenceScore, fullMark: 100},
-    {subject: "Behavioral", A: data.behavioralScore, fullMark: 100},
+    {subject: "Technical", A: data.technicalScore, fullMark: 10},
+    {subject: "Problem Solving", A: data.problemSolvingScore, fullMark: 10},
+    {subject: "Communication", A: data.communicationScore, fullMark: 10},
+    {subject: "Confidence", A: data.confidenceScore, fullMark: 10},
+    {subject: "Behavioral", A: data.behavioralScore, fullMark: 10},
   ];
 
   return (
@@ -57,7 +57,7 @@ export function ReportRadarChart({data}: ReportChartProps) {
             />
             <PolarRadiusAxis
               angle={30}
-              domain={[0, 100]}
+              domain={[0, 10]}
               tick={false}
               axisLine={false}
             />

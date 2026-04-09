@@ -2,10 +2,6 @@
 
 import { prisma } from "@/prisma/src";
 
-/**
- * Fetches all interview reports for a specific user ID.
- * @param userId The ID of the user whose reports to fetch
- */
 export async function getUserInterviewReports(userId: string) {
   if (!userId) {
     throw new Error("User ID is required to fetch reports");
@@ -28,10 +24,6 @@ export async function getUserInterviewReports(userId: string) {
   }
 }
 
-/**
- * Fetches a single interview report by its ID.
- * @param reportId The ID of the report to fetch
- */
 export async function getInterviewReportById(reportId: string) {
   if (!reportId) {
     throw new Error("Report ID is required");

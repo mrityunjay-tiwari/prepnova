@@ -1,29 +1,10 @@
 import {auth} from "@/utils/auth";
 import {getInterviewReportById} from "@/app/actions/userReports";
-import {redirect, notFound} from "next/navigation";
-import {
-  ChevronLeft,
-  BarChart3,
-  Target,
-  MessageSquare,
-  Zap,
-  ShieldCheck,
-  Award,
-  Calendar,
-  User,
-  BrainCircuit,
-  Lightbulb,
-  AlertCircle,
-} from "lucide-react";
+import {notFound, redirect} from "next/navigation";
+import { ChevronLeft, BarChart3, Target, MessageSquare, Zap, ShieldCheck, Award, Calendar, User, BrainCircuit, Lightbulb, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
 import {Progress} from "@/components/ui/progress";
 import {format} from "date-fns";
@@ -37,20 +18,12 @@ export default async function ReportDetailPage({
   const session = await auth();
   const {id} = await params;
 
-  if (!session?.user?.id) {
-    redirect("/");
-  }
+  if (!session?.user?.id) redirect("/");
 
   const report = await getInterviewReportById(id);
 
-  if (!report) {
-    notFound();
-  }
-
-  // Security check: ensure the report belongs to the user
-  if (report.userId !== session.user.id) {
-    redirect("/dashboard");
-  }
+  if (!report) notFound();
+  if (report.userId !== session.user.id) redirect("/dashboard");
 
   const formattedDate = format(
     new Date(report.createdAt),
@@ -60,7 +33,6 @@ export default async function ReportDetailPage({
   return (
     <div className="min-h-screen bg-background mt-20 pb-20">
       <div className="container mx-auto md:px-8 px-4 max-w-6xl">
-        {/* Back Button */}
         <div className="mb-8">
           <Link href="/dashboard">
             <Button
@@ -73,7 +45,6 @@ export default async function ReportDetailPage({
           </Link>
         </div>
 
-        {/* Hero Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
@@ -107,7 +78,6 @@ export default async function ReportDetailPage({
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
-          {/* Radar Chart (Visual Summary) */}
           <div className="lg:col-span-1">
             <ReportRadarChart
               data={{
@@ -120,7 +90,6 @@ export default async function ReportDetailPage({
             />
           </div>
 
-          {/* Performance Metrics List (Detailed Numbers) */}
           <div className="lg:col-span-2 space-y-8">
             <Card className="border-muted/40 overflow-hidden rounded-3xl shadow-sm h-full flex flex-col">
               <CardHeader className="bg-muted/30 pb-4 border-b border-muted/20">
@@ -181,10 +150,10 @@ export default async function ReportDetailPage({
                         </div>
                       </div>
                       <span className="font-mono font-bold text-lg">
-                        {item.score}%
+                        {item.score.toFixed(1)}/10
                       </span>
                     </div>
-                    <Progress value={item.score} className="h-1.5" />
+                    <Progress value={item.score * 10} className="h-1.5" />
                   </div>
                 ))}
               </CardContent>
@@ -193,7 +162,6 @@ export default async function ReportDetailPage({
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Strengths & Improvements */}
           <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
             <Card className="border-emerald-500/20 bg-emerald-500/2 rounded-3xl shadow-sm">
               <CardHeader>
@@ -240,7 +208,6 @@ export default async function ReportDetailPage({
             </Card>
           </div>
 
-          {/* Right Sidebar: Posture and Final Summary */}
           <div className="space-y-8">
             <Card className="rounded-3xl border-muted/40 shadow-sm overflow-hidden bg-linear-to-b from-primary/3 to-transparent">
               <CardHeader className="pb-2">

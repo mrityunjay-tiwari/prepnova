@@ -1,7 +1,7 @@
 import { sans } from "@/lib/fonts";
 import Image from "next/image";
 
-interface CarouselSlideProps {
+type CarouselSlideProps = {
   image: string;
   title: string;
   description: string;

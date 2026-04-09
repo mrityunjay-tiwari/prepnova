@@ -18,8 +18,6 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-background mt-20">
-      {/* Dashboard Top Navigation / Header */}
-
       <main className="container mx-auto md:px-8 px-4 py-8 max-w-7xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
@@ -31,7 +29,7 @@ export default async function DashboardPage() {
               Viewing your recent performance and feedback history.
             </p>
           </div>
-          <Link href="/interview/new">
+          <Link href="/interview">
             <Button className="font-semibold shadow-md hover:shadow-lg transition-all rounded-xl gap-2 px-6 py-5">
               <PlusCircle className="h-5 w-5" />
               New Mock Interview
@@ -51,7 +49,7 @@ export default async function DashboardPage() {
               {`You haven't completed any interviews yet. Start your first session
               to get personalized AI feedback.`}
             </p>
-            <Link href="/interview/new">
+            <Link href="/interview">
               <Button size="lg" className="rounded-xl px-8">
                 Start First Interview
               </Button>

@@ -9,12 +9,9 @@ export async function getStreamToken(userId: string) {
   if (!apiKey || !streamSecret) {
     throw new Error("Stream API Key or Secret not found");
   }
-
   const client = new StreamClient(apiKey, streamSecret);
-
-  // Expire the token in 1 hour
   const expirationTime = Math.floor(Date.now() / 1000) + 3600;
-
+  
   const token = client.generateUserToken({
     user_id: userId,
     validity_in_seconds: expirationTime,

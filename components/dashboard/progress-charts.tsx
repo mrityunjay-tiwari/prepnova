@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/card";
 import {TrendingUp, Activity} from "lucide-react";
 
-interface ProgressData {
+type ProgressData = {
   date: string;
   overall: number;
   technical: number;
@@ -30,7 +30,7 @@ interface ProgressData {
   confidence: number;
 }
 
-interface ProgressChartsProps {
+type ProgressChartsProps = {
   data: ProgressData[];
 }
 
@@ -73,7 +73,7 @@ export function ProgressCharts({data}: ProgressChartsProps) {
                 axisLine={false}
                 tickLine={false}
                 tick={{fill: "#64748b", fontSize: 12}}
-                domain={[0, 100]}
+                domain={[0, 10]}
               />
               <Tooltip
                 contentStyle={{
@@ -125,7 +125,7 @@ export function ProgressCharts({data}: ProgressChartsProps) {
                 axisLine={false}
                 tickLine={false}
                 tick={{fill: "#64748b", fontSize: 12}}
-                domain={[0, 100]}
+                domain={[0, 10]}
               />
               <Tooltip
                 contentStyle={{
