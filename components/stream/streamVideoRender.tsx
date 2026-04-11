@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/sidebar";
 import {PanelLeft, Sparkles, ScanEye, UserRound, Bot} from "lucide-react";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
+import AgentAvatar from "../ui/agent-avatar";
 
 export default function StreamVideoCallRender({
   role,
@@ -95,11 +96,8 @@ const InterviewLayout = ({
   userId: string;
   userName: string;
 }) => {
-  const {
-    useCallCallingState,
-    useLocalParticipant,
-    useRemoteParticipants,
-  } = useCallStateHooks();
+  const {useCallCallingState, useLocalParticipant, useRemoteParticipants} =
+    useCallStateHooks();
   const callingState = useCallCallingState();
   const localParticipant = useLocalParticipant();
   const remoteParticipants = useRemoteParticipants();
@@ -150,7 +148,7 @@ const InterviewLayout = ({
 
   if (callingState !== CallingState.JOINED) {
     return (
-    <div className="flex flex-col items-center justify-center h-full w-full gap-4">
+      <div className="flex flex-col items-center justify-center h-full w-full gap-4">
         <Spinner className="h-6 w-6 text-blue-950" />
         <p className="text-sm font-bold text-blue-950 uppercase tracking-widest">
           Joining Call...
@@ -180,8 +178,8 @@ const InterviewLayout = ({
                 </SidebarTrigger>
               </div>
 
-              <StreamTheme className="flex flex-1 flex-col bg-transparent">
-                <div className="mx-auto grid flex-1 max-w-[1100px] grid-cols-1 gap-4 lg:grid-cols-2">
+              <StreamTheme className="mt-14 flex flex-1 flex-col bg-transparent">
+                <div className="mx-auto grid h-full w-full flex-1 max-w-8xl auto-rows-fr grid-cols-1 gap-4 lg:grid-cols-2">
                   <InterviewStageTile
                     icon={UserRound}
                     label={userName || "You"}
@@ -196,7 +194,7 @@ const InterviewLayout = ({
                   />
                 </div>
 
-                <div className="mt-10 flex items-center justify-center gap-4 pb-20">
+                <div className="mt-10 flex items-center justify-center gap-4 pb-2">
                   <ToggleAudioPublishingButton />
                   <CancelCallButton />
                 </div>
@@ -207,9 +205,9 @@ const InterviewLayout = ({
               side="right"
               variant="floating"
               collapsible="offcanvas"
-              className="top-20 h-[calc(100vh-170px)]"
+              className="top-16 h-[calc(100vh-170px)] shadow-none"
             >
-              <SidebarHeader className="gap-3 border-b border-sidebar-border/70 px-4 py-4">
+              <SidebarHeader className="gap-3 border-b border-sidebar-border/70 px-3 py-3">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-sidebar-foreground/55">
@@ -222,7 +220,7 @@ const InterviewLayout = ({
                 </div>
               </SidebarHeader>
 
-              <SidebarContent className="px-3 py-4">
+              <SidebarContent className="px-2 py-3">
                 <SidebarGroup className="p-0">
                   <SidebarGroupLabel className="px-2 text-sidebar-foreground/65">
                     Live Guidance
@@ -244,8 +242,9 @@ const InterviewLayout = ({
                         </p>
                       </div>
                     ) : (
-                      <div className="rounded-3xl border border-dashed border-sidebar-border/80 bg-white/55 p-4 text-sm text-slate-500">
-                        Live feedback will appear here once the conversation is underway.
+                      <div className="rounded-lg border border-sidebar-border/70 bg-white/55 p-4 text-sm text-slate-500">
+                        Live feedback will appear here once the conversation is
+                        underway.
                       </div>
                     )}
                   </SidebarGroupContent>
@@ -256,8 +255,8 @@ const InterviewLayout = ({
                     Presence Tracking
                   </SidebarGroupLabel>
                   <SidebarGroupContent className="px-1">
-                    <div className="rounded-lg border border-sidebar-border/70 bg-white/85 p-3 shadow-sm">
-                      <div className="mb-2 flex items-center gap-2 text-base font-semibold text-slate-800">
+                    <div className="rounded-lg border border-sidebar-border/70 bg-white/85 p-3">
+                      <div className="mb-2 flex items-center gap-2 font-semibold text-slate-800">
                         <ScanEye className="h-4 w-4 text-emerald-600" />
                         Posture & Presence
                       </div>
@@ -320,8 +319,10 @@ const InterviewStageTile = ({
   accent: string;
 }) => {
   return (
-    <div className="relative aspect-square min-h-120 max-h-[min(62vh,540px)] overflow-hidden rounded-xl border border-blue-950/10 bg-blue-950 shadow-[0_24px_60px_-28px_rgba(15,23,42,0.55)]">
-      <div className={`pointer-events-none absolute inset-0 bg-linear-to-br ${accent}`} />
+    <div className="relative w-full h-full overflow-hidden rounded-xl border border-blue-950/10 bg-blue-950 shadow-[0_24px_60px_-28px_rgba(15,23,42,0.55)]">
+      <div
+        className={`pointer-events-none absolute inset-0 bg-linear-to-br ${accent}`}
+      />
       <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-5 py-4">
         <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs font-semibold tracking-wide text-white/90 backdrop-blur">
           <Icon className="h-3.5 w-3.5" />
@@ -338,7 +339,12 @@ const InterviewStageTile = ({
           />
         ) : (
           <div className="flex h-full items-center justify-center text-sm font-medium text-white/60">
-            Waiting for participant...
+            <div className="text-center">
+              <AgentAvatar seed="Interviewer" size={80} />
+              <p className="mt-2 text-neutral-500 text-sm dark:text-neutral-400">
+                Interviewer
+              </p>
+            </div>
           </div>
         )}
       </div>
