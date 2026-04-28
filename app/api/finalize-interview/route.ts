@@ -3,7 +3,12 @@ import { openrouter } from "@openrouter/ai-sdk-provider";
 import { prisma } from "@/prisma/src";
 import { InterviewReportSchema } from "@/app/api/structured-data/schema";
 import { INTERVIEW_EVALUATOR_SYSTEM_PROMPT } from "@/utils/system-prompt";
-import type { FinalizeInterviewRequest, InterviewSegment } from "@/utils/types";
+import type {
+  FinalizeInterviewRequest,
+  InterviewSegment,
+  InterviewReportResult,
+  StoredInterviewFlowSection,
+} from "@/utils/types";
 
 const globalForInterviewFinalization = global as unknown as {
   finalizedInterviewCalls?: Set<string>;
@@ -25,6 +30,18 @@ function buildTranscript(segments: InterviewSegment[]) {
     )
     .join("\n\n");
 }
+
+type RemoteReportContext = {
+  role?: string;
+  seniority?: string;
+  flow?: StoredInterviewFlowSection[];
+  feedbackHistory?: Array<{
+    question: string;
+    section_type: string;
+    score: number;
+    short_feedback: string;
+  }>;
+};
 
 async function getSegmentsWithRetry(callId: string, attempts = 5, delayMs = 1500) {
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
@@ -51,6 +68,55 @@ async function getSegmentsWithRetry(callId: string, attempts = 5, delayMs = 1500
   }
 
   return [];
+}
+
+async function getReportContext(callId: string): Promise<RemoteReportContext> {
+  const response = await fetch(
+    `https://mrityunjay18-ai-interview-agent.hf.space/report-context/${callId}`,
+    { cache: "no-store" },
+  );
+
+  if (!response.ok) {
+    return {};
+  }
+
+  return (await response.json()) as RemoteReportContext;
+}
+
+function buildReportPrompt({
+  role,
+  seniority,
+  flow,
+  feedbackHistory,
+  postureStats,
+  transcript,
+}: {
+  role: string;
+  seniority: string;
+  flow: StoredInterviewFlowSection[];
+  feedbackHistory: RemoteReportContext["feedbackHistory"];
+  postureStats: FinalizeInterviewRequest["postureStats"];
+  transcript: string;
+}) {
+  return `
+Role:
+${role}
+
+Target seniority:
+${seniority}
+
+Interview flow:
+${JSON.stringify(flow, null, 2)}
+
+Question-level feedback history:
+${JSON.stringify(feedbackHistory ?? [], null, 2)}
+
+Posture statistics:
+${JSON.stringify(postureStats, null, 2)}
+
+Interview transcript:
+${transcript}
+`;
 }
 
 export async function POST(req: Request) {
@@ -95,19 +161,31 @@ export async function POST(req: Request) {
       });
     }
 
+    const reportContext = await getReportContext(callId);
     const transcript = buildTranscript(segments);
+    const roleForReport = reportContext.role || role;
+    const seniority = reportContext.seniority || "SDE1";
+    const flow = reportContext.flow || [];
 
-    const { object: report } = await generateObject({
-      model: openrouter("openai/gpt-oss-20b:free"),
+    const { object } = await generateObject({
+      model: openrouter("openai/gpt-4o-mini"),
       schema: InterviewReportSchema,
       system: INTERVIEW_EVALUATOR_SYSTEM_PROMPT,
-      prompt: transcript,
+      prompt: buildReportPrompt({
+        role: roleForReport,
+        seniority,
+        flow,
+        feedbackHistory: reportContext.feedbackHistory,
+        postureStats,
+        transcript,
+      }),
     });
+    const report = object as InterviewReportResult;
 
     const savedReport = await prisma.interviewReport.create({
       data: {
         userId,
-        role,
+        role: roleForReport,
         technicalScore: report.technicalScore,
         problemSolvingScore: report.problemSolvingScore,
         communicationScore: report.communicationScore,
@@ -122,6 +200,29 @@ export async function POST(req: Request) {
         postureAvg: postureStats.avg,
       },
     });
+
+    await prisma.$executeRawUnsafe(
+      `
+        UPDATE "InterviewReport"
+        SET
+          "seniority" = $1,
+          "readinessLevel" = $2,
+          "communicationSummary" = $3,
+          "postureSummary" = $4,
+          "actionPlan" = CAST($5 AS jsonb),
+          "sectionBreakdown" = CAST($6 AS jsonb),
+          "flowUsed" = CAST($7 AS jsonb)
+        WHERE "id" = $8
+      `,
+      seniority,
+      report.readinessLevel,
+      report.communicationSummary,
+      report.postureSummary,
+      JSON.stringify(report.actionPlan),
+      JSON.stringify(report.sectionBreakdown),
+      JSON.stringify(flow),
+      savedReport.id,
+    );
 
     return Response.json({
       success: true,

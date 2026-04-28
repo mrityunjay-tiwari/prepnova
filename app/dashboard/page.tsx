@@ -2,7 +2,7 @@ import {auth} from "@/utils/auth";
 import {getUserInterviewReports} from "@/app/actions/userReports";
 import {InterviewCard} from "@/components/dashboard/interview-card";
 import {LoginRequired} from "@/components/auth/login-required";
-import {PlusCircle, History} from "lucide-react";
+import {PlusCircle, History, Plus} from "lucide-react";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import {Separator} from "@/components/ui/separator";
@@ -22,17 +22,17 @@ export default async function DashboardPage() {
       <main className="container mx-auto md:px-8 px-4 py-8 max-w-7xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight mb-2">
+            <h2 className="font-serif text-3xl font-bold mb-2">
               My Interviews
             </h2>
-            <p className="text-muted-foreground flex items-center gap-1.5 font-medium">
+            <p className="font-serif text-muted-foreground flex items-center gap-1.5 font-medium">
               <History className="h-4 w-4" />
               Viewing your recent performance and feedback history.
             </p>
           </div>
           <Link href="/interview">
-            <Button className="font-semibold shadow-md hover:shadow-lg transition-all rounded-xl gap-2 px-6 py-5">
-              <PlusCircle className="h-5 w-5" />
+            <Button className="rounded-none">
+              <Plus className="h-5 w-5" />
               New Mock Interview
             </Button>
           </Link>

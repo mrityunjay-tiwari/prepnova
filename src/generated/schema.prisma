@@ -70,7 +70,8 @@ model InterviewReport {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  role String?
+  role      String?
+  seniority String?
 
   technicalScore      Float
   problemSolvingScore Float
@@ -78,14 +79,20 @@ model InterviewReport {
   confidenceScore     Float
   behavioralScore     Float
 
-  overallScore Float
+  overallScore   Float
+  readinessLevel String?
 
-  postureMin Float
-  postureMax Float
-  postureAvg Float
+  postureMin     Float
+  postureMax     Float
+  postureAvg     Float
+  postureSummary String?
 
-  strengths        String[]
-  improvementAreas String[]
+  strengths            String[]
+  improvementAreas     String[]
+  actionPlan           Json?
+  communicationSummary String?
+  sectionBreakdown     Json?
+  flowUsed             Json?
 
   finalSummary String
 

@@ -1,7 +1,23 @@
 import {auth} from "@/utils/auth";
 import {getInterviewReportById} from "@/app/actions/userReports";
 import {notFound, redirect} from "next/navigation";
-import { ChevronLeft, BarChart3, Target, MessageSquare, Zap, ShieldCheck, Award, Calendar, User, BrainCircuit, Lightbulb, AlertCircle } from "lucide-react";
+import {
+  ChevronLeft,
+  BarChart3,
+  Target,
+  MessageSquare,
+  Zap,
+  ShieldCheck,
+  Award,
+  Calendar,
+  User,
+  BrainCircuit,
+  Lightbulb,
+  AlertCircle,
+  ListChecks,
+  Route,
+  GraduationCap,
+} from "lucide-react";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -9,6 +25,40 @@ import {Badge} from "@/components/ui/badge";
 import {Progress} from "@/components/ui/progress";
 import {format} from "date-fns";
 import {ReportRadarChart} from "@/components/dashboard/report-chart";
+import type {ReportSectionBreakdown, StoredInterviewFlowSection} from "@/utils/types";
+
+function coerceSectionBreakdown(value: unknown): ReportSectionBreakdown[] {
+  if (!Array.isArray(value)) return [];
+
+  return value.filter((item): item is ReportSectionBreakdown => {
+    return (
+      typeof item === "object" &&
+      item !== null &&
+      typeof (item as ReportSectionBreakdown).sectionType === "string" &&
+      typeof (item as ReportSectionBreakdown).label === "string" &&
+      typeof (item as ReportSectionBreakdown).score === "number" &&
+      typeof (item as ReportSectionBreakdown).summary === "string"
+    );
+  });
+}
+
+function coerceFlow(value: unknown): StoredInterviewFlowSection[] {
+  if (!Array.isArray(value)) return [];
+
+  return value.filter((item): item is StoredInterviewFlowSection => {
+    return (
+      typeof item === "object" &&
+      item !== null &&
+      typeof (item as StoredInterviewFlowSection).type === "string"
+    );
+  });
+}
+
+function coerceActionPlan(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+
+  return value.filter((item): item is string => typeof item === "string");
+}
 
 export default async function ReportDetailPage({
   params,
@@ -29,6 +79,9 @@ export default async function ReportDetailPage({
     new Date(report.createdAt),
     "MMMM do, yyyy 'at' h:mm a",
   );
+  const sectionBreakdown = coerceSectionBreakdown(report.sectionBreakdown);
+  const flowUsed = coerceFlow(report.flowUsed);
+  const actionPlan = coerceActionPlan(report.actionPlan);
 
   return (
     <div className="min-h-screen bg-background mt-20 pb-20">
@@ -65,6 +118,19 @@ export default async function ReportDetailPage({
             <p className="text-lg text-muted-foreground font-medium">
               Comprehensive AI analysis of your interview performance.
             </p>
+            <div className="flex flex-wrap items-center gap-2 pt-2">
+              {report.seniority ? (
+                <Badge variant="outline" className="rounded-full px-3 py-1">
+                  <GraduationCap className="mr-1 h-3.5 w-3.5" />
+                  {report.seniority}
+                </Badge>
+              ) : null}
+              {report.readinessLevel ? (
+                <Badge variant="secondary" className="rounded-full px-3 py-1">
+                  Ready for: {report.readinessLevel}
+                </Badge>
+              ) : null}
+            </div>
           </div>
 
           <div className="flex flex-col items-center justify-center p-6 bg-primary/5 rounded-3xl border border-primary/10 shadow-sm min-w-[180px]">
@@ -226,6 +292,20 @@ export default async function ReportDetailPage({
             <Card className="rounded-3xl border-muted/40 shadow-sm">
               <CardHeader className="pb-2">
                 <CardTitle className="text-xl flex items-center gap-2">
+                  <MessageSquare className="h-5 w-5 text-primary" />
+                  Communication Readout
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {report.communicationSummary || "Communication summary unavailable."}
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="rounded-3xl border-muted/40 shadow-sm">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-xl flex items-center gap-2">
                   <Award className="h-5 w-5 text-primary" />
                   Posture Analysis
                 </CardTitle>
@@ -239,14 +319,117 @@ export default async function ReportDetailPage({
                   </span>
                 </div>
                 <div className="text-xs text-muted-foreground leading-relaxed px-1">
-                  Your posture remained consistent throughout{" "}
-                  {Math.round(report.postureAvg)}% of the interview, indicating
-                  high perceived confidence and professional presence.
+                  {report.postureSummary ||
+                    `Your posture remained consistent throughout ${Math.round(report.postureAvg)}% of the interview, indicating generally steady presence.`}
                 </div>
               </CardContent>
             </Card>
           </div>
         </div>
+
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <Card className="lg:col-span-2 rounded-3xl border-muted/40 shadow-sm">
+            <CardHeader className="border-b border-muted/20 pb-4">
+              <CardTitle className="text-xl flex items-center gap-2">
+                <Route className="h-5 w-5 text-primary" />
+                Section Breakdown
+              </CardTitle>
+              <CardDescription>
+                Aggregated performance by interview round.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-5 pt-6">
+              {sectionBreakdown.length ? (
+                sectionBreakdown.map((section, index) => (
+                  <div
+                    key={`${section.sectionType}-${index}`}
+                    className="rounded-2xl border border-muted/30 bg-muted/10 p-4"
+                  >
+                    <div className="mb-2 flex items-center justify-between gap-4">
+                      <div>
+                        <p className="font-semibold text-foreground">
+                          {section.label}
+                        </p>
+                        <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                          {section.sectionType.replaceAll("_", " ")}
+                        </p>
+                      </div>
+                      <Badge variant="outline" className="font-mono">
+                        {section.score.toFixed(1)}/10
+                      </Badge>
+                    </div>
+                    <Progress value={section.score * 10} className="mb-3 h-1.5" />
+                    <p className="text-sm leading-relaxed text-muted-foreground">
+                      {section.summary}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Section breakdown unavailable for this report.
+                </p>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-3xl border-muted/40 shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xl flex items-center gap-2">
+                <ListChecks className="h-5 w-5 text-primary" />
+                Action Plan
+              </CardTitle>
+              <CardDescription>
+                Concrete next steps based on this interview.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {actionPlan.length ? (
+                actionPlan.map((step: string, index: number) => (
+                  <div
+                    key={index}
+                    className="flex gap-3 rounded-2xl border border-muted/30 bg-muted/10 px-4 py-3"
+                  >
+                    <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                      {index + 1}
+                    </div>
+                    <p className="text-sm leading-relaxed text-foreground">
+                      {step}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Action plan unavailable for this report.
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {flowUsed.length ? (
+          <div className="mt-8">
+            <Card className="rounded-3xl border-muted/40 shadow-sm">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-xl">Interview Flow Used</CardTitle>
+                <CardDescription>
+                  Session structure used for this mock interview.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-wrap gap-3">
+                {flowUsed.map((section, index) => (
+                  <Badge
+                    key={`${section.type}-${index}`}
+                    variant="outline"
+                    className="rounded-full px-3 py-1"
+                  >
+                    {section.label || section.type.replaceAll("_", " ")}
+                    {section.duration_minutes ? ` · ${section.duration_minutes} min` : ""}
+                  </Badge>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        ) : null}
       </div>
     </div>
   );

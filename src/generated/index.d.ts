@@ -5688,15 +5688,19 @@ export namespace Prisma {
     id: string | null
     userId: string | null
     role: string | null
+    seniority: string | null
     technicalScore: number | null
     problemSolvingScore: number | null
     communicationScore: number | null
     confidenceScore: number | null
     behavioralScore: number | null
     overallScore: number | null
+    readinessLevel: string | null
     postureMin: number | null
     postureMax: number | null
     postureAvg: number | null
+    postureSummary: string | null
+    communicationSummary: string | null
     finalSummary: string | null
     createdAt: Date | null
   }
@@ -5705,15 +5709,19 @@ export namespace Prisma {
     id: string | null
     userId: string | null
     role: string | null
+    seniority: string | null
     technicalScore: number | null
     problemSolvingScore: number | null
     communicationScore: number | null
     confidenceScore: number | null
     behavioralScore: number | null
     overallScore: number | null
+    readinessLevel: string | null
     postureMin: number | null
     postureMax: number | null
     postureAvg: number | null
+    postureSummary: string | null
+    communicationSummary: string | null
     finalSummary: string | null
     createdAt: Date | null
   }
@@ -5722,17 +5730,24 @@ export namespace Prisma {
     id: number
     userId: number
     role: number
+    seniority: number
     technicalScore: number
     problemSolvingScore: number
     communicationScore: number
     confidenceScore: number
     behavioralScore: number
     overallScore: number
+    readinessLevel: number
     postureMin: number
     postureMax: number
     postureAvg: number
+    postureSummary: number
     strengths: number
     improvementAreas: number
+    actionPlan: number
+    communicationSummary: number
+    sectionBreakdown: number
+    flowUsed: number
     finalSummary: number
     createdAt: number
     _all: number
@@ -5767,15 +5782,19 @@ export namespace Prisma {
     id?: true
     userId?: true
     role?: true
+    seniority?: true
     technicalScore?: true
     problemSolvingScore?: true
     communicationScore?: true
     confidenceScore?: true
     behavioralScore?: true
     overallScore?: true
+    readinessLevel?: true
     postureMin?: true
     postureMax?: true
     postureAvg?: true
+    postureSummary?: true
+    communicationSummary?: true
     finalSummary?: true
     createdAt?: true
   }
@@ -5784,15 +5803,19 @@ export namespace Prisma {
     id?: true
     userId?: true
     role?: true
+    seniority?: true
     technicalScore?: true
     problemSolvingScore?: true
     communicationScore?: true
     confidenceScore?: true
     behavioralScore?: true
     overallScore?: true
+    readinessLevel?: true
     postureMin?: true
     postureMax?: true
     postureAvg?: true
+    postureSummary?: true
+    communicationSummary?: true
     finalSummary?: true
     createdAt?: true
   }
@@ -5801,17 +5824,24 @@ export namespace Prisma {
     id?: true
     userId?: true
     role?: true
+    seniority?: true
     technicalScore?: true
     problemSolvingScore?: true
     communicationScore?: true
     confidenceScore?: true
     behavioralScore?: true
     overallScore?: true
+    readinessLevel?: true
     postureMin?: true
     postureMax?: true
     postureAvg?: true
+    postureSummary?: true
     strengths?: true
     improvementAreas?: true
+    actionPlan?: true
+    communicationSummary?: true
+    sectionBreakdown?: true
+    flowUsed?: true
     finalSummary?: true
     createdAt?: true
     _all?: true
@@ -5907,17 +5937,24 @@ export namespace Prisma {
     id: string
     userId: string
     role: string | null
+    seniority: string | null
     technicalScore: number
     problemSolvingScore: number
     communicationScore: number
     confidenceScore: number
     behavioralScore: number
     overallScore: number
+    readinessLevel: string | null
     postureMin: number
     postureMax: number
     postureAvg: number
+    postureSummary: string | null
     strengths: string[]
     improvementAreas: string[]
+    actionPlan: JsonValue | null
+    communicationSummary: string | null
+    sectionBreakdown: JsonValue | null
+    flowUsed: JsonValue | null
     finalSummary: string
     createdAt: Date
     _count: InterviewReportCountAggregateOutputType | null
@@ -5945,17 +5982,24 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     role?: boolean
+    seniority?: boolean
     technicalScore?: boolean
     problemSolvingScore?: boolean
     communicationScore?: boolean
     confidenceScore?: boolean
     behavioralScore?: boolean
     overallScore?: boolean
+    readinessLevel?: boolean
     postureMin?: boolean
     postureMax?: boolean
     postureAvg?: boolean
+    postureSummary?: boolean
     strengths?: boolean
     improvementAreas?: boolean
+    actionPlan?: boolean
+    communicationSummary?: boolean
+    sectionBreakdown?: boolean
+    flowUsed?: boolean
     finalSummary?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -5965,17 +6009,24 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     role?: boolean
+    seniority?: boolean
     technicalScore?: boolean
     problemSolvingScore?: boolean
     communicationScore?: boolean
     confidenceScore?: boolean
     behavioralScore?: boolean
     overallScore?: boolean
+    readinessLevel?: boolean
     postureMin?: boolean
     postureMax?: boolean
     postureAvg?: boolean
+    postureSummary?: boolean
     strengths?: boolean
     improvementAreas?: boolean
+    actionPlan?: boolean
+    communicationSummary?: boolean
+    sectionBreakdown?: boolean
+    flowUsed?: boolean
     finalSummary?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -5985,17 +6036,24 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     role?: boolean
+    seniority?: boolean
     technicalScore?: boolean
     problemSolvingScore?: boolean
     communicationScore?: boolean
     confidenceScore?: boolean
     behavioralScore?: boolean
     overallScore?: boolean
+    readinessLevel?: boolean
     postureMin?: boolean
     postureMax?: boolean
     postureAvg?: boolean
+    postureSummary?: boolean
     strengths?: boolean
     improvementAreas?: boolean
+    actionPlan?: boolean
+    communicationSummary?: boolean
+    sectionBreakdown?: boolean
+    flowUsed?: boolean
     finalSummary?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -6005,22 +6063,29 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     role?: boolean
+    seniority?: boolean
     technicalScore?: boolean
     problemSolvingScore?: boolean
     communicationScore?: boolean
     confidenceScore?: boolean
     behavioralScore?: boolean
     overallScore?: boolean
+    readinessLevel?: boolean
     postureMin?: boolean
     postureMax?: boolean
     postureAvg?: boolean
+    postureSummary?: boolean
     strengths?: boolean
     improvementAreas?: boolean
+    actionPlan?: boolean
+    communicationSummary?: boolean
+    sectionBreakdown?: boolean
+    flowUsed?: boolean
     finalSummary?: boolean
     createdAt?: boolean
   }
 
-  export type InterviewReportOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "role" | "technicalScore" | "problemSolvingScore" | "communicationScore" | "confidenceScore" | "behavioralScore" | "overallScore" | "postureMin" | "postureMax" | "postureAvg" | "strengths" | "improvementAreas" | "finalSummary" | "createdAt", ExtArgs["result"]["interviewReport"]>
+  export type InterviewReportOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "role" | "seniority" | "technicalScore" | "problemSolvingScore" | "communicationScore" | "confidenceScore" | "behavioralScore" | "overallScore" | "readinessLevel" | "postureMin" | "postureMax" | "postureAvg" | "postureSummary" | "strengths" | "improvementAreas" | "actionPlan" | "communicationSummary" | "sectionBreakdown" | "flowUsed" | "finalSummary" | "createdAt", ExtArgs["result"]["interviewReport"]>
   export type InterviewReportInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -6040,17 +6105,24 @@ export namespace Prisma {
       id: string
       userId: string
       role: string | null
+      seniority: string | null
       technicalScore: number
       problemSolvingScore: number
       communicationScore: number
       confidenceScore: number
       behavioralScore: number
       overallScore: number
+      readinessLevel: string | null
       postureMin: number
       postureMax: number
       postureAvg: number
+      postureSummary: string | null
       strengths: string[]
       improvementAreas: string[]
+      actionPlan: Prisma.JsonValue | null
+      communicationSummary: string | null
+      sectionBreakdown: Prisma.JsonValue | null
+      flowUsed: Prisma.JsonValue | null
       finalSummary: string
       createdAt: Date
     }, ExtArgs["result"]["interviewReport"]>
@@ -6480,17 +6552,24 @@ export namespace Prisma {
     readonly id: FieldRef<"InterviewReport", 'String'>
     readonly userId: FieldRef<"InterviewReport", 'String'>
     readonly role: FieldRef<"InterviewReport", 'String'>
+    readonly seniority: FieldRef<"InterviewReport", 'String'>
     readonly technicalScore: FieldRef<"InterviewReport", 'Float'>
     readonly problemSolvingScore: FieldRef<"InterviewReport", 'Float'>
     readonly communicationScore: FieldRef<"InterviewReport", 'Float'>
     readonly confidenceScore: FieldRef<"InterviewReport", 'Float'>
     readonly behavioralScore: FieldRef<"InterviewReport", 'Float'>
     readonly overallScore: FieldRef<"InterviewReport", 'Float'>
+    readonly readinessLevel: FieldRef<"InterviewReport", 'String'>
     readonly postureMin: FieldRef<"InterviewReport", 'Float'>
     readonly postureMax: FieldRef<"InterviewReport", 'Float'>
     readonly postureAvg: FieldRef<"InterviewReport", 'Float'>
+    readonly postureSummary: FieldRef<"InterviewReport", 'String'>
     readonly strengths: FieldRef<"InterviewReport", 'String[]'>
     readonly improvementAreas: FieldRef<"InterviewReport", 'String[]'>
+    readonly actionPlan: FieldRef<"InterviewReport", 'Json'>
+    readonly communicationSummary: FieldRef<"InterviewReport", 'String'>
+    readonly sectionBreakdown: FieldRef<"InterviewReport", 'Json'>
+    readonly flowUsed: FieldRef<"InterviewReport", 'Json'>
     readonly finalSummary: FieldRef<"InterviewReport", 'String'>
     readonly createdAt: FieldRef<"InterviewReport", 'DateTime'>
   }
@@ -6977,17 +7056,24 @@ export namespace Prisma {
     id: 'id',
     userId: 'userId',
     role: 'role',
+    seniority: 'seniority',
     technicalScore: 'technicalScore',
     problemSolvingScore: 'problemSolvingScore',
     communicationScore: 'communicationScore',
     confidenceScore: 'confidenceScore',
     behavioralScore: 'behavioralScore',
     overallScore: 'overallScore',
+    readinessLevel: 'readinessLevel',
     postureMin: 'postureMin',
     postureMax: 'postureMax',
     postureAvg: 'postureAvg',
+    postureSummary: 'postureSummary',
     strengths: 'strengths',
     improvementAreas: 'improvementAreas',
+    actionPlan: 'actionPlan',
+    communicationSummary: 'communicationSummary',
+    sectionBreakdown: 'sectionBreakdown',
+    flowUsed: 'flowUsed',
     finalSummary: 'finalSummary',
     createdAt: 'createdAt'
   };
@@ -7001,6 +7087,14 @@ export namespace Prisma {
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
   export const QueryMode: {
@@ -7017,6 +7111,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -7077,6 +7180,20 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
   /**
    * Deep Input Types
@@ -7357,17 +7474,24 @@ export namespace Prisma {
     id?: StringFilter<"InterviewReport"> | string
     userId?: StringFilter<"InterviewReport"> | string
     role?: StringNullableFilter<"InterviewReport"> | string | null
+    seniority?: StringNullableFilter<"InterviewReport"> | string | null
     technicalScore?: FloatFilter<"InterviewReport"> | number
     problemSolvingScore?: FloatFilter<"InterviewReport"> | number
     communicationScore?: FloatFilter<"InterviewReport"> | number
     confidenceScore?: FloatFilter<"InterviewReport"> | number
     behavioralScore?: FloatFilter<"InterviewReport"> | number
     overallScore?: FloatFilter<"InterviewReport"> | number
+    readinessLevel?: StringNullableFilter<"InterviewReport"> | string | null
     postureMin?: FloatFilter<"InterviewReport"> | number
     postureMax?: FloatFilter<"InterviewReport"> | number
     postureAvg?: FloatFilter<"InterviewReport"> | number
+    postureSummary?: StringNullableFilter<"InterviewReport"> | string | null
     strengths?: StringNullableListFilter<"InterviewReport">
     improvementAreas?: StringNullableListFilter<"InterviewReport">
+    actionPlan?: JsonNullableFilter<"InterviewReport">
+    communicationSummary?: StringNullableFilter<"InterviewReport"> | string | null
+    sectionBreakdown?: JsonNullableFilter<"InterviewReport">
+    flowUsed?: JsonNullableFilter<"InterviewReport">
     finalSummary?: StringFilter<"InterviewReport"> | string
     createdAt?: DateTimeFilter<"InterviewReport"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -7377,17 +7501,24 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     role?: SortOrderInput | SortOrder
+    seniority?: SortOrderInput | SortOrder
     technicalScore?: SortOrder
     problemSolvingScore?: SortOrder
     communicationScore?: SortOrder
     confidenceScore?: SortOrder
     behavioralScore?: SortOrder
     overallScore?: SortOrder
+    readinessLevel?: SortOrderInput | SortOrder
     postureMin?: SortOrder
     postureMax?: SortOrder
     postureAvg?: SortOrder
+    postureSummary?: SortOrderInput | SortOrder
     strengths?: SortOrder
     improvementAreas?: SortOrder
+    actionPlan?: SortOrderInput | SortOrder
+    communicationSummary?: SortOrderInput | SortOrder
+    sectionBreakdown?: SortOrderInput | SortOrder
+    flowUsed?: SortOrderInput | SortOrder
     finalSummary?: SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -7400,17 +7531,24 @@ export namespace Prisma {
     NOT?: InterviewReportWhereInput | InterviewReportWhereInput[]
     userId?: StringFilter<"InterviewReport"> | string
     role?: StringNullableFilter<"InterviewReport"> | string | null
+    seniority?: StringNullableFilter<"InterviewReport"> | string | null
     technicalScore?: FloatFilter<"InterviewReport"> | number
     problemSolvingScore?: FloatFilter<"InterviewReport"> | number
     communicationScore?: FloatFilter<"InterviewReport"> | number
     confidenceScore?: FloatFilter<"InterviewReport"> | number
     behavioralScore?: FloatFilter<"InterviewReport"> | number
     overallScore?: FloatFilter<"InterviewReport"> | number
+    readinessLevel?: StringNullableFilter<"InterviewReport"> | string | null
     postureMin?: FloatFilter<"InterviewReport"> | number
     postureMax?: FloatFilter<"InterviewReport"> | number
     postureAvg?: FloatFilter<"InterviewReport"> | number
+    postureSummary?: StringNullableFilter<"InterviewReport"> | string | null
     strengths?: StringNullableListFilter<"InterviewReport">
     improvementAreas?: StringNullableListFilter<"InterviewReport">
+    actionPlan?: JsonNullableFilter<"InterviewReport">
+    communicationSummary?: StringNullableFilter<"InterviewReport"> | string | null
+    sectionBreakdown?: JsonNullableFilter<"InterviewReport">
+    flowUsed?: JsonNullableFilter<"InterviewReport">
     finalSummary?: StringFilter<"InterviewReport"> | string
     createdAt?: DateTimeFilter<"InterviewReport"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -7420,17 +7558,24 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     role?: SortOrderInput | SortOrder
+    seniority?: SortOrderInput | SortOrder
     technicalScore?: SortOrder
     problemSolvingScore?: SortOrder
     communicationScore?: SortOrder
     confidenceScore?: SortOrder
     behavioralScore?: SortOrder
     overallScore?: SortOrder
+    readinessLevel?: SortOrderInput | SortOrder
     postureMin?: SortOrder
     postureMax?: SortOrder
     postureAvg?: SortOrder
+    postureSummary?: SortOrderInput | SortOrder
     strengths?: SortOrder
     improvementAreas?: SortOrder
+    actionPlan?: SortOrderInput | SortOrder
+    communicationSummary?: SortOrderInput | SortOrder
+    sectionBreakdown?: SortOrderInput | SortOrder
+    flowUsed?: SortOrderInput | SortOrder
     finalSummary?: SortOrder
     createdAt?: SortOrder
     _count?: InterviewReportCountOrderByAggregateInput
@@ -7447,17 +7592,24 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"InterviewReport"> | string
     userId?: StringWithAggregatesFilter<"InterviewReport"> | string
     role?: StringNullableWithAggregatesFilter<"InterviewReport"> | string | null
+    seniority?: StringNullableWithAggregatesFilter<"InterviewReport"> | string | null
     technicalScore?: FloatWithAggregatesFilter<"InterviewReport"> | number
     problemSolvingScore?: FloatWithAggregatesFilter<"InterviewReport"> | number
     communicationScore?: FloatWithAggregatesFilter<"InterviewReport"> | number
     confidenceScore?: FloatWithAggregatesFilter<"InterviewReport"> | number
     behavioralScore?: FloatWithAggregatesFilter<"InterviewReport"> | number
     overallScore?: FloatWithAggregatesFilter<"InterviewReport"> | number
+    readinessLevel?: StringNullableWithAggregatesFilter<"InterviewReport"> | string | null
     postureMin?: FloatWithAggregatesFilter<"InterviewReport"> | number
     postureMax?: FloatWithAggregatesFilter<"InterviewReport"> | number
     postureAvg?: FloatWithAggregatesFilter<"InterviewReport"> | number
+    postureSummary?: StringNullableWithAggregatesFilter<"InterviewReport"> | string | null
     strengths?: StringNullableListFilter<"InterviewReport">
     improvementAreas?: StringNullableListFilter<"InterviewReport">
+    actionPlan?: JsonNullableWithAggregatesFilter<"InterviewReport">
+    communicationSummary?: StringNullableWithAggregatesFilter<"InterviewReport"> | string | null
+    sectionBreakdown?: JsonNullableWithAggregatesFilter<"InterviewReport">
+    flowUsed?: JsonNullableWithAggregatesFilter<"InterviewReport">
     finalSummary?: StringWithAggregatesFilter<"InterviewReport"> | string
     createdAt?: DateTimeWithAggregatesFilter<"InterviewReport"> | Date | string
   }
@@ -7755,17 +7907,24 @@ export namespace Prisma {
   export type InterviewReportCreateInput = {
     id?: string
     role?: string | null
+    seniority?: string | null
     technicalScore: number
     problemSolvingScore: number
     communicationScore: number
     confidenceScore: number
     behavioralScore: number
     overallScore: number
+    readinessLevel?: string | null
     postureMin: number
     postureMax: number
     postureAvg: number
+    postureSummary?: string | null
     strengths?: InterviewReportCreatestrengthsInput | string[]
     improvementAreas?: InterviewReportCreateimprovementAreasInput | string[]
+    actionPlan?: NullableJsonNullValueInput | InputJsonValue
+    communicationSummary?: string | null
+    sectionBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    flowUsed?: NullableJsonNullValueInput | InputJsonValue
     finalSummary: string
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutInterviewsInput
@@ -7775,17 +7934,24 @@ export namespace Prisma {
     id?: string
     userId: string
     role?: string | null
+    seniority?: string | null
     technicalScore: number
     problemSolvingScore: number
     communicationScore: number
     confidenceScore: number
     behavioralScore: number
     overallScore: number
+    readinessLevel?: string | null
     postureMin: number
     postureMax: number
     postureAvg: number
+    postureSummary?: string | null
     strengths?: InterviewReportCreatestrengthsInput | string[]
     improvementAreas?: InterviewReportCreateimprovementAreasInput | string[]
+    actionPlan?: NullableJsonNullValueInput | InputJsonValue
+    communicationSummary?: string | null
+    sectionBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    flowUsed?: NullableJsonNullValueInput | InputJsonValue
     finalSummary: string
     createdAt?: Date | string
   }
@@ -7793,17 +7959,24 @@ export namespace Prisma {
   export type InterviewReportUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: NullableStringFieldUpdateOperationsInput | string | null
+    seniority?: NullableStringFieldUpdateOperationsInput | string | null
     technicalScore?: FloatFieldUpdateOperationsInput | number
     problemSolvingScore?: FloatFieldUpdateOperationsInput | number
     communicationScore?: FloatFieldUpdateOperationsInput | number
     confidenceScore?: FloatFieldUpdateOperationsInput | number
     behavioralScore?: FloatFieldUpdateOperationsInput | number
     overallScore?: FloatFieldUpdateOperationsInput | number
+    readinessLevel?: NullableStringFieldUpdateOperationsInput | string | null
     postureMin?: FloatFieldUpdateOperationsInput | number
     postureMax?: FloatFieldUpdateOperationsInput | number
     postureAvg?: FloatFieldUpdateOperationsInput | number
+    postureSummary?: NullableStringFieldUpdateOperationsInput | string | null
     strengths?: InterviewReportUpdatestrengthsInput | string[]
     improvementAreas?: InterviewReportUpdateimprovementAreasInput | string[]
+    actionPlan?: NullableJsonNullValueInput | InputJsonValue
+    communicationSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    sectionBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    flowUsed?: NullableJsonNullValueInput | InputJsonValue
     finalSummary?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutInterviewsNestedInput
@@ -7813,17 +7986,24 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     role?: NullableStringFieldUpdateOperationsInput | string | null
+    seniority?: NullableStringFieldUpdateOperationsInput | string | null
     technicalScore?: FloatFieldUpdateOperationsInput | number
     problemSolvingScore?: FloatFieldUpdateOperationsInput | number
     communicationScore?: FloatFieldUpdateOperationsInput | number
     confidenceScore?: FloatFieldUpdateOperationsInput | number
     behavioralScore?: FloatFieldUpdateOperationsInput | number
     overallScore?: FloatFieldUpdateOperationsInput | number
+    readinessLevel?: NullableStringFieldUpdateOperationsInput | string | null
     postureMin?: FloatFieldUpdateOperationsInput | number
     postureMax?: FloatFieldUpdateOperationsInput | number
     postureAvg?: FloatFieldUpdateOperationsInput | number
+    postureSummary?: NullableStringFieldUpdateOperationsInput | string | null
     strengths?: InterviewReportUpdatestrengthsInput | string[]
     improvementAreas?: InterviewReportUpdateimprovementAreasInput | string[]
+    actionPlan?: NullableJsonNullValueInput | InputJsonValue
+    communicationSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    sectionBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    flowUsed?: NullableJsonNullValueInput | InputJsonValue
     finalSummary?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7832,17 +8012,24 @@ export namespace Prisma {
     id?: string
     userId: string
     role?: string | null
+    seniority?: string | null
     technicalScore: number
     problemSolvingScore: number
     communicationScore: number
     confidenceScore: number
     behavioralScore: number
     overallScore: number
+    readinessLevel?: string | null
     postureMin: number
     postureMax: number
     postureAvg: number
+    postureSummary?: string | null
     strengths?: InterviewReportCreatestrengthsInput | string[]
     improvementAreas?: InterviewReportCreateimprovementAreasInput | string[]
+    actionPlan?: NullableJsonNullValueInput | InputJsonValue
+    communicationSummary?: string | null
+    sectionBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    flowUsed?: NullableJsonNullValueInput | InputJsonValue
     finalSummary: string
     createdAt?: Date | string
   }
@@ -7850,17 +8037,24 @@ export namespace Prisma {
   export type InterviewReportUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: NullableStringFieldUpdateOperationsInput | string | null
+    seniority?: NullableStringFieldUpdateOperationsInput | string | null
     technicalScore?: FloatFieldUpdateOperationsInput | number
     problemSolvingScore?: FloatFieldUpdateOperationsInput | number
     communicationScore?: FloatFieldUpdateOperationsInput | number
     confidenceScore?: FloatFieldUpdateOperationsInput | number
     behavioralScore?: FloatFieldUpdateOperationsInput | number
     overallScore?: FloatFieldUpdateOperationsInput | number
+    readinessLevel?: NullableStringFieldUpdateOperationsInput | string | null
     postureMin?: FloatFieldUpdateOperationsInput | number
     postureMax?: FloatFieldUpdateOperationsInput | number
     postureAvg?: FloatFieldUpdateOperationsInput | number
+    postureSummary?: NullableStringFieldUpdateOperationsInput | string | null
     strengths?: InterviewReportUpdatestrengthsInput | string[]
     improvementAreas?: InterviewReportUpdateimprovementAreasInput | string[]
+    actionPlan?: NullableJsonNullValueInput | InputJsonValue
+    communicationSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    sectionBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    flowUsed?: NullableJsonNullValueInput | InputJsonValue
     finalSummary?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7869,17 +8063,24 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     role?: NullableStringFieldUpdateOperationsInput | string | null
+    seniority?: NullableStringFieldUpdateOperationsInput | string | null
     technicalScore?: FloatFieldUpdateOperationsInput | number
     problemSolvingScore?: FloatFieldUpdateOperationsInput | number
     communicationScore?: FloatFieldUpdateOperationsInput | number
     confidenceScore?: FloatFieldUpdateOperationsInput | number
     behavioralScore?: FloatFieldUpdateOperationsInput | number
     overallScore?: FloatFieldUpdateOperationsInput | number
+    readinessLevel?: NullableStringFieldUpdateOperationsInput | string | null
     postureMin?: FloatFieldUpdateOperationsInput | number
     postureMax?: FloatFieldUpdateOperationsInput | number
     postureAvg?: FloatFieldUpdateOperationsInput | number
+    postureSummary?: NullableStringFieldUpdateOperationsInput | string | null
     strengths?: InterviewReportUpdatestrengthsInput | string[]
     improvementAreas?: InterviewReportUpdateimprovementAreasInput | string[]
+    actionPlan?: NullableJsonNullValueInput | InputJsonValue
+    communicationSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    sectionBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    flowUsed?: NullableJsonNullValueInput | InputJsonValue
     finalSummary?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8223,22 +8424,52 @@ export namespace Prisma {
     hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
     isEmpty?: boolean
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type InterviewReportCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     role?: SortOrder
+    seniority?: SortOrder
     technicalScore?: SortOrder
     problemSolvingScore?: SortOrder
     communicationScore?: SortOrder
     confidenceScore?: SortOrder
     behavioralScore?: SortOrder
     overallScore?: SortOrder
+    readinessLevel?: SortOrder
     postureMin?: SortOrder
     postureMax?: SortOrder
     postureAvg?: SortOrder
+    postureSummary?: SortOrder
     strengths?: SortOrder
     improvementAreas?: SortOrder
+    actionPlan?: SortOrder
+    communicationSummary?: SortOrder
+    sectionBreakdown?: SortOrder
+    flowUsed?: SortOrder
     finalSummary?: SortOrder
     createdAt?: SortOrder
   }
@@ -8259,15 +8490,19 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     role?: SortOrder
+    seniority?: SortOrder
     technicalScore?: SortOrder
     problemSolvingScore?: SortOrder
     communicationScore?: SortOrder
     confidenceScore?: SortOrder
     behavioralScore?: SortOrder
     overallScore?: SortOrder
+    readinessLevel?: SortOrder
     postureMin?: SortOrder
     postureMax?: SortOrder
     postureAvg?: SortOrder
+    postureSummary?: SortOrder
+    communicationSummary?: SortOrder
     finalSummary?: SortOrder
     createdAt?: SortOrder
   }
@@ -8276,15 +8511,19 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     role?: SortOrder
+    seniority?: SortOrder
     technicalScore?: SortOrder
     problemSolvingScore?: SortOrder
     communicationScore?: SortOrder
     confidenceScore?: SortOrder
     behavioralScore?: SortOrder
     overallScore?: SortOrder
+    readinessLevel?: SortOrder
     postureMin?: SortOrder
     postureMax?: SortOrder
     postureAvg?: SortOrder
+    postureSummary?: SortOrder
+    communicationSummary?: SortOrder
     finalSummary?: SortOrder
     createdAt?: SortOrder
   }
@@ -8315,6 +8554,32 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type AccountCreateNestedManyWithoutUserInput = {
@@ -8722,6 +8987,29 @@ export namespace Prisma {
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
   }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type AccountCreateWithoutUserInput = {
     type: string
@@ -8790,17 +9078,24 @@ export namespace Prisma {
   export type InterviewReportCreateWithoutUserInput = {
     id?: string
     role?: string | null
+    seniority?: string | null
     technicalScore: number
     problemSolvingScore: number
     communicationScore: number
     confidenceScore: number
     behavioralScore: number
     overallScore: number
+    readinessLevel?: string | null
     postureMin: number
     postureMax: number
     postureAvg: number
+    postureSummary?: string | null
     strengths?: InterviewReportCreatestrengthsInput | string[]
     improvementAreas?: InterviewReportCreateimprovementAreasInput | string[]
+    actionPlan?: NullableJsonNullValueInput | InputJsonValue
+    communicationSummary?: string | null
+    sectionBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    flowUsed?: NullableJsonNullValueInput | InputJsonValue
     finalSummary: string
     createdAt?: Date | string
   }
@@ -8808,17 +9103,24 @@ export namespace Prisma {
   export type InterviewReportUncheckedCreateWithoutUserInput = {
     id?: string
     role?: string | null
+    seniority?: string | null
     technicalScore: number
     problemSolvingScore: number
     communicationScore: number
     confidenceScore: number
     behavioralScore: number
     overallScore: number
+    readinessLevel?: string | null
     postureMin: number
     postureMax: number
     postureAvg: number
+    postureSummary?: string | null
     strengths?: InterviewReportCreatestrengthsInput | string[]
     improvementAreas?: InterviewReportCreateimprovementAreasInput | string[]
+    actionPlan?: NullableJsonNullValueInput | InputJsonValue
+    communicationSummary?: string | null
+    sectionBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    flowUsed?: NullableJsonNullValueInput | InputJsonValue
     finalSummary: string
     createdAt?: Date | string
   }
@@ -8918,17 +9220,24 @@ export namespace Prisma {
     id?: StringFilter<"InterviewReport"> | string
     userId?: StringFilter<"InterviewReport"> | string
     role?: StringNullableFilter<"InterviewReport"> | string | null
+    seniority?: StringNullableFilter<"InterviewReport"> | string | null
     technicalScore?: FloatFilter<"InterviewReport"> | number
     problemSolvingScore?: FloatFilter<"InterviewReport"> | number
     communicationScore?: FloatFilter<"InterviewReport"> | number
     confidenceScore?: FloatFilter<"InterviewReport"> | number
     behavioralScore?: FloatFilter<"InterviewReport"> | number
     overallScore?: FloatFilter<"InterviewReport"> | number
+    readinessLevel?: StringNullableFilter<"InterviewReport"> | string | null
     postureMin?: FloatFilter<"InterviewReport"> | number
     postureMax?: FloatFilter<"InterviewReport"> | number
     postureAvg?: FloatFilter<"InterviewReport"> | number
+    postureSummary?: StringNullableFilter<"InterviewReport"> | string | null
     strengths?: StringNullableListFilter<"InterviewReport">
     improvementAreas?: StringNullableListFilter<"InterviewReport">
+    actionPlan?: JsonNullableFilter<"InterviewReport">
+    communicationSummary?: StringNullableFilter<"InterviewReport"> | string | null
+    sectionBreakdown?: JsonNullableFilter<"InterviewReport">
+    flowUsed?: JsonNullableFilter<"InterviewReport">
     finalSummary?: StringFilter<"InterviewReport"> | string
     createdAt?: DateTimeFilter<"InterviewReport"> | Date | string
   }
@@ -9150,17 +9459,24 @@ export namespace Prisma {
   export type InterviewReportCreateManyUserInput = {
     id?: string
     role?: string | null
+    seniority?: string | null
     technicalScore: number
     problemSolvingScore: number
     communicationScore: number
     confidenceScore: number
     behavioralScore: number
     overallScore: number
+    readinessLevel?: string | null
     postureMin: number
     postureMax: number
     postureAvg: number
+    postureSummary?: string | null
     strengths?: InterviewReportCreatestrengthsInput | string[]
     improvementAreas?: InterviewReportCreateimprovementAreasInput | string[]
+    actionPlan?: NullableJsonNullValueInput | InputJsonValue
+    communicationSummary?: string | null
+    sectionBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    flowUsed?: NullableJsonNullValueInput | InputJsonValue
     finalSummary: string
     createdAt?: Date | string
   }
@@ -9234,17 +9550,24 @@ export namespace Prisma {
   export type InterviewReportUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: NullableStringFieldUpdateOperationsInput | string | null
+    seniority?: NullableStringFieldUpdateOperationsInput | string | null
     technicalScore?: FloatFieldUpdateOperationsInput | number
     problemSolvingScore?: FloatFieldUpdateOperationsInput | number
     communicationScore?: FloatFieldUpdateOperationsInput | number
     confidenceScore?: FloatFieldUpdateOperationsInput | number
     behavioralScore?: FloatFieldUpdateOperationsInput | number
     overallScore?: FloatFieldUpdateOperationsInput | number
+    readinessLevel?: NullableStringFieldUpdateOperationsInput | string | null
     postureMin?: FloatFieldUpdateOperationsInput | number
     postureMax?: FloatFieldUpdateOperationsInput | number
     postureAvg?: FloatFieldUpdateOperationsInput | number
+    postureSummary?: NullableStringFieldUpdateOperationsInput | string | null
     strengths?: InterviewReportUpdatestrengthsInput | string[]
     improvementAreas?: InterviewReportUpdateimprovementAreasInput | string[]
+    actionPlan?: NullableJsonNullValueInput | InputJsonValue
+    communicationSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    sectionBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    flowUsed?: NullableJsonNullValueInput | InputJsonValue
     finalSummary?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9252,17 +9575,24 @@ export namespace Prisma {
   export type InterviewReportUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: NullableStringFieldUpdateOperationsInput | string | null
+    seniority?: NullableStringFieldUpdateOperationsInput | string | null
     technicalScore?: FloatFieldUpdateOperationsInput | number
     problemSolvingScore?: FloatFieldUpdateOperationsInput | number
     communicationScore?: FloatFieldUpdateOperationsInput | number
     confidenceScore?: FloatFieldUpdateOperationsInput | number
     behavioralScore?: FloatFieldUpdateOperationsInput | number
     overallScore?: FloatFieldUpdateOperationsInput | number
+    readinessLevel?: NullableStringFieldUpdateOperationsInput | string | null
     postureMin?: FloatFieldUpdateOperationsInput | number
     postureMax?: FloatFieldUpdateOperationsInput | number
     postureAvg?: FloatFieldUpdateOperationsInput | number
+    postureSummary?: NullableStringFieldUpdateOperationsInput | string | null
     strengths?: InterviewReportUpdatestrengthsInput | string[]
     improvementAreas?: InterviewReportUpdateimprovementAreasInput | string[]
+    actionPlan?: NullableJsonNullValueInput | InputJsonValue
+    communicationSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    sectionBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    flowUsed?: NullableJsonNullValueInput | InputJsonValue
     finalSummary?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9270,17 +9600,24 @@ export namespace Prisma {
   export type InterviewReportUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: NullableStringFieldUpdateOperationsInput | string | null
+    seniority?: NullableStringFieldUpdateOperationsInput | string | null
     technicalScore?: FloatFieldUpdateOperationsInput | number
     problemSolvingScore?: FloatFieldUpdateOperationsInput | number
     communicationScore?: FloatFieldUpdateOperationsInput | number
     confidenceScore?: FloatFieldUpdateOperationsInput | number
     behavioralScore?: FloatFieldUpdateOperationsInput | number
     overallScore?: FloatFieldUpdateOperationsInput | number
+    readinessLevel?: NullableStringFieldUpdateOperationsInput | string | null
     postureMin?: FloatFieldUpdateOperationsInput | number
     postureMax?: FloatFieldUpdateOperationsInput | number
     postureAvg?: FloatFieldUpdateOperationsInput | number
+    postureSummary?: NullableStringFieldUpdateOperationsInput | string | null
     strengths?: InterviewReportUpdatestrengthsInput | string[]
     improvementAreas?: InterviewReportUpdateimprovementAreasInput | string[]
+    actionPlan?: NullableJsonNullValueInput | InputJsonValue
+    communicationSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    sectionBreakdown?: NullableJsonNullValueInput | InputJsonValue
+    flowUsed?: NullableJsonNullValueInput | InputJsonValue
     finalSummary?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

@@ -57,6 +57,38 @@ export type InterviewSessionStatus = {
   currentQuestion?: string;
 };
 
+export type ReportSectionBreakdown = {
+  sectionType: string;
+  label: string;
+  score: number;
+  summary: string;
+};
+
+export type StoredInterviewFlowSection = {
+  type: string;
+  label?: string;
+  duration_minutes?: number;
+  min_questions?: number;
+  max_questions?: number;
+};
+
+export type InterviewReportResult = {
+  technicalScore: number;
+  problemSolvingScore: number;
+  communicationScore: number;
+  confidenceScore: number;
+  behavioralScore: number;
+  overallScore: number;
+  readinessLevel: string;
+  strengths: string[];
+  improvementAreas: string[];
+  communicationSummary: string;
+  postureSummary: string;
+  actionPlan: string[];
+  sectionBreakdown: ReportSectionBreakdown[];
+  finalSummary: string;
+};
+
 export type MidFeedback = {
   short_feedback: string;
   score: number;

@@ -165,17 +165,24 @@ exports.Prisma.InterviewReportScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   role: 'role',
+  seniority: 'seniority',
   technicalScore: 'technicalScore',
   problemSolvingScore: 'problemSolvingScore',
   communicationScore: 'communicationScore',
   confidenceScore: 'confidenceScore',
   behavioralScore: 'behavioralScore',
   overallScore: 'overallScore',
+  readinessLevel: 'readinessLevel',
   postureMin: 'postureMin',
   postureMax: 'postureMax',
   postureAvg: 'postureAvg',
+  postureSummary: 'postureSummary',
   strengths: 'strengths',
   improvementAreas: 'improvementAreas',
+  actionPlan: 'actionPlan',
+  communicationSummary: 'communicationSummary',
+  sectionBreakdown: 'sectionBreakdown',
+  flowUsed: 'flowUsed',
   finalSummary: 'finalSummary',
   createdAt: 'createdAt'
 };
@@ -183,6 +190,11 @@ exports.Prisma.InterviewReportScalarFieldEnum = {
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -193,6 +205,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 
 

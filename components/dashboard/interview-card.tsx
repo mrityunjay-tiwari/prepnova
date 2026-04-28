@@ -40,16 +40,16 @@ export function InterviewCard({report}: InterviewCardProps) {
   // Helper to determine score color
   const getScoreColor = (score: number) => {
     if (score >= 8)
-      return "text-emerald-500 bg-emerald-500/10 border-emerald-500/20";
+      return "text-green-500 bg-green-500/10 border-green-500/20";
     if (score >= 6)
-      return "text-amber-500 bg-amber-500/10 border-amber-500/20";
-    return "text-rose-500 bg-rose-500/10 border-rose-500/20";
+      return "text-yellow-500 bg-yellow-500/10 border-yellow-500/20";
+    return "text-red-500 bg-red-500/10 border-red-500/20";
   };
 
   return (
     <motion.div whileHover={{y: -4}} transition={{duration: 0.2}}>
       <Link href={`/dashboard/reports/${report.id}`} className="block group">
-        <Card className="overflow-hidden border-muted/40 hover:border-primary/30 hover:shadow-lg transition-all duration-300 bg-linear-to-br from-card to-card/50">
+        <Card className="rounded-none overflow-hidden border-muted/40 hover:border-primary/30 hover:shadow-lg transition-all duration-300 bg-linear-to-br from-card to-card/50">
           <CardHeader className="pb-3 border-b border-muted/20">
             <div className="flex justify-between items-start">
               <div>
@@ -63,7 +63,7 @@ export function InterviewCard({report}: InterviewCardProps) {
               </div>
               <Badge
                 variant="outline"
-                className={`text-base font-bold px-3 py-1 border ${getScoreColor(report.overallScore)}`}
+                className={`${getScoreColor(report.overallScore)}`}
               >
                 {report.overallScore.toFixed(1)}/10
               </Badge>
@@ -73,8 +73,8 @@ export function InterviewCard({report}: InterviewCardProps) {
           <CardContent className="pt-5 pb-2">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
-                <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  <BarChart3 className="h-3 w-3" />
+                <div className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
+                  
                   Technical
                 </div>
                 <div className="text-lg font-semibold">
@@ -89,8 +89,8 @@ export function InterviewCard({report}: InterviewCardProps) {
               </div>
 
               <div className="space-y-1">
-                <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  <MessageSquare className="h-3 w-3" />
+                <div className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
+                  
                   Communication
                 </div>
                 <div className="text-lg font-semibold">
