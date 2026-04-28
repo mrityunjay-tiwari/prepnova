@@ -6,25 +6,47 @@ export default function BgGradient({
   className?: string
 }) {
   return (
-    <div className={`relative isolate ${className}`}>
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 -top-40 
-        -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-30"
-      >
-        <div
-          style={{
-            clipPath:
-              'polygon(50% 0%, 63% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 3% 35%, 35% 35%)',
-          }}
-          className="relative left-[calc(50%-11rem)] aspect-[1155/678] 
-          w-[36.125rem] -translate-x-1/2 rotate-[30deg]
-          bg-linear-to-tr from-emerald-500 via-teal-500 to-cyan-500 
-          opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72rem]"
-        />
-      </div>
-      {children}
-    </div>
+   <div className="min-h-screen w-full bg-white dark:bg-black relative">
+  {/* Bottom Fade Stripes */}
+  <div
+    className="absolute bottom-0 left-0 w-full h-[50vh] z-0 pointer-events-none
+               [mask-image:linear-gradient(to_top,black,transparent)]"
+    style={{
+      backgroundImage: `
+        repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 0.01px,
+          rgba(243,244,246,1) 2px,
+          rgba(243,244,246,1) 4px
+        )
+      `,
+    }}
+  />
+
+  {/* Dark mode stripes */}
+  <div
+    className="absolute bottom-0 left-0 w-full h-[50vh] z-0 pointer-events-none hidden dark:block
+               [mask-image:linear-gradient(to_top,white,transparent)]"
+    style={{
+      backgroundImage: `
+        repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 2px,
+          rgba(55,65,81,0.4) 2px,
+          rgba(55,65,81,0.4) 4px
+        )
+      `,
+    }}
+  />
+
+  {/* Content */}
+  <div className="relative z-10">
+    {/* Your content/components */}
+    {children}
+  </div>
+</div>
   
   )
 }

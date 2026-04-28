@@ -17,6 +17,7 @@ import {useInterviewAgent} from "@/hooks/useInterviewAgent";
 import {useLiveFeedback} from "@/hooks/useLiveFeedback";
 import {useInterviewPosture} from "@/hooks/useInterviewPosture";
 import {useInterviewFinalization} from "@/hooks/useInterviewFinalization";
+import {useInterviewSectionStatus} from "@/hooks/useInterviewSectionStatus";
 import {Spinner} from "@/components/ui/spinner";
 import {
   Sidebar,
@@ -29,22 +30,32 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import {PanelLeft, Sparkles, ScanEye, UserRound, Bot} from "lucide-react";
+import {
+  PanelLeft,
+  Sparkles,
+  ScanEye,
+  UserRound,
+  Bot,
+  MessageSquareQuote,
+} from "lucide-react";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
 import AgentAvatar from "../ui/agent-avatar";
+import {getSectionLabel} from "@/utils/interview-config";
+import type {InterviewSetupConfig} from "@/utils/types";
 
 export default function StreamVideoCallRender({
-  role,
+  config,
   userId,
   userName,
   userToken,
 }: {
-  role: string;
+  config: InterviewSetupConfig;
   userId: string;
   userName: string;
   userToken: string;
 }) {
   const {client, call, callId, isReady} = useInterviewSession({
+    config,
     userId,
     userName,
     userToken,
@@ -72,11 +83,11 @@ export default function StreamVideoCallRender({
   }
 
   return (
-    <StreamVideo client={client}>
+      <StreamVideo client={client}>
       <StreamCall call={call}>
         <InterviewLayout
           callId={callId}
-          role={role}
+          config={config}
           userId={userId}
           userName={userName}
         />
@@ -87,12 +98,12 @@ export default function StreamVideoCallRender({
 
 const InterviewLayout = ({
   callId,
-  role,
+  config,
   userId,
   userName,
 }: {
   callId: string | null;
-  role: string;
+  config: InterviewSetupConfig;
   userId: string;
   userName: string;
 }) => {
@@ -103,6 +114,7 @@ const InterviewLayout = ({
   const remoteParticipants = useRemoteParticipants();
   const coachParticipant = remoteParticipants[0];
   const midFeedback = useLiveFeedback({callId, callingState});
+  const sectionStatus = useInterviewSectionStatus({callId, callingState});
   const {
     videoRef,
     canvasRef,
@@ -112,10 +124,10 @@ const InterviewLayout = ({
     getPostureStats,
   } = useInterviewPosture(callingState);
 
-  useInterviewAgent({callId, role, callingState});
+  useInterviewAgent({callId, role: config.role, callingState});
   useInterviewFinalization({
     callId,
-    role,
+    role: config.role,
     userId,
     callingState,
     getPostureStats,
@@ -169,8 +181,30 @@ const InterviewLayout = ({
                     Interview Stage
                   </p>
                   <h2 className="text-xl font-bold text-blue-950">
-                    {role.replace(/-/g, " ")}
+                    {config.role}
                   </h2>
+                  <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-slate-600">
+                    <span className="rounded-full border border-blue-950/10 bg-white/70 px-3 py-1 font-medium">
+                      {config.seniority}
+                    </span>
+                    {sectionStatus ? (
+                      <>
+                        <span className="rounded-full border border-blue-950/10 bg-white/70 px-3 py-1 font-medium">
+                          {sectionStatus.currentSectionLabel ??
+                            (sectionStatus.currentSection
+                              ? getSectionLabel(sectionStatus.currentSection)
+                              : "Section pending")}
+                        </span>
+                        <span className="rounded-full border border-blue-950/10 bg-white/70 px-3 py-1 font-medium">
+                          {formatElapsedTime(sectionStatus.elapsedSeconds)} /{" "}
+                          {formatElapsedTime(sectionStatus.durationSeconds)}
+                        </span>
+                        <span className="rounded-full border border-blue-950/10 bg-white/70 px-3 py-1 font-medium">
+                          {sectionStatus.questionsCompleted} answered
+                        </span>
+                      </>
+                    ) : null}
+                  </div>
                 </div>
                 <SidebarTrigger className="inline-flex rounded-full border border-blue-950/10 bg-white/80 px-4 py-2 text-sm font-semibold text-blue-950 shadow-sm backdrop-blur">
                   <PanelLeft className="mr-2 h-4 w-4" />
@@ -178,8 +212,20 @@ const InterviewLayout = ({
                 </SidebarTrigger>
               </div>
 
-              <StreamTheme className="mt-14 flex flex-1 flex-col bg-transparent">
-                <div className="mx-auto grid h-full w-full flex-1 max-w-8xl auto-rows-fr grid-cols-1 gap-4 lg:grid-cols-2">
+              <StreamTheme className="mt-8 flex min-h-0 flex-1 flex-col bg-transparent">
+                {sectionStatus?.currentQuestion ? (
+                  <div className="mx-auto mb-3 w-full max-w-5xl shrink-0 rounded-2xl border border-blue-950/10 bg-white/85 px-5 py-3 shadow-sm backdrop-blur">
+                    <div className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.24em] text-blue-900/60">
+                      <MessageSquareQuote className="h-4 w-4" />
+                      Current Question
+                    </div>
+                    <p className="text-sm font-medium leading-6 text-slate-800 md:text-base">
+                      {sectionStatus.currentQuestion}
+                    </p>
+                  </div>
+                ) : null}
+
+                <div className="mx-auto grid min-h-0 w-full flex-1 max-w-8xl auto-rows-fr grid-cols-1 gap-4 lg:grid-cols-2">
                   <InterviewStageTile
                     icon={UserRound}
                     label={userName || "You"}
@@ -194,7 +240,7 @@ const InterviewLayout = ({
                   />
                 </div>
 
-                <div className="mt-10 flex items-center justify-center gap-4 pb-2">
+                <div className="mt-4 flex shrink-0 items-center justify-center gap-4 pb-2">
                   <ToggleAudioPublishingButton />
                   <CancelCallButton />
                 </div>
@@ -306,6 +352,13 @@ const InterviewLayout = ({
     </SidebarProvider>
   );
 };
+
+function formatElapsedTime(totalSeconds: number) {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
 
 const InterviewStageTile = ({
   participant,

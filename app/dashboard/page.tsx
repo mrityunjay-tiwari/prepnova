@@ -6,12 +6,13 @@ import {PlusCircle, History} from "lucide-react";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import {Separator} from "@/components/ui/separator";
+import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
   const session = await auth();
 
   if (!session?.user?.id) {
-    return <LoginRequired />;
+    redirect("/signin");
   }
 
   const reports = await getUserInterviewReports(session.user.id);

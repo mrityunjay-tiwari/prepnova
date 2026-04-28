@@ -6,14 +6,17 @@ import {
   StreamVideoClient,
   type User,
 } from "@stream-io/video-react-sdk";
+import type {InterviewSetupConfig} from "@/utils/types";
 
 const apiKey = process.env.NEXT_PUBLIC_STREAM_API_KEY!;
 
 export function useInterviewSession({
+  config,
   userId,
   userName,
   userToken,
 }: {
+  config: InterviewSetupConfig;
   userId: string;
   userName: string;
   userToken: string;
@@ -22,14 +25,31 @@ export function useInterviewSession({
   const [call, setCall] = useState<Call | null>(null);
   const [callId, setCallId] = useState<string | null>(null);
   const [isReady, setIsReady] = useState(false);
+  const hasCreatedSession = useRef(false);
   const hasJoined = useRef(false);
 
   useEffect(() => {
+    if (hasCreatedSession.current) return;
+
+    hasCreatedSession.current = true;
+
     const createSession = async () => {
       const res = await fetch(
         "https://mrityunjay18-ai-interview-agent.hf.space/create-session",
         {
           method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            role: config.role,
+            seniority: config.seniority,
+            flow: config.flow.map((section) => ({
+              type: section.type,
+              duration_minutes: section.durationMinutes,
+              min_questions: section.minQuestions,
+              max_questions: section.maxQuestions,
+              focus_topics: section.focusTopics ?? [],
+            })),
+          }),
         },
       );
 
@@ -37,8 +57,11 @@ export function useInterviewSession({
       setCallId(data.call_id);
     };
 
-    createSession();
-  }, []);
+    createSession().catch((error) => {
+      hasCreatedSession.current = false;
+      console.error("Failed to create interview session", error);
+    });
+  }, [config]);
 
   useEffect(() => {
     if (!callId) return;

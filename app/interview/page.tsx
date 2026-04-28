@@ -11,7 +11,7 @@ export default async function InterviewMainPage() {
 
   return (
     <div>
-      <BgGradient />
+      {/* <BgGradient /> */}
       <InterviewPage
         userId={user.user?.id || ""}
         userName={user.user?.name || "You"}

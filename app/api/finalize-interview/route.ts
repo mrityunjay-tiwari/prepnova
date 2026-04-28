@@ -98,7 +98,7 @@ export async function POST(req: Request) {
     const transcript = buildTranscript(segments);
 
     const { object: report } = await generateObject({
-      model: openrouter("arcee-ai/trinity-large-preview:free"),
+      model: openrouter("openai/gpt-oss-20b:free"),
       schema: InterviewReportSchema,
       system: INTERVIEW_EVALUATOR_SYSTEM_PROMPT,
       prompt: transcript,

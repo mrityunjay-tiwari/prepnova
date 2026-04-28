@@ -38,7 +38,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <LayoutWrapper navbar={<Navbar />} bgGradient={<BgGradient />}>
+          <LayoutWrapper navbar={<Navbar />}>
             {children}
           </LayoutWrapper>
         </ThemeProvider>

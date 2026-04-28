@@ -34,7 +34,7 @@ export default async function ProgressPage() {
   const session = await auth();
 
   if (!session?.user?.id) {
-    return <LoginRequired />;
+    redirect('/signin');
   }
 
   const reports = await getUserInterviewReports(session.user.id);
