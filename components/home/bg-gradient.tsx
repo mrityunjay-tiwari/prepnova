@@ -6,10 +6,10 @@ export default function BgGradient({
   className?: string
 }) {
   return (
-   <div className="min-h-[130vh] rounded-b-3xl w-full bg-white dark:bg-black relative">
+   <div className="min-h-[130vh] w-full bg-white dark:bg-black relative">
   {/* Bottom Fade Stripes */}
   <div
-    className="absolute bottom-0 left-0 w-full h-[76vh] z-0 pointer-events-none
+    className="absolute rounded-b-2xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/8 bottom-0 left-0 w-[99%] h-[76vh] z-0 pointer-events-none
                [mask-image:linear-gradient(to_top,black,transparent)]"
     style={{
       backgroundImage: `

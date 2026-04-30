@@ -5,6 +5,7 @@ import { useState } from "react";
 import { FaXTwitter } from "react-icons/fa6";
 import { FaLinkedinIn } from "react-icons/fa";
 import { SiPeerlist } from "react-icons/si";
+import { FaGithub } from "react-icons/fa";
 
 type XIconProps = React.SVGProps<SVGSVGElement> & {
   className?: string;
@@ -86,6 +87,12 @@ const defaultPlatforms: Platform[] = [
     domain: "peerlist.io",
     icon: <SiPeerlist className="h-5 w-5" />,
     url: "https://threads.net/@educalvolpz",
+  },
+  {
+    name: "Github",
+    domain: "github.com",
+    icon: <FaGithub className="h-5 w-5" />,
+    url: "https://github.com/mrityunjay-tiwari/interview-tool",
   },
 ];
 

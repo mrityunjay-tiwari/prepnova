@@ -38,7 +38,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${sen.className} thin-scrollbar antialiased`}
+        className={`${sen.className} hide-scrollbar antialiased`}
       >
         <ThemeProvider
           attribute="class"

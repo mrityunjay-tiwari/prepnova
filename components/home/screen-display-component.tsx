@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "../ui/button";
+import AgentAvatar from "../ui/agent-avatar";
 
 export default function ScreenDisplayComponent() {
   return (
@@ -29,14 +30,17 @@ export default function ScreenDisplayComponent() {
 
         {/* Person 2 (Mira) */}
         <div className="relative w-1/2 h-full rounded-lg overflow-hidden shadow-sm bg-gray-100">
-          <Image
-            src="https://ik.imagekit.io/mrityunjay/prepnova/person-2_lzr6yo.webp?updatedAt=1777513835620"
+          {/* <Image
+            src="https://ik.imagekit.io/mrityunjay/prepnova/teach%20(11).png"
             alt="Mira"
             className="w-full h-full object-cover"
             fill
-          />
+          /> */}
+          <div className="flex items-center justify-center w-full h-full">
+            <AgentAvatar size={120} seed="" />
+          </div>
           <div className="absolute bottom-3.5 left-3.5 bg-black/30 text-white text-[13px] px-1.5 py-1 rounded-sm backdrop-blur-xl">
-            Mira
+            Kirosk (AI Interviewer)
           </div>
         </div>
       </div>

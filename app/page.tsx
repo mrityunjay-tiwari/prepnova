@@ -8,6 +8,7 @@ import {Screen} from "@/components/home/screen";
 import {Navbar} from "@/components/navbar/nav";
 import {auth} from "@/utils/auth";
 import HeroSection from "@/components/home/hero-section";
+import FLoatingInterviewReportPanel from "@/components/home/floating-interview-analysis-panel";
 
 export default async function Home() {
   const user = await auth();
@@ -23,7 +24,7 @@ export default async function Home() {
       <div className="-mt-92">
         <Screen />
       </div>
-      <SocialSelector />
+      {/* <FLoatingInterviewReportPanel /> */}
       <Footer />
     </main>
   );
