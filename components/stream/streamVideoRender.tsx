@@ -38,10 +38,19 @@ import {
   Bot,
   MessageSquareQuote,
 } from "lucide-react";
+import {PiStarFourFill} from "react-icons/pi";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
 import AgentAvatar from "../ui/agent-avatar";
 import {getSectionLabel} from "@/utils/interview-config";
 import type {InterviewSetupConfig} from "@/utils/types";
+import {PiSealQuestionFill} from "react-icons/pi";
+import { GrUserNew } from "react-icons/gr";
+import { IconType } from "react-icons/lib";
+import { TbPointerQuestion } from "react-icons/tb";
+import { PiQuestionMarkThin } from "react-icons/pi";
+import { PiSealQuestionThin } from "react-icons/pi";
+import { Separator } from "../ui/separator";
+import {AnimatedThemeToggler} from "../ui/animated-theme-toggler";
 
 export default function StreamVideoCallRender({
   config,
@@ -63,19 +72,22 @@ export default function StreamVideoCallRender({
 
   if (!client || !call || !isReady) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[70vh] w-full gap-4">
+      <div className="flex flex-col items-center justify-center min-h-screen w-full gap-4">
         <motion.div
           initial={{opacity: 0, y: 10}}
           animate={{opacity: 1, y: 0}}
           className="flex flex-col items-center gap-4"
         >
-          <div className="p-3 border border-gray-300 rounded-2xl bg-muted/20">
-            <div className="p-3 border border-gray-200 rounded-xl bg-background shadow-sm">
-              <Spinner className="h-8 w-8 text-blue-950" />
+          <div className="p-3 border dark:border-zinc-800 border-gray-300 bg-muted/20">
+            <div className="p-3 border dark:border-zinc-800 border-gray-200 bg-background shadow-sm">
+              <Spinner className="h-8 w-8 text-blue-950 dark:text-zinc-200" />
             </div>
           </div>
-          <p className="text-xl font-bold tracking-tight text-blue-950 animate-pulse">
+          <p className="text-xl font-bold tracking-tight text-blue-950 dark:text-zinc-100 animate-pulse">
             Configuring interview session...
+          </p>
+          <p className="text-xl font-bold tracking-tight text-blue-900 dark:text-zinc-300">
+            Best Of Luck, Your Interview is about to start!
           </p>
         </motion.div>
       </div>
@@ -83,7 +95,7 @@ export default function StreamVideoCallRender({
   }
 
   return (
-      <StreamVideo client={client}>
+    <StreamVideo client={client}>
       <StreamCall call={call}>
         <InterviewLayout
           callId={callId}
@@ -135,9 +147,9 @@ const InterviewLayout = ({
 
   if (callingState === CallingState.LEFT) {
     return (
-      <div className="flex flex-col items-center justify-center h-full w-full gap-4">
-        <Spinner className="h-6 w-6 text-blue-950" />
-        <p className="text-sm font-bold text-blue-950 uppercase tracking-widest">
+      <div className="flex flex-col items-center justify-center h-screen w-full gap-4">
+        <Spinner className="h-6 w-6 text-blue-950 dark:text-zinc-200" />
+        <p className="text-sm font-bold text-blue-950 dark:text-zinc-200 uppercase">
           Ending Call...
         </p>
       </div>
@@ -150,8 +162,8 @@ const InterviewLayout = ({
   ) {
     return (
       <div className="flex flex-col items-center justify-center h-full w-full gap-4">
-        <Spinner className="h-6 w-6 text-blue-950" />
-        <p className="text-sm font-bold text-blue-950 uppercase tracking-widest">
+        <Spinner className="h-6 w-6 text-blue-950 dark:text-zinc-200" />
+        <p className="text-sm font-bold text-blue-950 dark:text-zinc-200 uppercase">
           Reconnecting...
         </p>
       </div>
@@ -160,66 +172,70 @@ const InterviewLayout = ({
 
   if (callingState !== CallingState.JOINED) {
     return (
-      <div className="flex flex-col items-center justify-center h-full w-full gap-4">
-        <Spinner className="h-6 w-6 text-blue-950" />
-        <p className="text-sm font-bold text-blue-950 uppercase tracking-widest">
-          Joining Call...
+      <div className="flex flex-col items-center justify-center h-screen w-full gap-4">
+        <Spinner className="h-6 w-6 text-blue-950 dark:text-zinc-200" />
+        <p className="text-sm font-bold text-blue-950 dark:text-zinc-200 uppercase">
+          Ending Call...
         </p>
       </div>
     );
   }
 
   return (
-    <SidebarProvider defaultOpen>
-      <div className="h-[calc(100vh-96px)] w-full overflow-hidden">
+    <SidebarProvider defaultOpen style={{ "--sidebar-width": "24rem" } as React.CSSProperties}>
+      <div className="h-[calc(100vh)] w-full flex items-center justify-center overflow-hidden">
         <SidebarInset className="bg-transparent">
           <div className="flex h-full">
-            <div className="flex min-w-0 flex-1 flex-col px-4 pb-4 pt-5 md:px-6">
+            <div className="mx-auto flex w-full max-w-7xl min-w-0 flex-1 flex-col px-4 pb-4 pt-5 md:px-6">
               <div className="mb-3 flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.28em] text-blue-900/55">
+                  <p className="text-xs font-bold uppercase text-blue-900/55 dark:text-zinc-400">
                     Interview Stage
                   </p>
-                  <h2 className="text-xl font-bold text-blue-950">
+                  <h2 className="text-xl font-bold text-blue-950 dark:text-zinc-100">
                     {config.role}
                   </h2>
-                  <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-slate-600">
-                    <span className="rounded-full border border-blue-950/10 bg-white/70 px-3 py-1 font-medium">
+                  <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-slate-600 dark:text-zinc-400">
+                    <span className="rounded-full border dark:border-zinc-800 border-blue-950/10 dark:bg-zinc-900/80 bg-white/70 dark:text-zinc-300 px-1.5 py-0.5 text-xs font-medium">
                       {config.seniority}
                     </span>
                     {sectionStatus ? (
                       <>
-                        <span className="rounded-full border border-blue-950/10 bg-white/70 px-3 py-1 font-medium">
+                        <span className="rounded-full border dark:border-zinc-800 border-blue-950/10 dark:bg-zinc-900/80 bg-white/70 dark:text-zinc-300 px-2 py-0.5 text-xs font-medium">
                           {sectionStatus.currentSectionLabel ??
                             (sectionStatus.currentSection
                               ? getSectionLabel(sectionStatus.currentSection)
                               : "Section pending")}
                         </span>
-                        <span className="rounded-full border border-blue-950/10 bg-white/70 px-3 py-1 font-medium">
+                        <span className="rounded-full border dark:border-zinc-800 border-blue-950/10 dark:bg-zinc-900/80 bg-white/70 dark:text-zinc-300 px-2 py-0.5 text-xs font-medium">
                           {formatElapsedTime(sectionStatus.elapsedSeconds)} /{" "}
                           {formatElapsedTime(sectionStatus.durationSeconds)}
                         </span>
-                        <span className="rounded-full border border-blue-950/10 bg-white/70 px-3 py-1 font-medium">
+                        <span className="rounded-full border dark:border-zinc-800 border-blue-950/10 dark:bg-zinc-900/80 bg-white/70 dark:text-zinc-300 px-2 py-0.5 text-xs font-medium">
                           {sectionStatus.questionsCompleted} answered
                         </span>
                       </>
                     ) : null}
                   </div>
                 </div>
-                <SidebarTrigger className="inline-flex rounded-full border border-blue-950/10 bg-white/80 px-4 py-2 text-sm font-semibold text-blue-950 shadow-sm backdrop-blur">
+                <div className="flex items-center gap-2">
+
+                <AnimatedThemeToggler />
+                <SidebarTrigger className="inline-flex text-sm font-semibold text-blue-950 dark:text-zinc-200 shadow-sm backdrop-blur">
                   <PanelLeft className="mr-2 h-4 w-4" />
-                  Analysis
+                  
                 </SidebarTrigger>
+                </div>
               </div>
 
               <StreamTheme className="mt-8 flex min-h-0 flex-1 flex-col bg-transparent">
                 {sectionStatus?.currentQuestion ? (
-                  <div className="mx-auto mb-3 w-full max-w-5xl shrink-0 rounded-2xl border border-blue-950/10 bg-white/85 px-5 py-3 shadow-sm backdrop-blur">
-                    <div className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.24em] text-blue-900/60">
-                      <MessageSquareQuote className="h-4 w-4" />
+                  <div className="mx-auto mb-3 w-full shrink-0 rounded-sm border dark:border-zinc-800 border-blue-950/10 dark:bg-zinc-900/80 bg-white/85 px-5 py-3">
+                    <div className="mb-2 flex items-center gap-1 text-xs font-medium uppercase text-blue-900/60 dark:text-zinc-400">
+                      <PiSealQuestionThin className="h-4 w-4" />
                       Current Question
                     </div>
-                    <p className="text-sm font-medium leading-6 text-slate-800 md:text-base">
+                    <p className="text-xs text-slate-800 dark:text-zinc-200 md:text-sm">
                       {sectionStatus.currentQuestion}
                     </p>
                   </div>
@@ -233,7 +249,7 @@ const InterviewLayout = ({
                     accent="from-sky-500/30 via-cyan-500/15 to-transparent"
                   />
                   <InterviewStageTile
-                    icon={Bot}
+                    icon={GrUserNew}
                     label="Interview Coach"
                     participant={coachParticipant}
                     accent="from-blue-950/40 via-blue-800/20 to-transparent"
@@ -251,44 +267,39 @@ const InterviewLayout = ({
               side="right"
               variant="floating"
               collapsible="offcanvas"
-              className="top-16 h-[calc(100vh-170px)] shadow-none"
+              className="top-1/2 bottom-auto -translate-y-1/2 justify-center border-none! p-0! [&>[data-sidebar=sidebar]]:border-none! rounded-lg! max-h-[calc(70vh)] h-auto shadow-2xl"
             >
-              <SidebarHeader className="gap-3 border-b border-sidebar-border/70 px-3 py-3">
+              <SidebarHeader className="p-2.5">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-sidebar-foreground/55">
-                      Analysis
-                    </p>
-                    <h3 className="text-lg font-bold text-sidebar-foreground">
-                      Interview Signals
-                    </h3>
-                  </div>
+                  <h3 className="text-sidebar-foreground flex items-center gap-2">
+                    <PiStarFourFill className="w-3.5 h-3.5 backdrop-brightness-200 text-neutral-700 dark:text-neutral-300" />
+                    Live Interview Feedback
+                  </h3>
                 </div>
               </SidebarHeader>
-
-              <SidebarContent className="px-2 py-3">
+                <Separator />
+              <SidebarContent className="p-2.5 items-center justify-center">
                 <SidebarGroup className="p-0">
-                  <SidebarGroupLabel className="px-2 text-sidebar-foreground/65">
+                  <SidebarGroupLabel className="px-2 text-sm text-sidebar-foreground/65 flex items-center">
                     Live Guidance
                   </SidebarGroupLabel>
                   <SidebarGroupContent className="px-1">
                     {midFeedback ? (
-                      <div className="rounded-3xl border border-sidebar-border/70 bg-white/80 p-4 shadow-sm">
-                        <div className="mb-2 flex items-center justify-between">
-                          <div className="flex items-center gap-2 text-sm font-semibold text-slate-800">
-                            <Sparkles className="h-4 w-4 text-amber-500" />
-                            Live AI Feedback
+                      <div className="rounded dark:border-0 border border-sidebar-border/70 dark:bg-zinc-900/80 bg-white/80 p-2.5 shadow-lg">
+                        <div className="mb-1.5 flex items-center justify-between">
+                          <div className="flex items-center text-sm text-slate-800 dark:text-zinc-200">
+                            Last Answer Feedback
                           </div>
-                          <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-700">
+                          <span className="rounded-none dark:bg-amber-500/20 dark:text-amber-300 bg-amber-50 px-1.5 py-0.5 text-[10px] text-amber-700">
                             {midFeedback.score}/10
                           </span>
                         </div>
-                        <p className="text-sm leading-relaxed text-slate-600">
+                        <p className="text-xs leading-relaxed text-slate-600 dark:text-zinc-400">
                           {midFeedback.short_feedback}
                         </p>
                       </div>
                     ) : (
-                      <div className="rounded-lg border border-sidebar-border/70 bg-white/55 p-4 text-sm text-slate-500">
+                      <div className="rounded dark:border-0 border border-sidebar-border/70 dark:bg-zinc-900/50 dark:text-zinc-400 bg-white/55 p-2.5 text-xs text-slate-500 shadow-lg">
                         Live feedback will appear here once the conversation is
                         underway.
                       </div>
@@ -297,22 +308,26 @@ const InterviewLayout = ({
                 </SidebarGroup>
 
                 <SidebarGroup className="p-0 pt-4">
-                  <SidebarGroupLabel className="px-2 text-sidebar-foreground/65">
+                  <SidebarGroupLabel className="px-2 text-sm dark:text-neutral-500 text-sidebar-foreground/65">
                     Presence Tracking
                   </SidebarGroupLabel>
                   <SidebarGroupContent className="px-1">
-                    <div className="rounded-lg border border-sidebar-border/70 bg-white/85 p-3">
-                      <div className="mb-2 flex items-center gap-2 font-semibold text-slate-800">
-                        <ScanEye className="h-4 w-4 text-emerald-600" />
-                        Posture & Presence
+                    <div className="rounded dark:border-0 border border-sidebar-border/70 dark:bg-zinc-900/80 bg-white/85 px-3 py-2.5">
+                      <div className="mb-0.5 flex items-center justify-between">
+                        <div className="mb-2 text-sm flex items-center gap-2 text-slate-800 dark:text-zinc-200">
+                          Posture & Presence
+                        </div>
+                        <span className="rounded-none dark:bg-amber-500/20 dark:text-amber-300 bg-amber-50 px-1.5 py-0.5 text-[10px] text-amber-700">
+                          {postureScore}/1
+                        </span>
                       </div>
 
                       {hasCamera === false ? (
-                        <div className="flex items-center justify-center w-full aspect-video rounded-md bg-gray-100 text-sm text-gray-500 font-medium border border-dashed border-gray-300">
+                        <div className="flex items-center justify-center w-full aspect-video rounded-md dark:bg-zinc-800/50 dark:text-zinc-400 dark:border-zinc-700 bg-gray-100 text-sm text-gray-500 font-medium border border-dashed border-gray-300">
                           Camera disabled
                         </div>
                       ) : (
-                        <div className="relative mx-auto w-full max-w-[280px] aspect-video rounded-md overflow-hidden bg-gray-100">
+                        <div className="relative mx-auto w-full aspect-video rounded-xs overflow-hidden dark:bg-zinc-900 bg-gray-100">
                           <video
                             ref={videoRef}
                             autoPlay
@@ -329,8 +344,7 @@ const InterviewLayout = ({
                         </div>
                       )}
 
-                      <div className="mt-2 text-sm leading-relaxed font-medium text-slate-700">
-                        Score: {postureScore} -{" "}
+                      <div className="mt-2 text-xs leading-relaxed font-medium text-slate-700 dark:text-zinc-300">
                         <span
                           className={
                             postureScore < 0.5
@@ -338,7 +352,8 @@ const InterviewLayout = ({
                               : "text-emerald-600"
                           }
                         >
-                          {postureScore < 0.5 ? "Poor" : "Good"} {nudgeMessage}
+                          {postureScore < 0.5 ? "Poor - " : "Good - "}{" "}
+                          {nudgeMessage || "Posture looks good!"}
                         </span>
                       </div>
                     </div>
@@ -368,17 +383,17 @@ const InterviewStageTile = ({
 }: {
   participant?: StreamVideoParticipant;
   label: string;
-  icon: typeof UserRound;
+  icon: IconType;
   accent: string;
 }) => {
   return (
-    <div className="relative w-full h-full overflow-hidden rounded-xl border border-blue-950/10 bg-blue-950 shadow-[0_24px_60px_-28px_rgba(15,23,42,0.55)]">
+    <div className="relative w-full h-full overflow-hidden rounded-sm border dark:border-zinc-800 border-blue-950/10 dark:bg-zinc-950 bg-blue-950 shadow-[0_24px_60px_-28px_rgba(15,23,42,0.55)]">
       <div
         className={`pointer-events-none absolute inset-0 bg-linear-to-br ${accent}`}
       />
       <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-5 py-4">
-        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs font-semibold tracking-wide text-white/90 backdrop-blur">
-          <Icon className="h-3.5 w-3.5" />
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs text-white/90 backdrop-blur">
+          <Icon className="h-3 w-3" />
           {label}
         </div>
       </div>

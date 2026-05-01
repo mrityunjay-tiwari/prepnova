@@ -16,10 +16,24 @@ import {
   ChevronRight,
   BarChart3,
   MessageSquare,
+  TrashIcon,
 } from "lucide-react";
 import {format} from "date-fns";
 import Link from "next/link";
 import {motion} from "motion/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { deleteInterviewReport } from "@/app/actions/userReports";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 type InterviewReport = {
   id: string;
@@ -36,6 +50,22 @@ type InterviewCardProps = {
 
 export function InterviewCard({report}: InterviewCardProps) {
   const formattedDate = format(new Date(report.createdAt), "PPP");
+  const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleDelete = async () => {
+    try {
+      setIsDeleting(true);
+      await deleteInterviewReport(report.id);
+      setIsDialogOpen(false);
+      router.refresh();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   // Helper to determine score color
   const getScoreColor = (score: number) => {
@@ -47,9 +77,34 @@ export function InterviewCard({report}: InterviewCardProps) {
   };
 
   return (
-    <motion.div whileHover={{y: -4}} transition={{duration: 0.2}}>
-      <Link href={`/dashboard/reports/${report.id}`} className="block group">
-        <Card className="rounded-none overflow-hidden border-muted/40 hover:border-primary/30 hover:shadow-lg transition-all duration-300 bg-linear-to-br from-card to-card/50">
+    <>
+      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Interview Record</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this interview? This action cannot be undone and will permanently remove all associated records.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                handleDelete();
+              }}
+              disabled={isDeleting}
+              className="bg-red-500 hover:bg-red-600 text-white"
+            >
+              {isDeleting ? "Deleting..." : "Confirm Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <motion.div whileHover={{y: -4}} transition={{duration: 0.2}}>
+        <Link href={`/dashboard/reports/${report.id}`} className="block group">
+        <Card className="rounded-sm overflow-hidden border-muted/40 hover:border-primary/30 hover:shadow-lg transition-all duration-300 bg-linear-to-br from-card to-card/50">
           <CardHeader className="pb-1">
             <div className="flex justify-between items-start">
               <div>
@@ -61,12 +116,25 @@ export function InterviewCard({report}: InterviewCardProps) {
                   {formattedDate}
                 </CardDescription>
               </div>
-              <Badge
+              <div className="flex gap-2 items-center justify-center">
+                <Badge
                 variant="outline"
-                className={`${getScoreColor(report.overallScore)}`}
+                className={`${getScoreColor(report.overallScore)} text-xs`}
               >
                 {report.overallScore.toFixed(1)}/10
               </Badge>
+              <div
+                role="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setIsDialogOpen(true);
+                }}
+                className="p-1 hover:bg-red-500/10 rounded-md transition-colors group/trash cursor-pointer z-10"
+              >
+                <TrashIcon className="h-4 w-4 text-muted-foreground group-hover/trash:text-red-500 transition-colors" />
+              </div>
+              </div>
             </div>
           </CardHeader>
 
@@ -119,5 +187,6 @@ export function InterviewCard({report}: InterviewCardProps) {
         </Card>
       </Link>
     </motion.div>
+    </>
   );
 }

@@ -31,6 +31,9 @@ import type {
   InterviewSeniority,
   InterviewSetupConfig,
 } from "@/utils/types";
+import { FaCubesStacked } from "react-icons/fa6";
+import { Separator } from "../ui/separator";
+import {AnimatedThemeToggler} from "../ui/animated-theme-toggler";
 
 export default function InterviewSetup({
   role,
@@ -80,44 +83,50 @@ export default function InterviewSetup({
 
   return (
     <div className="w-full px-4 py-8 md:px-6">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
-        <div className="space-y-2">
-          <p className="text-xs font-bold uppercase tracking-[0.28em] text-blue-900/55">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-3.5">
+        <div className="space-y-1">
+          <p className="text-xs font-bold uppercase flex items-center gap-1 text-blue-900/55 dark:text-blue-400/80">
+            <FaCubesStacked className="w-2.5 h-2.5" />
             Interview Setup
           </p>
-          <h1 className="text-3xl font-bold text-blue-950">
-            Configure the interview before the call starts
+          <div className="flex justify-between items-baseline">
+            <div>
+              <h1 className="text-3xl font-bold text-blue-950 dark:text-zinc-50">
+            Configure your interview flow before the call starts!
           </h1>
-          <p className="max-w-3xl text-sm leading-6 text-slate-600">
-            Phase 1 uses a backend-owned section engine. You choose the flow and
-            target level here, then the backend controls section timing and
-            transitions during the session.
+          <p className="max-w-3xl text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+            Select the target level you are preparing to let us decide the type of question to be asked! <br /> And configure for how much time and what all sections to be discussed in your interview.
           </p>
+            </div>
+            <div>
+                <AnimatedThemeToggler />
+            </div>
+          </div>
         </div>
-
+        <Separator />
         <div className="grid gap-6 xl:grid-cols-[1.35fr_0.9fr]">
-          <Card className="border-blue-950/10 bg-white/90 shadow-sm">
+          <Card className="border-blue-950/10 bg-white/90 shadow-sm dark:border-white/10 dark:bg-zinc-900/50 dark:backdrop-blur-sm rounded-sm">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-xl text-blue-950">
-                <BriefcaseBusiness className="h-5 w-5 text-blue-900" />
+              <CardTitle className="flex items-center gap-2 text-xl text-blue-950 dark:text-zinc-100">
+                
                 Interview Plan
               </CardTitle>
               <CardDescription>
-                Role is preselected. Configure the target level and interview
+                You selected Role in last page. Now Configure the target level and interview
                 sections.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <p className="text-sm font-medium text-slate-700">Role</p>
-                  <div className="rounded-xl border border-blue-950/10 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-800">
+                  <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Role</p>
+                  <div className="rounded-sm border border-blue-950/10 bg-zinc-50 px-4 py-1.5 text-sm font-semibold text-zinc-800 dark:border-white/10 dark:bg-zinc-800/50 dark:text-zinc-200">
                     {config.role}
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <p className="text-sm font-medium text-slate-700">
+                  <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
                     Preparing for
                   </p>
                   <Select
@@ -129,7 +138,7 @@ export default function InterviewSetup({
                       }))
                     }
                   >
-                    <SelectTrigger className="w-full rounded-xl">
+                    <SelectTrigger className="w-full rounded-sm">
                       <SelectValue placeholder="Select level" />
                     </SelectTrigger>
                     <SelectContent>
@@ -146,16 +155,16 @@ export default function InterviewSetup({
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-semibold text-slate-800">
+                    <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
                       Interview flow
                     </p>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
                       Each section defines the backend timing and transition
                       guardrails.
                     </p>
                   </div>
                   <Select onValueChange={(value) => addSection(value as InterviewSectionType)}>
-                    <SelectTrigger className="w-[220px] rounded-xl">
+                    <SelectTrigger className="w-[220px] rounded-sm border shadow-lg">
                       <SelectValue placeholder="Add section" />
                     </SelectTrigger>
                     <SelectContent>
@@ -177,14 +186,14 @@ export default function InterviewSetup({
                     return (
                       <div
                         key={section.id}
-                        className="rounded-2xl border border-blue-950/10 bg-slate-50/80 p-4"
+                        className="rounded-sm border border-blue-950/10 bg-zinc-50/80 p-4 dark:border-white/10 dark:bg-zinc-800/40"
                       >
                         <div className="mb-3 flex items-start justify-between gap-3">
                           <div>
-                            <p className="text-sm font-semibold text-slate-900">
+                            <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                               Section {index + 1}: {getSectionLabel(section.type)}
                             </p>
-                            <p className="mt-1 text-sm text-slate-500">
+                            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                               {template?.description}
                             </p>
                           </div>
@@ -192,7 +201,7 @@ export default function InterviewSetup({
                             type="button"
                             variant="ghost"
                             size="icon-sm"
-                            className="rounded-full text-slate-500"
+                            className="rounded-sm text-zinc-500 dark:text-zinc-400 dark:hover:text-zinc-300 dark:hover:bg-zinc-700"
                             onClick={() => removeSection(section.id)}
                             disabled={config.flow.length === 1}
                           >
@@ -202,7 +211,7 @@ export default function InterviewSetup({
 
                         <div className="grid gap-3 md:grid-cols-[1.1fr_0.7fr_0.7fr_0.7fr]">
                           <div className="space-y-2">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            <p className="text-xs font-semibold uppercase text-zinc-500 dark:text-zinc-400">
                               Section type
                             </p>
                             <Select
@@ -219,7 +228,7 @@ export default function InterviewSetup({
                                 })
                               }
                             >
-                              <SelectTrigger className="w-full rounded-xl">
+                              <SelectTrigger className="w-full rounded-sm">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
@@ -233,11 +242,12 @@ export default function InterviewSetup({
                           </div>
 
                           <div className="space-y-2">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            <p className="text-xs font-semibold uppercase text-zinc-500 dark:text-zinc-400">
                               Minutes
                             </p>
                             <Input
                               type="number"
+                              className="rounded-sm"
                               min={5}
                               max={45}
                               value={section.durationMinutes}
@@ -251,11 +261,12 @@ export default function InterviewSetup({
                           </div>
 
                           <div className="space-y-2">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            <p className="text-xs font-semibold uppercase text-zinc-500 dark:text-zinc-400">
                               Min Qs
                             </p>
                             <Input
                               type="number"
+                              className="rounded-sm"
                               min={1}
                               max={25}
                               value={section.minQuestions}
@@ -269,11 +280,12 @@ export default function InterviewSetup({
                           </div>
 
                           <div className="space-y-2">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            <p className="text-xs font-semibold uppercase text-zinc-500 dark:text-zinc-400">
                               Max Qs
                             </p>
                             <Input
                               type="number"
+                              className="rounded-sm"
                               min={1}
                               max={30}
                               value={section.maxQuestions}
@@ -294,24 +306,24 @@ export default function InterviewSetup({
             </CardContent>
           </Card>
 
-          <Card className="border-blue-950/10 bg-white/90 shadow-sm">
+          <Card className="border-blue-950/10 bg-white/90 shadow-sm dark:border-white/10 dark:bg-zinc-900/50 dark:backdrop-blur-sm rounded-sm">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-xl text-blue-950">
-                <Sparkles className="h-5 w-5 text-amber-500" />
+              <CardTitle className="flex items-center gap-2 text-xl text-blue-950 dark:text-zinc-100">
+                
                 Session Summary
               </CardTitle>
               <CardDescription>
-                This is the configuration that will be sent to the backend
+                This is the final configuration that will be sent to the backend
                 section engine.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="rounded-2xl border border-blue-950/10 bg-slate-50/90 p-4">
-                <p className="text-sm font-semibold text-slate-800">
+              <div className="rounded-sm border border-blue-950/10 bg-zinc-50/90 p-4 dark:border-white/10 dark:bg-zinc-800/40">
+                <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
                   {config.seniority} · {config.role}
                 </p>
-                <div className="mt-2 flex items-center gap-2 text-sm text-slate-600">
-                  <Clock3 className="h-4 w-4 text-blue-900/70" />
+                <div className="mt-2 flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+                  <Clock3 className="h-4 w-4" />
                   Total planned time: {totalDuration} minutes
                 </div>
               </div>
@@ -320,17 +332,17 @@ export default function InterviewSetup({
                 {config.flow.map((section) => (
                   <div
                     key={section.id}
-                    className="rounded-xl border border-blue-950/10 bg-white/80 px-4 py-3"
+                    className="rounded-sm border border-blue-950/10 bg-white/80 px-4 py-3 dark:border-white/10 dark:bg-zinc-800/50"
                   >
                     <div className="flex items-center justify-between gap-3">
-                      <p className="text-sm font-semibold text-slate-800">
+                      <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
                         {getSectionLabel(section.type)}
                       </p>
-                      <p className="text-sm text-slate-500">
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400">
                         {section.durationMinutes} min
                       </p>
                     </div>
-                    <p className="mt-1 text-sm text-slate-500">
+                    <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                       Guardrails: {section.minQuestions} to {section.maxQuestions}{" "}
                       completed question cycles
                     </p>
@@ -339,7 +351,8 @@ export default function InterviewSetup({
               </div>
 
               <Button
-                className="mt-2 h-11 w-full rounded-xl"
+                size={"lg"}
+                className="mt-2 w-full rounded-full"
                 onClick={() => onStart(config)}
               >
                 <Plus className="h-4 w-4" />

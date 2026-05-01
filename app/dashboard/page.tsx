@@ -22,10 +22,10 @@ export default async function DashboardPage() {
       <main className="container mx-auto md:px-8 px-4 py-8 max-w-7xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <h2 className="font-serif text-3xl font-bold mb-2">
+            <h2 className="text-3xl font-bold mb-2">
               My Interviews
             </h2>
-            <p className="font-serif text-muted-foreground flex items-center gap-1.5 font-medium">
+            <p className="text-muted-foreground flex items-center gap-1.5 font-medium">
               <History className="h-4 w-4" />
               Viewing your recent performance and feedback history.
             </p>
@@ -33,7 +33,7 @@ export default async function DashboardPage() {
           <Link href="/interview">
             <Button className="rounded-none">
               <Plus className="h-5 w-5" />
-              New Mock Interview
+              Start Interview
             </Button>
           </Link>
         </div>

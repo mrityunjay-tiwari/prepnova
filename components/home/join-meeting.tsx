@@ -92,7 +92,7 @@ export default function JoinMeeting() {
             )}
           />
 
-          <Button type="submit" className="md:w-full w-8 rounded-full">
+          <Button type="submit" className="hover:cursor-pointer md:w-full w-8 rounded-full">
             Start Your Interview
           </Button>
         </form>
