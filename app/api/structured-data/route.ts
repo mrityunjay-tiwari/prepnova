@@ -34,7 +34,7 @@ export async function POST(req: Request) {
       .join("\n\n");
 
     const result = streamObject({
-      model: openrouter("arcee-ai/trinity-large-preview:free"),
+      model: openrouter("openai/gpt-oss-20b:free"),
       schema: InterviewReportSchema,
       system: INTERVIEW_EVALUATOR_SYSTEM_PROMPT,
       prompt: transcript,

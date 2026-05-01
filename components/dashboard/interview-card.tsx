@@ -104,8 +104,8 @@ export function InterviewCard({report}: InterviewCardProps) {
 
       <motion.div whileHover={{y: -4}} transition={{duration: 0.2}}>
         <Link href={`/dashboard/reports/${report.id}`} className="block group">
-        <Card className="rounded-sm overflow-hidden border-muted/40 hover:border-primary/30 hover:shadow-lg transition-all duration-300 bg-linear-to-br from-card to-card/50">
-          <CardHeader className="pb-1">
+        <Card className="rounded-sm p-0 overflow-hidden border-muted/40 hover:border-primary/30 hover:shadow-lg transition-all duration-300 bg-linear-to-br from-card to-card/50">
+          <CardHeader className="pb-1 pt-2.5">
             <div className="flex justify-between items-start">
               <div>
                 <CardTitle className="text-xl font-semibold group-hover:text-primary transition-colors">
@@ -138,17 +138,17 @@ export function InterviewCard({report}: InterviewCardProps) {
             </div>
           </CardHeader>
 
-          <CardContent className="pt-2 pb-2">
+          <CardContent className="">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
                   
                   Technical
                 </div>
-                <div className="text-lg font-semibold">
+                <div className="font-medium">
                   {report.technicalScore.toFixed(1)}/10
                 </div>
-                <div className="w-full bg-muted h-1.5 overflow-hidden">
+                <div className="w-full bg-muted h-1 overflow-hidden">
                   <div
                     className="rounded-none bg-primary h-full transition-all duration-500"
                     style={{width: `${report.technicalScore * 10}%`}}
@@ -161,10 +161,10 @@ export function InterviewCard({report}: InterviewCardProps) {
                   
                   Communication
                 </div>
-                <div className="text-lg font-semibold">
+                <div className="font-medium">
                   {report.communicationScore.toFixed(1)}/10
                 </div>
-                <div className="w-full bg-muted h-1.5 overflow-hidden">
+                <div className="w-full bg-muted h-1 overflow-hidden">
                   <div
                     className="bg-primary h-full rounded-none transition-all duration-500"
                     style={{width: `${report.communicationScore * 10}%`}}

@@ -168,7 +168,7 @@ export async function POST(req: Request) {
     const flow = reportContext.flow || [];
 
     const { object } = await generateObject({
-      model: openrouter("openai/gpt-4o-mini"),
+      model: openrouter("openai/gpt-oss-20b:free"),
       schema: InterviewReportSchema,
       system: INTERVIEW_EVALUATOR_SYSTEM_PROMPT,
       prompt: buildReportPrompt({
@@ -186,44 +186,27 @@ export async function POST(req: Request) {
       data: {
         userId,
         role: roleForReport,
+        seniority,
         technicalScore: report.technicalScore,
         problemSolvingScore: report.problemSolvingScore,
         communicationScore: report.communicationScore,
         confidenceScore: report.confidenceScore,
         behavioralScore: report.behavioralScore,
         overallScore: report.overallScore,
-        strengths: report.strengths,
-        improvementAreas: report.improvementAreas,
-        finalSummary: report.finalSummary,
+        readinessLevel: report.readinessLevel,
         postureMin: postureStats.min,
         postureMax: postureStats.max,
         postureAvg: postureStats.avg,
+        postureSummary: report.postureSummary,
+        strengths: report.strengths,
+        improvementAreas: report.improvementAreas,
+        actionPlan: report.actionPlan,
+        communicationSummary: report.communicationSummary,
+        sectionBreakdown: report.sectionBreakdown,
+        flowUsed: flow,
+        finalSummary: report.finalSummary,
       },
     });
-
-    await prisma.$executeRawUnsafe(
-      `
-        UPDATE "InterviewReport"
-        SET
-          "seniority" = $1,
-          "readinessLevel" = $2,
-          "communicationSummary" = $3,
-          "postureSummary" = $4,
-          "actionPlan" = CAST($5 AS jsonb),
-          "sectionBreakdown" = CAST($6 AS jsonb),
-          "flowUsed" = CAST($7 AS jsonb)
-        WHERE "id" = $8
-      `,
-      seniority,
-      report.readinessLevel,
-      report.communicationSummary,
-      report.postureSummary,
-      JSON.stringify(report.actionPlan),
-      JSON.stringify(report.sectionBreakdown),
-      JSON.stringify(flow),
-      savedReport.id,
-    );
-
     return Response.json({
       success: true,
       finalized: true,
