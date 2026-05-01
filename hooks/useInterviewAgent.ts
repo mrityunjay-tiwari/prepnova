@@ -2,6 +2,7 @@
 
 import {useEffect, useRef} from "react";
 import {CallingState} from "@stream-io/video-react-sdk";
+import {buildInterviewApiUrl} from "@/utils/interview-api";
 
 export function useInterviewAgent({
   callId,
@@ -24,17 +25,14 @@ export function useInterviewAgent({
     const startAgentWithDelay = async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      await fetch(
-        "https://mrityunjay18-ai-interview-agent.hf.space/start-agent",
-        {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({
-            role,
-            call_id: callId,
-          }),
-        },
-      );
+      await fetch(buildInterviewApiUrl("/start-agent"), {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          role,
+          call_id: callId,
+        }),
+      });
     };
 
     startAgentWithDelay();

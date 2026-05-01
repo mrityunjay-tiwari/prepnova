@@ -3,6 +3,7 @@
 import {useEffect, useState} from "react";
 import {CallingState} from "@stream-io/video-react-sdk";
 import type {MidFeedback} from "@/utils/types";
+import {buildInterviewApiUrl} from "@/utils/interview-api";
 
 export function useLiveFeedback({
   callId,
@@ -20,7 +21,7 @@ export function useLiveFeedback({
     const interval = setInterval(async () => {
       try {
         const res = await fetch(
-          `https://mrityunjay18-ai-interview-agent.hf.space/latest-feedback/${callId}?t=${Date.now()}`,
+          `${buildInterviewApiUrl(`/latest-feedback/${callId}`)}?t=${Date.now()}`,
           {
             cache: "no-store",
             headers: {

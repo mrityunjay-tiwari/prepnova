@@ -3,6 +3,7 @@ import { openrouter } from "@openrouter/ai-sdk-provider";
 import { prisma } from "@/prisma/src";
 import { InterviewReportSchema } from "@/app/api/structured-data/schema";
 import { INTERVIEW_EVALUATOR_SYSTEM_PROMPT } from "@/utils/system-prompt";
+import {buildInterviewApiUrl, INTERVIEW_API_BASE_URL} from "@/utils/interview-api";
 import type {
   FinalizeInterviewRequest,
   InterviewSegment,
@@ -43,12 +44,15 @@ type RemoteReportContext = {
   }>;
 };
 
+if (!INTERVIEW_API_BASE_URL) {
+  throw new Error("INTERVIEW_API_BASE_URL is not configured");
+}
+
 async function getSegmentsWithRetry(callId: string, attempts = 5, delayMs = 1500) {
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
-    const response = await fetch(
-      `https://mrityunjay18-ai-interview-agent.hf.space/segments/${callId}`,
-      { cache: "no-store" },
-    );
+    const response = await fetch(buildInterviewApiUrl(`/segments/${callId}`), {
+      cache: "no-store",
+    });
 
     if (!response.ok) {
       throw new Error(`Failed to fetch interview segments: ${response.status}`);
@@ -71,10 +75,9 @@ async function getSegmentsWithRetry(callId: string, attempts = 5, delayMs = 1500
 }
 
 async function getReportContext(callId: string): Promise<RemoteReportContext> {
-  const response = await fetch(
-    `https://mrityunjay18-ai-interview-agent.hf.space/report-context/${callId}`,
-    { cache: "no-store" },
-  );
+  const response = await fetch(buildInterviewApiUrl(`/report-context/${callId}`), {
+    cache: "no-store",
+  });
 
   if (!response.ok) {
     return {};
@@ -142,7 +145,7 @@ export async function POST(req: Request) {
   finalizedInterviewCalls.add(callId);
 
   try {
-    await fetch("https://mrityunjay18-ai-interview-agent.hf.space/end-call", {
+    await fetch(buildInterviewApiUrl("/end-call"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ call_id: callId }),

@@ -7,6 +7,7 @@ import {
   type User,
 } from "@stream-io/video-react-sdk";
 import type {InterviewSetupConfig} from "@/utils/types";
+import {buildInterviewApiUrl} from "@/utils/interview-api";
 
 const apiKey = process.env.NEXT_PUBLIC_STREAM_API_KEY!;
 
@@ -34,24 +35,21 @@ export function useInterviewSession({
     hasCreatedSession.current = true;
 
     const createSession = async () => {
-      const res = await fetch(
-        "https://mrityunjay18-ai-interview-agent.hf.space/create-session",
-        {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({
-            role: config.role,
-            seniority: config.seniority,
-            flow: config.flow.map((section) => ({
-              type: section.type,
-              duration_minutes: section.durationMinutes,
-              min_questions: section.minQuestions,
-              max_questions: section.maxQuestions,
-              focus_topics: section.focusTopics ?? [],
-            })),
-          }),
-        },
-      );
+      const res = await fetch(buildInterviewApiUrl("/create-session"), {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          role: config.role,
+          seniority: config.seniority,
+          flow: config.flow.map((section) => ({
+            type: section.type,
+            duration_minutes: section.durationMinutes,
+            min_questions: section.minQuestions,
+            max_questions: section.maxQuestions,
+            focus_topics: section.focusTopics ?? [],
+          })),
+        }),
+      });
 
       const data = await res.json();
       setCallId(data.call_id);

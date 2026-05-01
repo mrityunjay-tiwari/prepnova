@@ -3,6 +3,7 @@
 import {useEffect, useState} from "react";
 import {CallingState} from "@stream-io/video-react-sdk";
 import type {InterviewSessionStatus} from "@/utils/types";
+import {buildInterviewApiUrl} from "@/utils/interview-api";
 
 const STATUS_POLL_INTERVAL_MS = 5000;
 
@@ -14,10 +15,10 @@ export function useInterviewSectionStatus({
   callingState: CallingState;
 }) {
   const [status, setStatus] = useState<InterviewSessionStatus | null>(null);
+  const isActive = Boolean(callId && callingState === CallingState.JOINED);
 
   useEffect(() => {
-    if (!callId || callingState !== CallingState.JOINED) {
-      setStatus(null);
+    if (!isActive || !callId) {
       return;
     }
 
@@ -26,7 +27,7 @@ export function useInterviewSectionStatus({
     const fetchStatus = async () => {
       try {
         const response = await fetch(
-          `https://mrityunjay18-ai-interview-agent.hf.space/session-status/${callId}`,
+          buildInterviewApiUrl(`/session-status/${callId}`),
           {
             cache: "no-store",
           },
@@ -53,7 +54,7 @@ export function useInterviewSectionStatus({
       cancelled = true;
       window.clearInterval(interval);
     };
-  }, [callId, callingState]);
+  }, [callId, isActive]);
 
-  return status;
+  return isActive ? status : null;
 }
