@@ -4,7 +4,7 @@ import {PiStarFourFill} from "react-icons/pi";
 export default function FLoatingInterviewReportPanel() {
   return (
     <div className="z-30">
-      <div className="w-full border rounded-lg  shadow-2xl backdrop-saturate-200">
+      <div className="w-full border rounded-lg max-w-xs shadow-2xl backdrop-saturate-200">
         <div className="gap-3 border-b border-sidebar-border/70 px-3 py-1.5">
           <div className="flex items-center justify-between">
             <div>

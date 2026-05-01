@@ -12,16 +12,20 @@ import type {
 } from "@/utils/types";
 
 const globalForInterviewFinalization = global as unknown as {
-  finalizedInterviewCalls?: Set<string>;
+  finalizedInterviewCalls?: Map<string, "in_progress" | "completed">;
 };
 
 const finalizedInterviewCalls =
-  globalForInterviewFinalization.finalizedInterviewCalls || new Set<string>();
+  globalForInterviewFinalization.finalizedInterviewCalls || new Map();
 
 if (!globalForInterviewFinalization.finalizedInterviewCalls) {
   globalForInterviewFinalization.finalizedInterviewCalls =
     finalizedInterviewCalls;
 }
+
+const END_CALL_TIMEOUT_MS = 5_000;
+const SEGMENTS_TIMEOUT_MS = 8_000;
+const REPORT_CONTEXT_TIMEOUT_MS = 5_000;
 
 function buildTranscript(segments: InterviewSegment[]) {
   return segments
@@ -48,26 +52,72 @@ if (!INTERVIEW_API_BASE_URL) {
   throw new Error("INTERVIEW_API_BASE_URL is not configured");
 }
 
-async function getSegmentsWithRetry(callId: string, attempts = 5, delayMs = 1500) {
-  for (let attempt = 1; attempt <= attempts; attempt += 1) {
-    const response = await fetch(buildInterviewApiUrl(`/segments/${callId}`), {
-      cache: "no-store",
+async function fetchJsonWithTimeout<T>(
+  input: string,
+  init: RequestInit,
+  timeoutMs: number,
+): Promise<T> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(input, {
+      ...init,
+      signal: controller.signal,
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch interview segments: ${response.status}`);
+      throw new Error(`Request failed with status ${response.status}`);
     }
 
-    const data = (await response.json()) as {
-      segments?: InterviewSegment[];
-    };
+    return (await response.json()) as T;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
 
-    if (data.segments?.length) {
-      return data.segments;
+async function endRemoteInterview(callId: string) {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), END_CALL_TIMEOUT_MS);
+
+    try {
+      await fetch(buildInterviewApiUrl("/end-call"), {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({call_id: callId}),
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
+  } catch (error) {
+    console.error("[API] Failed to stop remote interview agent", error);
+  }
+}
+
+async function getSegmentsWithRetry(callId: string, attempts = 5, delayMs = 1500) {
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      const data = await fetchJsonWithTimeout<{
+        segments?: InterviewSegment[];
+      }>(
+        buildInterviewApiUrl(`/segments/${callId}`),
+        {cache: "no-store"},
+        SEGMENTS_TIMEOUT_MS,
+      );
+
+      if (data.segments?.length) {
+        return data.segments;
+      }
+    } catch (error) {
+      if (attempt === attempts) {
+        throw error;
+      }
     }
 
     if (attempt < attempts) {
-      await new Promise((resolve) => setTimeout(resolve, delayMs));
+      await new Promise((resolve) => setTimeout(resolve, delayMs * attempt));
     }
   }
 
@@ -75,15 +125,16 @@ async function getSegmentsWithRetry(callId: string, attempts = 5, delayMs = 1500
 }
 
 async function getReportContext(callId: string): Promise<RemoteReportContext> {
-  const response = await fetch(buildInterviewApiUrl(`/report-context/${callId}`), {
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
+  try {
+    return await fetchJsonWithTimeout<RemoteReportContext>(
+      buildInterviewApiUrl(`/report-context/${callId}`),
+      {cache: "no-store"},
+      REPORT_CONTEXT_TIMEOUT_MS,
+    );
+  } catch (error) {
+    console.error("[API] Failed to fetch remote report context", error);
     return {};
   }
-
-  return (await response.json()) as RemoteReportContext;
 }
 
 function buildReportPrompt({
@@ -138,20 +189,15 @@ export async function POST(req: Request) {
     return new Response("Missing required fields", { status: 400 });
   }
 
-  if (finalizedInterviewCalls.has(callId)) {
+  const existingStatus = finalizedInterviewCalls.get(callId);
+  if (existingStatus === "in_progress" || existingStatus === "completed") {
     return Response.json({ success: true, duplicate: true, reason });
   }
 
-  finalizedInterviewCalls.add(callId);
+  finalizedInterviewCalls.set(callId, "in_progress");
 
   try {
-    await fetch(buildInterviewApiUrl("/end-call"), {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ call_id: callId }),
-    }).catch((error) => {
-      console.error("[API] Failed to stop remote interview agent", error);
-    });
+    await endRemoteInterview(callId);
 
     const segments = await getSegmentsWithRetry(callId);
 
@@ -210,6 +256,7 @@ export async function POST(req: Request) {
         finalSummary: report.finalSummary,
       },
     });
+    finalizedInterviewCalls.set(callId, "completed");
     return Response.json({
       success: true,
       finalized: true,

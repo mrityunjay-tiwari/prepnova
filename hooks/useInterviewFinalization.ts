@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useRef} from "react";
+import {useCallback, useEffect, useRef} from "react";
 import {CallingState} from "@stream-io/video-react-sdk";
 import {useRouter} from "next/navigation";
 import type {FinalizeInterviewRequest, PostureStats} from "@/utils/types";
@@ -23,32 +23,59 @@ export function useInterviewFinalization({
   const isFinalizing = useRef(false);
   const hasRedirected = useRef(false);
   const offlineTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const callIdRef = useRef(callId);
+  const roleRef = useRef(role);
+  const userIdRef = useRef(userId);
+  const getPostureStatsRef = useRef(getPostureStats);
   const router = useRouter();
 
-  const buildFinalizePayload = (
-    reason: FinalizeInterviewRequest["reason"],
-  ): FinalizeInterviewRequest | null => {
-    if (!callId || !userId || !role) {
-      return null;
-    }
+  useEffect(() => {
+    callIdRef.current = callId;
+  }, [callId]);
 
-    return {
-      callId,
-      userId,
-      role,
-      postureStats: getPostureStats(),
-      reason,
-    };
-  };
+  useEffect(() => {
+    roleRef.current = role;
+  }, [role]);
 
-  const finalizeInterview = async (
+  useEffect(() => {
+    userIdRef.current = userId;
+  }, [userId]);
+
+  useEffect(() => {
+    getPostureStatsRef.current = getPostureStats;
+  }, [getPostureStats]);
+
+  const buildFinalizePayload = useCallback(
+    (
+      reason: FinalizeInterviewRequest["reason"],
+    ): FinalizeInterviewRequest | null => {
+      const currentCallId = callIdRef.current;
+      const currentRole = roleRef.current;
+      const currentUserId = userIdRef.current;
+
+      if (!currentCallId || !currentUserId || !currentRole) {
+        return null;
+      }
+
+      return {
+        callId: currentCallId,
+        userId: currentUserId,
+        role: currentRole,
+        postureStats: getPostureStatsRef.current(),
+        reason,
+      };
+    },
+    [],
+  );
+
+  const finalizeInterview = useCallback(async (
     reason: FinalizeInterviewRequest["reason"],
     options?: {redirectToDashboard?: boolean; useBeacon?: boolean},
   ) => {
     const payload = buildFinalizePayload(reason);
 
     if (!payload) {
-      return;
+      return null;
     }
 
     if (options?.useBeacon) {
@@ -99,7 +126,7 @@ export function useInterviewFinalization({
         router.push("/dashboard");
       }
     }
-  };
+  }, [buildFinalizePayload, router]);
 
   useEffect(() => {
     if (!callId) return;
@@ -119,13 +146,13 @@ export function useInterviewFinalization({
       window.removeEventListener("pagehide", handlePageHide);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [callId, role, userId]);
+  }, [callId, finalizeInterview]);
 
   useEffect(() => {
     return () => {
       finalizeInterview("route_change", {useBeacon: true});
     };
-  }, [callId, role, userId]);
+  }, [finalizeInterview]);
 
   useEffect(() => {
     if (callingState !== CallingState.JOINED || !callId) {
@@ -165,12 +192,12 @@ export function useInterviewFinalization({
         offlineTimeoutRef.current = null;
       }
     };
-  }, [callingState, callId, role, userId]);
+  }, [callingState, callId, finalizeInterview]);
 
   useEffect(() => {
     if (!callId) return;
     if (callingState === CallingState.LEFT) {
       finalizeInterview("call_left", {redirectToDashboard: true});
     }
-  }, [callingState, callId, role, userId]);
+  }, [callingState, callId, finalizeInterview]);
 }
