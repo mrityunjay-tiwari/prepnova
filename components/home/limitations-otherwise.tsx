@@ -29,25 +29,7 @@ const Step1Card = () => {
       {/* Illustration Section */}
       <div className="w-full rounded-none">
         <div className="relative pt-10 pb-4 px-2 bg-linear-to-t from-slate-100 to-gray-50 max-w-full overflow-hidden">
-          <Card className="inset-0 relative max-w-full m-2 z-40 p-1 py-3 bg-white">
-            <CardContent className="">
-              <div className="flex w-full items-center gap-2">
-                {/* Icon */}
-                <div className="bg-gray-100 flex items-center justify-center w-8 h-8 rounded-md text-gray-700 font-semibold shrink-0">
-                  R.
-                </div>
-
-                <Work1Card />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="inset-0 relative max-w-full m-4 rounded-lg z-30 -mt-13"></Card>
-          <Card className="inset-0 relative max-w-full m-6 rounded-lg z-20 -mt-15"></Card>
-          <Card className="inset-0 relative max-w-full m-8 rounded-lg z-10 -mt-17"></Card>
-          <Card className="inset-0 relative max-w-full m-10 rounded-lg z-0 -mt-19"></Card>
-          <Card className="inset-0 relative max-w-full m-12 rounded-lg -z-10 -mt-21"></Card>
-          <Card className="inset-0 relative max-w-full m-14 rounded-lg -z-20 -mt-23"></Card>
+          
 
           {/* Fade overlay blending into the white background */}
           <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white to-transparent pointer-events-none z-50" />
@@ -58,52 +40,9 @@ const Step1Card = () => {
 
       <CardsBottomSection
         stepNumber="01"
-        title="Select Role"
-        description="Select the role you are preparing for."
+        title="No Guidance"
+        description="Practicing alone feels unrealistic."
       />
-    </div>
-  );
-};
-
-const Work1Card = () => {
-  return (
-    <div className="flex w-full items-center justify-center">
-      <Select>
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Choose role" />
-        </SelectTrigger>
-
-        <SelectContent>
-          <SelectItem value="react-developer">React Developer</SelectItem>
-          <SelectItem value="full-stack-developer">
-            Full Stack Developer
-          </SelectItem>
-          <SelectItem value="frontend-developer">Frontend Developer</SelectItem>
-          <SelectItem value="backend-developer">Backend Developer</SelectItem>
-          <SelectItem value="data-scientist">Data Scientist</SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
-  );
-};
-
-const Work2Card = () => {
-  return (
-    <div className="flex w-full items-center justify-center">
-      <Select>
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Choose Target" />
-        </SelectTrigger>
-
-        <SelectContent>
-          <SelectItem value="internship">Internship</SelectItem>
-          <SelectItem value="sde1">SDE1</SelectItem>
-          <SelectItem value="sde2">SDE2</SelectItem>
-          <SelectItem value="sde3">SDE3</SelectItem>
-          <SelectItem value="data-scientist">Principal Engineer</SelectItem>
-          <SelectItem value="data-scientist">Staff Engineer</SelectItem>
-        </SelectContent>
-      </Select>
     </div>
   );
 };
@@ -114,25 +53,7 @@ const Step2Card = () => {
       {/* Illustration Section */}
       <div className="w-full rounded-none">
         <div className="relative pt-10 pb-4 px-2 bg-linear-to-t from-slate-100 to-gray-50 max-w-full overflow-hidden">
-          <Card className="inset-0 relative max-w-full m-2 z-40 p-1 py-3 bg-white">
-            <CardContent className="">
-              <div className="flex w-full items-center gap-2">
-                {/* Icon */}
-                <div className="bg-gray-100 flex items-center justify-center w-8 h-8 rounded-md text-gray-700 font-semibold shrink-0">
-                  T.
-                </div>
-
-                <Work2Card />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="inset-0 relative max-w-full m-4 rounded-lg z-30 -mt-13"></Card>
-          <Card className="inset-0 relative max-w-full m-6 rounded-lg z-20 -mt-15"></Card>
-          <Card className="inset-0 relative max-w-full m-8 rounded-lg z-10 -mt-17"></Card>
-          <Card className="inset-0 relative max-w-full m-10 rounded-lg z-0 -mt-19"></Card>
-          <Card className="inset-0 relative max-w-full m-12 rounded-lg -z-10 -mt-21"></Card>
-          <Card className="inset-0 relative max-w-full m-14 rounded-lg -z-20 -mt-23"></Card>
+          
 
           {/* Fade overlay blending into the white background */}
           <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white to-transparent pointer-events-none z-50" />
@@ -143,8 +64,8 @@ const Step2Card = () => {
 
       <CardsBottomSection
         stepNumber="02"
-        title="Select Target/Difficulty"
-        description="Select target you are preparing for (SDE1, SDE2 etc.)."
+        title="Lacking Simulation"
+        description="Generic chatbots don’t simulate real interviews."
       />
     </div>
   );
@@ -155,10 +76,9 @@ const Step3Card = () => {
     <div className="w-full flex flex-col rounded-none items-center">
       {/* Illustration Section */}
       <div className="w-full rounded-none">
-        <div className="relative pt-2 pb-4 px-2 bg-linear-to-t from-slate-100 to-gray-50 max-w-full overflow-hidden">
-          <div className="flex w-full items-center justify-center">
-            <InterviewSetup12 role="react-developer" />
-          </div>
+        <div className="relative pt-10 pb-4 px-2 bg-linear-to-t from-slate-100 to-gray-50 max-w-full overflow-hidden">
+          
+
           {/* Fade overlay blending into the white background */}
           <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white to-transparent pointer-events-none z-50" />
         </div>
@@ -168,8 +88,8 @@ const Step3Card = () => {
 
       <CardsBottomSection
         stepNumber="03"
-        title="Configure Your Interview"
-        description="Select all the sections to be asked questions about."
+        title="No Adaptability"
+        description="Most tools don’t adapt to role/seniority."
       />
     </div>
   );
@@ -180,17 +100,9 @@ const Step4Card = () => {
     <div className="w-full flex flex-col rounded-none items-center">
       {/* Illustration Section */}
       <div className="w-full rounded-none">
-        <div className="relative bg-linear-to-t from-slate-100 to-gray-50 max-w-full overflow-hidden">
-          <div className="flex w-full items-center justify-center">
-            <div className="w-full h-full rounded-none bg-gray-100 pt-10">
-              <div className="flex items-center justify-center w-full h-full pb-14">
-                <AgentAvatar size={100} seed="" />
-              </div>
-              <div className="absolute bottom-3.5 left-3.5 z-[60] bg-black/30 text-white text-xs px-1 py-0.5 rounded-sm backdrop-blur-xl">
-                Kirosk (AI Interviewer)
-              </div>
-            </div>
-          </div>
+        <div className="relative pt-10 pb-4 px-2 bg-linear-to-t from-slate-100 to-gray-50 max-w-full overflow-hidden">
+          
+
           {/* Fade overlay blending into the white background */}
           <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white to-transparent pointer-events-none z-50" />
         </div>
@@ -198,68 +110,10 @@ const Step4Card = () => {
 
       {/* Step section */}
 
-      <div className="mt-4">
-        <CardsBottomSection
+      <CardsBottomSection
         stepNumber="04"
-        title="Take the Interview"
-        description="Attend the interview custom designed in Real Time as per your configurations."
-      />
-      </div>
-    </div>
-  );
-};
-
-const Step5Card = () => {
-  return (
-    <div className="w-full flex flex-col rounded-none items-center">
-      {/* Illustration Section */}
-      <div className="w-full rounded-none">
-        <div className="relative bg-linear-to-t from-slate-100 to-gray-50 max-w-full overflow-hidden">
-          <div className="flex w-full items-center justify-center scale-[90%]">
-           <FLoatingInterviewReportPanel />
-          </div>
-          {/* Fade overlay blending into the white background */}
-          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white to-transparent pointer-events-none z-50" />
-        </div>
-      </div>
-
-      {/* Step section */}
-
-      <CardsBottomSection
-        stepNumber="05"
-        title="Get Live Feedback"
-        description="Get Live feeback for your answers and Presence."
-      />
-    </div>
-  );
-};
-
-const Step6Card = () => {
-  return (
-    <div className="w-full flex flex-col rounded-none items-center">
-      {/* Illustration Section */}
-      <div className="w-full rounded-none">
-        <div className="relative pt-5 px-2 pb-4 bg-linear-to-t from-slate-100 to-gray-50 max-w-full overflow-hidden">
-          <div className="flex w-full items-center justify-center">
-            <Image 
-              src="https://ik.imagekit.io/mrityunjay/prepnova/ChatGPT%20Image%20May%202,%202026,%2003_31_40%20PM.png"
-              alt="Report 1"
-              width={800}
-              height={400}
-              className="w-full h-full"
-            />
-          </div>
-          {/* Fade overlay blending into the white background */}
-          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white to-transparent pointer-events-none z-50" />
-        </div>
-      </div>
-
-      {/* Step section */}
-
-      <CardsBottomSection
-        stepNumber="06"
-        title="Get Your Interview Report"
-        description="Get Detailed analysis of your performance based on multiple metrics."
+        title="Lacking Feedbacks"
+        description="Feedback is often vague or not actionable."
       />
     </div>
   );
@@ -279,7 +133,7 @@ const CardsBottomSection = ({
   return (
     <div className="w-full bg-white p-6 -mt-8 flex flex-col items-start relative z-50">
       {/* Step number bubble */}
-      <div className="bg-linear-to-br shadow-[0_4px_15px_rgba(37,99,235,0.4)] from-blue-500 to-blue-600 text-white font-semibold text-base rounded-xl w-10 h-10 flex items-center justify-center mb-2">
+      <div className="bg-linear-to-br shadow-[0_4px_15px_rgba(37,99,235,0.4)] from-zinc-400 to-zinc-700 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center mb-2">
         <h1>{stepNumber}</h1>
       </div>
 
@@ -295,20 +149,18 @@ const STEPS = [
   {num: "02", card: Step2Card},
   {num: "03", card: Step3Card},
   {num: "04", card: Step4Card},
-  {num: "05", card: Step5Card},
-  {num: "06", card: Step6Card},
 ];
 
 export default function HowItWorks() {
   return (
     <div className="w-full mx-auto max-w-6xl">
-      <Headings subtitle="How it Solves?" title="How the entire flow works!" subheading="(Interactive Playground)" />
+      <Headings subtitle="Why it Exists?" title="Why other solutions feels empty ?" />
 
       <div className="mt-16 relative w-full flex flex-wrap border-t border-l border-slate-200">
         {STEPS.map((step) => (
           <div
             key={step.num}
-            className="relative w-full md:w-1/3 border-b border-r border-slate-200 flex flex-col items-center"
+            className="relative w-1/2 md:w-1/4 border-b border-r border-slate-200 flex flex-col items-center"
           >
             {/* Blueprint Crosses at intersections */}
             <Cross className="-top-[8px] -left-[8px]" />

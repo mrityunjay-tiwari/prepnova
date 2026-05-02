@@ -9,7 +9,7 @@ const features = [
   {
     id: 1,
     title: "Detailed Interview Analysis",
-    description: "Get detailed feedback on your answers, communication style and executionable insights.",
+    description: "Get detailed feedback on your answers, communication with executionable insights.",
     image: "https://ik.imagekit.io/mrityunjay/prepnova/ChatGPT%20Image%20May%202,%202026,%2003_31_40%20PM.png",
   },
   {
@@ -109,7 +109,7 @@ export function FeatureShowcase() {
                   src={feature.image}
                   alt={feature.title}
                   fill
-                  unoptimized // Bypasses the need for domain configuration in next.config.js for quick prototyping
+                
                   className={cn(
                     "object-contain transition-transform duration-1000",
                     isActive ? "scale-100" : "scale-105"

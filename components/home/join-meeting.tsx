@@ -59,7 +59,7 @@ export default function JoinMeeting() {
             render={({field}) => (
               <FormItem>
                 <FormLabel className="font-normal text-xs">
-                  Select Interview Role
+                  Select Your Role
                 </FormLabel>
                 <Select
                   onValueChange={field.onChange}

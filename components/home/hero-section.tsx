@@ -21,7 +21,7 @@ export default function HeroSection() {
       {/* description */}
       <div className="text-left mt-4">
         <h1 className="text-lg md:text-xl text-neutral-500 dark:text-neutral-400">
-            Get exact Interview experience for your specific role with <br /> Real Time Feedback and Detailed Analysis. 
+            With our Voice Agent get exact Interview experience for your <br />specific role with Real Time Feedback and Detailed Analysis. 
         </h1>
       </div>
       {/* may here i have some imp message or sth */}

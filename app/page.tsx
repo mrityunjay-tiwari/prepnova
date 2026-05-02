@@ -14,6 +14,7 @@ import { WhoItIsForSection } from "@/components/home/who-it-is-for";
 import UsersCarousel from "@/components/home/users-crousel";
 import WhyItExists from "@/components/home/why-it-exists";
 import HowItWorks from "@/components/home/how-it-works";
+import CTA from "@/components/home/cta";
 
 export default async function Home() {
   const user = await auth();
@@ -36,6 +37,7 @@ export default async function Home() {
         <HowItWorks />
       </div>
       <PostInterviewTab />
+      <CTA />
       <Footer />
     </main>
   );
