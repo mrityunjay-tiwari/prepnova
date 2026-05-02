@@ -9,6 +9,11 @@ import {Navbar} from "@/components/navbar/nav";
 import {auth} from "@/utils/auth";
 import HeroSection from "@/components/home/hero-section";
 import FLoatingInterviewReportPanel from "@/components/home/floating-interview-analysis-panel";
+import PostInterviewTab from "@/components/home/post-interview";
+import { WhoItIsForSection } from "@/components/home/who-it-is-for";
+import UsersCarousel from "@/components/home/users-crousel";
+import WhyItExists from "@/components/home/why-it-exists";
+import HowItWorks from "@/components/home/how-it-works";
 
 export default async function Home() {
   const user = await auth();
@@ -25,6 +30,12 @@ export default async function Home() {
         <Screen />
       </div>
       {/* <FLoatingInterviewReportPanel /> */}
+      <UsersCarousel />
+      <div className="w-full mx-auto md:max-w-5xl">
+        <WhyItExists />
+        <HowItWorks />
+      </div>
+      <PostInterviewTab />
       <Footer />
     </main>
   );

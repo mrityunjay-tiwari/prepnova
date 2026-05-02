@@ -190,10 +190,10 @@ export default async function ProgressPage() {
         </div>
         <header className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold tracking-tight">
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
               Growth Dashboard
             </h1>
-            <p className="text-muted-foreground text-lg font-medium">
+            <p className="text-muted-foreground text-md md:text-lg font-medium">
               Tracking your journey toward interview excellence.
             </p>
           </div>

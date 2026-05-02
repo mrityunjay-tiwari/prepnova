@@ -20,25 +20,31 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-background mt-20">
       <main className="container mx-auto md:px-8 px-4 py-8 max-w-6xl">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+        <div className="flex items-baseline md:items-end justify-between gap-4 md:mb-8 mb-2.5">
           <div>
-            <h2 className="text-3xl font-bold mb-2">
+            <h2 className="text-xl md:text-3xl font-bold mb-2">
               My Interviews
             </h2>
-            <p className="text-muted-foreground flex items-center gap-1.5 font-medium">
+            <p className="hidden md:flex text-muted-foreground items-center gap-1.5 font-medium">
               <History className="h-4 w-4" />
               Viewing your recent performance and feedback history.
             </p>
           </div>
-          <Link href="/interview">
-            <Button className="rounded-none">
-              <Plus className="h-5 w-5" />
+          <Link href="/interview" className="hidden md:block ">
+            <Button className="rounded-md">
+              <Plus className="md:h-5 md:w-5 h-3.5 w-3.5" />
+              Start Interview
+            </Button>
+          </Link>
+          <Link href="/interview" className="block md:hidden ">
+            <Button size={"xs"} className="rounded-md text-xs">
+              <Plus className="h-2 w-2" />
               Start Interview
             </Button>
           </Link>
         </div>
 
-        <Separator className="mb-10" />
+        <Separator className="mb-4 md:mb-10" />
 
         {reports.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 px-4 border-2 border-dashed rounded-3xl bg-muted/30">

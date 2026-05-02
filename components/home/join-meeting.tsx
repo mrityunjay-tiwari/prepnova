@@ -51,7 +51,7 @@ export default function JoinMeeting() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex gap-10 items-end justify-start"
+          className="flex flex-col md:flex-row gap-10 items-end justify-start"
         >
           <FormField
             control={form.control}
@@ -92,7 +92,7 @@ export default function JoinMeeting() {
             )}
           />
 
-          <Button type="submit" className="hover:cursor-pointer md:w-full w-8 rounded-full">
+          <Button type="submit" className="hover:cursor-pointer md:w-full w-[90%] rounded-full">
             Start Your Interview
           </Button>
         </form>

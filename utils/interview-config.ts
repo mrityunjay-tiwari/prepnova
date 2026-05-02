@@ -115,3 +115,10 @@ export function buildDefaultInterviewSetup(role: string): InterviewSetupConfig {
     flow: [createFlowSection("projects"), createFlowSection("frontend"), createFlowSection("behavioral")],
   };
 }
+export function buildDefaultInterviewSetup1(role: string): InterviewSetupConfig {
+  return {
+    role,
+    seniority: "SDE1",
+    flow: [createFlowSection("projects"), createFlowSection("behavioral")],
+  };
+}

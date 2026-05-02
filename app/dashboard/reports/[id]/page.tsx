@@ -42,8 +42,8 @@ import {PiStackFill, PiThumbsUpFill} from "react-icons/pi";
 import {RiPencilFill} from "react-icons/ri";
 import {LuMessageCircleDashed} from "react-icons/lu";
 import {IoIosTrendingUp} from "react-icons/io";
-import { BsHandThumbsUp } from "react-icons/bs";
-import { MdOutlineSelfImprovement } from "react-icons/md";
+import {BsHandThumbsUp} from "react-icons/bs";
+import {MdOutlineSelfImprovement} from "react-icons/md";
 
 function coerceSectionBreakdown(value: unknown): ReportSectionBreakdown[] {
   if (!Array.isArray(value)) return [];
@@ -116,16 +116,16 @@ export default async function ReportDetailPage({
           </Link>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-1">
+        <div className="flex justify-between items-start md:items-center gap-6 mb-1">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
               <Badge
                 variant="secondary"
-                className="px-2 py-0.5 font-medium uppercase text-xs"
+                className="px-1 md:px-2 py-0.5 font-medium uppercase text-[9px] md:text-xs"
               >
                 Interview Report
               </Badge>
-              <div className="flex items-center gap-1.5 text-muted-foreground text-xs font-medium">
+              <div className="hidden md:flex items-center gap-1.5 text-muted-foreground text-xs font-medium">
                 <Calendar className="h-3 w-3" />
                 {formattedDate}
               </div>
@@ -133,7 +133,19 @@ export default async function ReportDetailPage({
             <h1 className="text-2xl md:text-3xl font-semibold">
               Role : {report.role || "General Assessment"}
             </h1>
-            <p className="text-lg text-muted-foreground font-medium">
+            <div className="flex md:hidden items-center gap-1.5 text-muted-foreground text-xs font-medium">
+              <Calendar className="h-3 w-3" />
+              {formattedDate}
+            </div>
+            <div className="flex md:hidden items-center p-0 md:p-2.5 rounded-lg md:min-w-40">
+              <span className="text-xs md:text-sm font-semibold text-primary uppercase text-center">
+                Overall Score : <span> </span>
+              </span>
+              <span className="text-sm md:text-xl font-semibold text-primary">
+                {Math.round(report.overallScore)}/10
+              </span>
+            </div>
+            <p className="hidden md:block text-md md:text-lg text-muted-foreground font-medium">
               Comprehensive analysis of your interview performance.
             </p>
             <div className="flex flex-wrap items-center gap-2 pt-2">
@@ -151,16 +163,16 @@ export default async function ReportDetailPage({
             </div>
           </div>
 
-          <div className="flex flex-col items-center justify-center p-2.5 rounded-lg shadow-lg md:min-w-40">
-            <span className="text-sm font-semibold text-primary uppercase mb-1 text-center">
+          <div className="hidden md:flex md:flex-col items-center justify-center p-0 md:p-2.5 rounded-lg shadow-none md:shadow-lg md:min-w-40">
+            <span className="text-xs md:text-sm font-semibold text-primary uppercase mb-1 text-center">
               Overall Score
             </span>
-            <span className="text-xl font-semibold text-primary">
+            <span className="text-sm md:text-xl font-semibold text-primary">
               {Math.round(report.overallScore)}/10
             </span>
           </div>
         </div>
-              <Separator />
+        <Separator />
         <div className="flex flex-col gap-6 mb-10 mt-2.5">
           {/* Row 1: Radar & Metrics */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

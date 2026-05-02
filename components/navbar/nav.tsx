@@ -61,15 +61,7 @@ export const Navbar = ({user}: {user?: Session | null}) => {
                     height={95}
                   />
                   
-                  {/* <Image
-                    className=""
-                    src={
-                      "https://ik.imagekit.io/mrityunjay/DocuMind/mobile-logo-light.png"
-                    }
-                    alt="logo"
-                    width={50}
-                    height={40}
-                  /> */}
+                
                   <div className="flex md:hidden dark:hidden items-center">
                     <Image
                     className="aspect-square"
@@ -92,15 +84,7 @@ export const Navbar = ({user}: {user?: Session | null}) => {
                     height={40}
                   />
                   </div>
-                  {/* <Image
-                    className="hidden dark:block md:dark:hidden items-center grayscale-0 md:grayscale-50 scale-x-70 md:scale-x-100"
-                    src={
-                      "https://ik.imagekit.io/mrityunjay/DocuMind/mobile-logo-dark.png"
-                    }
-                    alt="logo"
-                    width={50}
-                    height={40}
-                  /> */}
+              
                 </Link>
 
                 <ul className="flex gap-3 sm:gap-4 md:gap-8 text-[12.5px] md:text-sm">
@@ -111,7 +95,7 @@ export const Navbar = ({user}: {user?: Session | null}) => {
                           href="/dashboard"
                           className={cn(
                             "group relative block transition-colors duration-150",
-                            sans.className,
+                            
                             pathname === "/dashboard"
                               ? "font-semibold"
                               : "hover:text-accent-foreground",
@@ -131,7 +115,7 @@ export const Navbar = ({user}: {user?: Session | null}) => {
                           href="/progress"
                           className={cn(
                             "group relative block transition-colors duration-150",
-                            sans.className,
+                           
                             pathname === "/progress"
                               ? "font-semibold"
                               : "hover:text-accent-foreground",
@@ -168,7 +152,7 @@ export const Navbar = ({user}: {user?: Session | null}) => {
                   </div>
                 ) : (
                   <Link
-                    href="/sign-in"
+                    href="/signin"
                     className="text-[12.5px] md:text-sm font-medium hover:text-foreground/80 transition-colors"
                   >
                     Sign In
