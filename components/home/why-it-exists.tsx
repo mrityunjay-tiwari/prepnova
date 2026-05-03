@@ -1,10 +1,9 @@
-import Headings from "./headings";
-import HowItWorks from "./limitations-otherwise";
+import Limitations from "./limitations-otherwise";
 
 export default function WhyItExists() {
   return (
     <div className="mt-10">
-      <HowItWorks />
+      <Limitations />
     </div>
   );
 }

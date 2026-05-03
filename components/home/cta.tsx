@@ -11,7 +11,7 @@ export default function CTA() {
   const router = useRouter();
   return (
     <div className="w-full max-w-5xl mx-auto p-2 md:p-4 my-12">
-      <div className="relative w-full rounded-xl border border-zinc-200/70 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col md:flex-row items-center min-h-[400px]">
+      <div className="relative w-full rounded-xl border bg-white shadow-sm overflow-hidden flex flex-col md:flex-row items-center min-h-[400px]">
         {/* Left Content */}
         <div className="w-full md:w-[65%] p-4 md:p-8 lg:p-12 z-10 flex flex-col items-start text-left">
           <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold text-slate-900 mb-2">
@@ -36,7 +36,7 @@ export default function CTA() {
         {/* Right Subtle Designs */}
         <div className="w-full md:w-[45%] h-[300px] md:h-full absolute bottom-0 right-0 hidden md:block overflow-hidden pointer-events-none">
           {/* Back Window (Browser mockup) */}
-          <div className="absolute top-[15%] left-[5%] right-[-10%] bottom-[-10%] bg-white rounded-tl-2xl border border-slate-100 shadow-sm flex flex-col">
+          <div className="absolute top-[15%] left-[5%] right-[-10%] bottom-[-10%] bg-white rounded-tl-2xl border border-slate-100 shadow-lg flex flex-col">
             {/* Top Bar */}
             <div className="h-12 border-b border-slate-50 flex items-center px-5 gap-2 w-full">
               <div className="w-2.5 h-2.5 rounded-full bg-slate-200" />

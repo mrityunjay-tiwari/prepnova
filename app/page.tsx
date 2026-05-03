@@ -15,6 +15,8 @@ import UsersCarousel from "@/components/home/users-crousel";
 import WhyItExists from "@/components/home/why-it-exists";
 import HowItWorks from "@/components/home/how-it-works";
 import CTA from "@/components/home/cta";
+import Technical from "@/components/home/technical";
+import ChatBotOpenButton from "@/components/chatbot/chatbot-openButton";
 
 export default async function Home() {
   const user = await auth();
@@ -37,8 +39,10 @@ export default async function Home() {
         <HowItWorks />
       </div>
       <PostInterviewTab />
+      <Technical />
       <CTA />
       <Footer />
+      <ChatBotOpenButton />
     </main>
   );
 }
