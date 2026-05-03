@@ -2,15 +2,6 @@
 
 import {useRouter} from "next/navigation";
 import {useForm} from "react-hook-form";
-
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-
 import {
   Form,
   FormControl,
@@ -92,7 +83,10 @@ export default function JoinMeeting() {
             )}
           />
 
-          <Button type="submit" className="hover:cursor-pointer md:w-full w-[90%] rounded-full">
+          <Button
+            type="submit"
+            className="hover:cursor-pointer md:w-full w-[90%] rounded-full"
+          >
             Start Your Interview
           </Button>
         </form>

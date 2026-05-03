@@ -2,8 +2,6 @@
 
 import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
-import ChartRenderer from "./chartRenderer";
-// import type {ChartData} from "chart.js";
 import {Check, Copy} from "lucide-react";
 import {useRef, useState} from "react";
 
@@ -70,13 +68,6 @@ export default function MarkDownRenderer({content}: {content: string}) {
               </a>
             );
           },
-          //   a: ({children}) => (
-          //     <span>
-          //       <a className="text-blue-500 hover:underline break-all">
-          //         {children}
-          //       </a>
-          //     </span>
-          //   ),
           blockquote: ({children}) => (
             <blockquote className="border-l-2 border-neutral-200 pl-2">
               {children}
@@ -103,7 +94,10 @@ export default function MarkDownRenderer({content}: {content: string}) {
                     />
                   )}
                 </div>
-                <table ref={tableRef} className="border-collapse border border-neutral-300 text-xs">
+                <table
+                  ref={tableRef}
+                  className="border-collapse border border-neutral-300 text-xs"
+                >
                   {children}
                 </table>
               </div>

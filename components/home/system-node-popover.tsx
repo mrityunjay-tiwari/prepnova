@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { X, ArrowUp, SmilePlus } from "lucide-react";
+import React, {useState} from "react";
+import {X, ArrowUp, SmilePlus} from "lucide-react";
 import Image from "next/image";
 
 export default function SystemNodePopover() {

@@ -5,7 +5,7 @@ import {useState} from "react";
 import {Tooltip, TooltipContent, TooltipTrigger} from "../ui/tooltip";
 import {Check, Copy, ThumbsDown, ThumbsUp} from "lucide-react";
 import {cn} from "@/lib/utils";
- 
+
 interface ChatReactionProps {
   regenerate: () => void;
   copyResponse: () => void;
@@ -70,13 +70,16 @@ export default function ChatReactions({
           {copied ? (
             <Check className="h-3 w-3 text-blue-500 transition-colors" />
           ) : (
-            <Copy className="h-3 w-3 text-muted-foreground hover:text-foreground transition-colors hover:cursor-pointer" onClick={() => {
-              copyResponse()
-              setCopied(true)
-              setTimeout(() => {
-                setCopied(false)
-              }, 2000)
-            }}/>
+            <Copy
+              className="h-3 w-3 text-muted-foreground hover:text-foreground transition-colors hover:cursor-pointer"
+              onClick={() => {
+                copyResponse();
+                setCopied(true);
+                setTimeout(() => {
+                  setCopied(false);
+                }, 2000);
+              }}
+            />
           )}
         </TooltipTrigger>
         <TooltipContent>

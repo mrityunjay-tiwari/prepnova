@@ -1,11 +1,11 @@
 "use client";
 
-import type { Variants } from "motion/react";
-import { motion, useAnimation } from "motion/react";
-import type { HTMLAttributes } from "react";
-import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
+import type {Variants} from "motion/react";
+import {motion, useAnimation} from "motion/react";
+import type {HTMLAttributes} from "react";
+import {forwardRef, useCallback, useImperativeHandle, useRef} from "react";
 
-import { cn } from "@/lib/utils";
+import {cn} from "@/lib/utils";
 
 export interface XIconHandle {
   startAnimation: () => void;
@@ -28,7 +28,7 @@ const PATH_VARIANTS: Variants = {
 };
 
 const XIcon = forwardRef<XIconHandle, XIconProps>(
-  ({ onMouseEnter, onMouseLeave, className, size = 28, ...props }, ref) => {
+  ({onMouseEnter, onMouseLeave, className, size = 28, ...props}, ref) => {
     const controls = useAnimation();
     const isControlledRef = useRef(false);
 
@@ -49,7 +49,7 @@ const XIcon = forwardRef<XIconHandle, XIconProps>(
           controls.start("animate");
         }
       },
-      [controls, onMouseEnter]
+      [controls, onMouseEnter],
     );
 
     const handleMouseLeave = useCallback(
@@ -60,7 +60,7 @@ const XIcon = forwardRef<XIconHandle, XIconProps>(
           controls.start("normal");
         }
       },
-      [controls, onMouseLeave]
+      [controls, onMouseLeave],
     );
     return (
       <div
@@ -88,15 +88,15 @@ const XIcon = forwardRef<XIconHandle, XIconProps>(
           <motion.path
             animate={controls}
             d="m6 6 12 12"
-            transition={{ delay: 0.2 }}
+            transition={{delay: 0.2}}
             variants={PATH_VARIANTS}
           />
         </svg>
       </div>
     );
-  }
+  },
 );
 
 XIcon.displayName = "XIcon";
 
-export { XIcon };
+export {XIcon};

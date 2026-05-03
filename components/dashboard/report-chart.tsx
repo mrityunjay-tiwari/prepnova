@@ -17,7 +17,6 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import {TrendingUp} from "lucide-react";
 import { Separator } from "../ui/separator";
 import { SiRadar } from "react-icons/si";
 

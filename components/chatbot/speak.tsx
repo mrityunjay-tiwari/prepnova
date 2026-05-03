@@ -2,7 +2,7 @@
 
 import {useEffect, useRef, useState} from "react";
 import {Button} from "@/components/ui/button";
-import {MicIcon, StopCircle, StopCircleIcon} from "lucide-react";
+import {MicIcon} from "lucide-react";
 import {cn} from "@/lib/utils";
 import {FaStopCircle} from "react-icons/fa";
 import {Spinner} from "../kibo-ui/spinner";
@@ -84,7 +84,7 @@ export default function VoiceTranscription({
   };
 
   const stopListening = () => {
-    setItIsListening(false)
+    setItIsListening(false);
     setIsListening(false);
     recognitionRef.current?.stop();
     onCompletion(transcript);
@@ -104,7 +104,9 @@ export default function VoiceTranscription({
               `rounded-full ${isListening || isFormattingInput ? "hidden" : "inline-block"}`,
             )}
           >
-            {<MicIcon className="size-4 text-neutral-600 dark:text-neutral-400" />}
+            {
+              <MicIcon className="size-4 text-neutral-600 dark:text-neutral-400" />
+            }
           </Button>
 
           <Button

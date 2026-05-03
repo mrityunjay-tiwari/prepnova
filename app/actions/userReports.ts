@@ -1,9 +1,6 @@
 "use server";
 
 import { prisma } from "@/prisma/src";
-import type { Prisma } from "@/src/generated/client";
-
-
 
 export async function getUserInterviewReports(userId: string) {
   if (!userId) {

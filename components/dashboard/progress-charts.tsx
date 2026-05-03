@@ -28,16 +28,15 @@ type ProgressData = {
   technical: number;
   communication: number;
   confidence: number;
-}
+};
 
 type ProgressChartsProps = {
   data: ProgressData[];
-}
+};
 
 export function ProgressCharts({data}: ProgressChartsProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      {/* Overall Progress Trend */}
       <Card className="border-muted/40 rounded-3xl overflow-hidden shadow-sm bg-linear-to-br from-card to-muted/20">
         <CardHeader className="pb-2 border-b border-muted/20">
           <CardTitle className="text-xl flex items-center gap-2">
@@ -95,7 +94,6 @@ export function ProgressCharts({data}: ProgressChartsProps) {
         </CardContent>
       </Card>
 
-      {/* Multi-parameter Analysis */}
       <Card className="border-muted/40 rounded-3xl overflow-hidden shadow-sm bg-linear-to-br from-card to-muted/20">
         <CardHeader className="pb-2 border-b border-muted/20">
           <CardTitle className="text-xl flex items-center gap-2">

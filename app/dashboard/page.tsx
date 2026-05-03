@@ -1,12 +1,11 @@
 import {auth} from "@/utils/auth";
 import {getUserInterviewReports} from "@/app/actions/userReports";
 import {InterviewCard} from "@/components/dashboard/interview-card";
-import {LoginRequired} from "@/components/auth/login-required";
-import {PlusCircle, History, Plus} from "lucide-react";
+import {History, Plus} from "lucide-react";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import {Separator} from "@/components/ui/separator";
-import { redirect } from "next/navigation";
+import {redirect} from "next/navigation";
 
 export default async function DashboardPage() {
   const session = await auth();

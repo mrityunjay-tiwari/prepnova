@@ -1,7 +1,7 @@
 "use client";
 
 import {useMemo, useState} from "react";
-import {BriefcaseBusiness, Clock3, Plus, Sparkles, Trash2} from "lucide-react";
+import {Clock3, Plus, Trash2} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {
   Card,
@@ -31,8 +31,8 @@ import type {
   InterviewSeniority,
   InterviewSetupConfig,
 } from "@/utils/types";
-import { FaCubesStacked } from "react-icons/fa6";
-import { Separator } from "../ui/separator";
+import {FaCubesStacked} from "react-icons/fa6";
+import {Separator} from "../ui/separator";
 import {AnimatedThemeToggler} from "../ui/animated-theme-toggler";
 
 export default function InterviewSetup({
@@ -92,14 +92,16 @@ export default function InterviewSetup({
           <div className="flex justify-between items-baseline">
             <div>
               <h1 className="text-3xl font-bold text-blue-950 dark:text-zinc-50">
-            Configure your interview flow before the call starts!
-          </h1>
-          <p className="max-w-3xl text-sm leading-6 text-zinc-600 dark:text-zinc-400">
-            Select the target level you are preparing to let us decide the type of question to be asked! <br /> And configure for how much time and what all sections to be discussed in your interview.
-          </p>
+                Configure your interview flow before the call starts!
+              </h1>
+              <p className="max-w-3xl text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                Select the target level you are preparing to let us decide the
+                type of question to be asked! <br /> And configure for how much
+                time and what all sections to be discussed in your interview.
+              </p>
             </div>
             <div>
-                <AnimatedThemeToggler />
+              <AnimatedThemeToggler />
             </div>
           </div>
         </div>
@@ -108,18 +110,19 @@ export default function InterviewSetup({
           <Card className="border-blue-950/10 bg-white/90 shadow-sm dark:border-white/10 dark:bg-zinc-900/50 dark:backdrop-blur-sm rounded-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-xl text-blue-950 dark:text-zinc-100">
-                
                 Interview Plan
               </CardTitle>
               <CardDescription>
-                You selected Role in last page. Now Configure the target level and interview
-                sections.
+                You selected Role in last page. Now Configure the target level
+                and interview sections.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Role</p>
+                  <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    Role
+                  </p>
                   <div className="rounded-sm border border-blue-950/10 bg-zinc-50 px-4 py-1.5 text-sm font-semibold text-zinc-800 dark:border-white/10 dark:bg-zinc-800/50 dark:text-zinc-200">
                     {config.role}
                   </div>
@@ -163,7 +166,11 @@ export default function InterviewSetup({
                       guardrails.
                     </p>
                   </div>
-                  <Select onValueChange={(value) => addSection(value as InterviewSectionType)}>
+                  <Select
+                    onValueChange={(value) =>
+                      addSection(value as InterviewSectionType)
+                    }
+                  >
                     <SelectTrigger className="w-[220px] rounded-sm border shadow-lg">
                       <SelectValue placeholder="Add section" />
                     </SelectTrigger>
@@ -191,7 +198,8 @@ export default function InterviewSetup({
                         <div className="mb-3 flex items-start justify-between gap-3">
                           <div>
                             <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                              Section {index + 1}: {getSectionLabel(section.type)}
+                              Section {index + 1}:{" "}
+                              {getSectionLabel(section.type)}
                             </p>
                             <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                               {template?.description}
@@ -233,7 +241,10 @@ export default function InterviewSetup({
                               </SelectTrigger>
                               <SelectContent>
                                 {INTERVIEW_SECTION_OPTIONS.map((option) => (
-                                  <SelectItem key={option.type} value={option.type}>
+                                  <SelectItem
+                                    key={option.type}
+                                    value={option.type}
+                                  >
                                     {option.label}
                                   </SelectItem>
                                 ))}
@@ -254,7 +265,9 @@ export default function InterviewSetup({
                               onChange={(event) =>
                                 updateSection(section.id, (current) => ({
                                   ...current,
-                                  durationMinutes: Number(event.target.value || 0),
+                                  durationMinutes: Number(
+                                    event.target.value || 0,
+                                  ),
                                 }))
                               }
                             />
@@ -309,7 +322,6 @@ export default function InterviewSetup({
           <Card className="border-blue-950/10 bg-white/90 shadow-sm dark:border-white/10 dark:bg-zinc-900/50 dark:backdrop-blur-sm rounded-sm">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-xl text-blue-950 dark:text-zinc-100">
-                
                 Session Summary
               </CardTitle>
               <CardDescription>
@@ -343,8 +355,8 @@ export default function InterviewSetup({
                       </p>
                     </div>
                     <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                      Guardrails: {section.minQuestions} to {section.maxQuestions}{" "}
-                      completed question cycles
+                      Guardrails: {section.minQuestions} to{" "}
+                      {section.maxQuestions} completed question cycles
                     </p>
                   </div>
                 ))}

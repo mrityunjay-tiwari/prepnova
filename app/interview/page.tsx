@@ -1,4 +1,3 @@
-import BgGradient from "@/components/home/bg-gradient";
 import InterviewPage from "@/components/interview/interview-page";
 import {auth} from "@/utils/auth";
 import {redirect} from "next/navigation";
@@ -11,7 +10,6 @@ export default async function InterviewMainPage() {
 
   return (
     <div>
-      {/* <BgGradient /> */}
       <InterviewPage
         userId={user.user?.id || ""}
         userName={user.user?.name || "You"}

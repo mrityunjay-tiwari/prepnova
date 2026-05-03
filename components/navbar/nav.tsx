@@ -6,11 +6,9 @@ import {cn} from "@/lib/utils";
 import {useScroll} from "motion/react";
 import {usePathname} from "next/navigation";
 import {AnimatedThemeToggler} from "../ui/animated-theme-toggler";
-import {sans} from "@/lib/fonts";
 import Image from "next/image";
-
-import { signOut } from "next-auth/react";
-import { Session } from "next-auth";
+import {signOut} from "next-auth/react";
+import {Session} from "next-auth";
 import UserAccountAvatar from "../smoothui/user-account-avatar";
 
 export const Navbar = ({user}: {user?: Session | null}) => {
@@ -37,11 +35,7 @@ export const Navbar = ({user}: {user?: Session | null}) => {
           <div className="mx-auto max-w-full md:max-w-4xl">
             <div className="flex items-center justify-between gap-3 py-3 lg:py-4">
               <div className="flex items-center gap-10 md:gap-16">
-                <Link
-                  href="/"
-                  aria-label="home"
-                  className="flex items-center"
-                >
+                <Link href="/" aria-label="home" className="flex items-center">
                   <Image
                     className="hidden md:block dark:hidden items-center scale-x-70 md:scale-x-100"
                     src={
@@ -60,31 +54,29 @@ export const Navbar = ({user}: {user?: Session | null}) => {
                     width={95}
                     height={95}
                   />
-                  
-                
+
                   <div className="flex md:hidden dark:hidden items-center">
                     <Image
-                    className="aspect-square"
-                    src={
-                      "https://ik.imagekit.io/mrityunjay/prepnova/teach__10_-removebg-preview.png"
-                    }
-                    alt="logo"
-                    width={40}
-                    height={40}
-                  />
+                      className="aspect-square"
+                      src={
+                        "https://ik.imagekit.io/mrityunjay/prepnova/teach__10_-removebg-preview.png"
+                      }
+                      alt="logo"
+                      width={40}
+                      height={40}
+                    />
                   </div>
                   <div className="hidden dark:flex md:dark:hidden items-center">
                     <Image
-                    className="aspect-square"
-                    src={
-                      "https://ik.imagekit.io/mrityunjay/prepnova/teach__10_-removebg-preview.png"
-                    }
-                    alt="logo"
-                    width={40}
-                    height={40}
-                  />
+                      className="aspect-square"
+                      src={
+                        "https://ik.imagekit.io/mrityunjay/prepnova/teach__10_-removebg-preview.png"
+                      }
+                      alt="logo"
+                      width={40}
+                      height={40}
+                    />
                   </div>
-              
                 </Link>
 
                 <ul className="flex gap-3 sm:gap-4 md:gap-8 text-[12.5px] md:text-sm">
@@ -95,7 +87,7 @@ export const Navbar = ({user}: {user?: Session | null}) => {
                           href="/dashboard"
                           className={cn(
                             "group relative block transition-colors duration-150",
-                            
+
                             pathname === "/dashboard"
                               ? "font-semibold"
                               : "hover:text-accent-foreground",
@@ -115,7 +107,7 @@ export const Navbar = ({user}: {user?: Session | null}) => {
                           href="/progress"
                           className={cn(
                             "group relative block transition-colors duration-150",
-                           
+
                             pathname === "/progress"
                               ? "font-semibold"
                               : "hover:text-accent-foreground",

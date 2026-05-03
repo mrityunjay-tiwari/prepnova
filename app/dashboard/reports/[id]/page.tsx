@@ -3,22 +3,15 @@ import {getInterviewReportById} from "@/app/actions/userReports";
 import {notFound, redirect} from "next/navigation";
 import {
   ChevronLeft,
-  BarChart3,
   Target,
   MessageSquare,
   Zap,
   ShieldCheck,
-  Award,
   Calendar,
   User,
-  BrainCircuit,
-  Lightbulb,
-  AlertCircle,
   ListChecks,
   Route,
   GraduationCap,
-  ThumbsUp,
-  ThumbsDown,
 } from "lucide-react";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
@@ -38,7 +31,7 @@ import type {
   StoredInterviewFlowSection,
 } from "@/utils/types";
 import {Separator} from "@/components/ui/separator";
-import {PiStackFill, PiThumbsUpFill} from "react-icons/pi";
+import {PiStackFill} from "react-icons/pi";
 import {RiPencilFill} from "react-icons/ri";
 import {LuMessageCircleDashed} from "react-icons/lu";
 import {IoIosTrendingUp} from "react-icons/io";

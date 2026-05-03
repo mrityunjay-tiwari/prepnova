@@ -9,11 +9,7 @@ import {
   MessageSquare,
   ShieldCheck,
   Award,
-  ArrowUpRight,
-  ArrowDownRight,
-  LayoutDashboard,
   Activity,
-  Sparkles,
   CalendarRange,
   BrainCircuit,
   ChevronLeft,
@@ -29,7 +25,6 @@ import {
 } from "@/components/ui/card";
 import {Progress} from "@/components/ui/progress";
 import {Badge} from "@/components/ui/badge";
-import {Separator} from "@/components/ui/separator";
 import {format} from "date-fns";
 import {ProgressCharts} from "@/components/dashboard/progress-charts";
 import {sans} from "@/lib/fonts";

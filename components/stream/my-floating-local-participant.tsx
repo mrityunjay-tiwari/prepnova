@@ -1,4 +1,7 @@
-import { ParticipantView, StreamVideoParticipant } from "@stream-io/video-react-sdk";
+import {
+  ParticipantView,
+  StreamVideoParticipant,
+} from "@stream-io/video-react-sdk";
 
 export const MyFloatingLocalParticipant = (props: {
   participant?: StreamVideoParticipant;

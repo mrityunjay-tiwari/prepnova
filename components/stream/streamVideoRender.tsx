@@ -30,26 +30,16 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import {
-  PanelLeft,
-  Sparkles,
-  ScanEye,
-  UserRound,
-  Bot,
-  MessageSquareQuote,
-} from "lucide-react";
+import {PanelLeft, UserRound} from "lucide-react";
 import {PiStarFourFill} from "react-icons/pi";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
 import AgentAvatar from "../ui/agent-avatar";
 import {getSectionLabel} from "@/utils/interview-config";
 import type {InterviewSetupConfig} from "@/utils/types";
-import {PiSealQuestionFill} from "react-icons/pi";
-import { GrUserNew } from "react-icons/gr";
-import { IconType } from "react-icons/lib";
-import { TbPointerQuestion } from "react-icons/tb";
-import { PiQuestionMarkThin } from "react-icons/pi";
-import { PiSealQuestionThin } from "react-icons/pi";
-import { Separator } from "../ui/separator";
+import {GrUserNew} from "react-icons/gr";
+import {IconType} from "react-icons/lib";
+import {PiSealQuestionThin} from "react-icons/pi";
+import {Separator} from "../ui/separator";
 import {AnimatedThemeToggler} from "../ui/animated-theme-toggler";
 
 export default function StreamVideoCallRender({
@@ -182,7 +172,10 @@ const InterviewLayout = ({
   }
 
   return (
-    <SidebarProvider defaultOpen style={{ "--sidebar-width": "24rem" } as React.CSSProperties}>
+    <SidebarProvider
+      defaultOpen
+      style={{"--sidebar-width": "24rem"} as React.CSSProperties}
+    >
       <div className="h-[calc(100vh)] w-full flex items-center justify-center overflow-hidden">
         <SidebarInset className="bg-transparent">
           <div className="flex h-full">
@@ -219,12 +212,10 @@ const InterviewLayout = ({
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-
-                <AnimatedThemeToggler />
-                <SidebarTrigger className="inline-flex text-sm font-semibold text-blue-950 dark:text-zinc-200 shadow-sm backdrop-blur">
-                  <PanelLeft className="mr-2 h-4 w-4" />
-                  
-                </SidebarTrigger>
+                  <AnimatedThemeToggler />
+                  <SidebarTrigger className="inline-flex text-sm font-semibold text-blue-950 dark:text-zinc-200 shadow-sm backdrop-blur">
+                    <PanelLeft className="mr-2 h-4 w-4" />
+                  </SidebarTrigger>
                 </div>
               </div>
 
@@ -277,7 +268,7 @@ const InterviewLayout = ({
                   </h3>
                 </div>
               </SidebarHeader>
-                <Separator />
+              <Separator />
               <SidebarContent className="p-2.5 items-center justify-center">
                 <SidebarGroup className="p-0">
                   <SidebarGroupLabel className="px-2 text-sm text-sidebar-foreground/65 flex items-center">

@@ -116,12 +116,9 @@ const CardsBottomSection = ({
 }: CardsBottomSectionProps) => {
   return (
     <div className="w-full bg-white p-6 -mt-8 flex flex-col items-start relative z-50">
-      {/* Step number bubble */}
       <div className="bg-linear-to-br shadow-[0_4px_15px_rgba(37,99,235,0.4)] from-zinc-400 to-zinc-700 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center mb-2">
         <h1>{stepNumber}</h1>
       </div>
-
-      {/* Step content */}
       <h2 className="text-lg font-semibold text-gray-900 mb-1">{title}</h2>
       <p className="text-sm text-gray-500">{description}</p>
     </div>
@@ -149,7 +146,6 @@ export default function Limitations() {
             key={step.num}
             className="relative w-1/2 md:w-1/4 border-b border-r border-slate-200 flex flex-col items-center"
           >
-            {/* Blueprint Crosses at intersections */}
             <Cross className="-top-[8px] -left-[8px]" />
             <Cross className="-top-[8px] -right-[8px]" />
             <Cross className="-bottom-[8px] -left-[8px]" />

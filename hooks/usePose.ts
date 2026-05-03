@@ -86,7 +86,6 @@ export function usePose(
         if (result.landmarks.length > 0) {
           const landmarks = result.landmarks[0];
 
-          // ================= DRAW SKELETON =================
           POSE_CONNECTIONS.forEach(([startIdx, endIdx]) => {
             const start = landmarks[startIdx];
             const end = landmarks[endIdx];
@@ -118,7 +117,6 @@ export function usePose(
             ctx.fill();
           });
 
-          // ================= POSTURE SCORE =================
           const leftShoulder = landmarks[11];
           const rightShoulder = landmarks[12];
 
@@ -129,7 +127,6 @@ export function usePose(
           const score = Math.max(0, 1 - shoulderDiff * 5);
           setPostureScore(Number(score.toFixed(2)));
 
-          // ================= SMART ISSUE DETECTION =================
           const now = Date.now();
           const NUDGE_DELAY = 2000;
 
@@ -242,7 +239,6 @@ export function usePose(
     };
   }, [videoRef]);
 
-  // ================= 5 SECOND COACH SCHEDULER =================
   useEffect(() => {
     schedulerRef.current = setInterval(() => {
       const nudges = latestNudgesRef.current;

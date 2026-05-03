@@ -1,7 +1,5 @@
-import { AuthButton } from "@/components/signin/sign-in-button";
+import {AuthButton} from "@/components/signin/sign-in-button";
 import {signIn} from "@/utils/auth";
-import Image from "next/image";
-import Link from "next/link";
 
 export default async function LoginPage() {
   return (
@@ -9,7 +7,6 @@ export default async function LoginPage() {
       <div className="max-w-92 m-auto h-fit w-full">
         <div className="p-6">
           <div>
-            
             <h1 className="mb-0.5 mt-4 text-xl font-medium">
               Welcome to Prepnova.
             </h1>
@@ -21,7 +18,7 @@ export default async function LoginPage() {
           <form
             action={async () => {
               "use server";
-              await signIn("google", { redirectTo: "/dashboard" });
+              await signIn("google", {redirectTo: "/dashboard"});
             }}
             className="mt-6"
           >

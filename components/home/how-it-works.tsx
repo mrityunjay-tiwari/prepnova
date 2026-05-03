@@ -1,5 +1,22 @@
 "use client";
 
+import {useState} from "react";
+import {TrashIcon} from "lucide-react";
+import {Input} from "@/components/ui/input";
+import {
+  buildDefaultInterviewSetup,
+  createFlowSection,
+  getSectionLabel,
+  INTERVIEW_SECTION_OPTIONS,
+} from "@/utils/interview-config";
+import type {
+  InterviewFlowSection,
+  InterviewSectionType,
+  InterviewSetupConfig,
+} from "@/utils/types";
+import AgentAvatar from "../ui/agent-avatar";
+import FLoatingInterviewReportPanel from "./floating-interview-analysis-panel";
+import Image from "next/image";
 import {Card, CardContent} from "../ui/card";
 import Headings from "./headings";
 import {
@@ -50,7 +67,7 @@ const Step1Card = () => {
           <Card className="inset-0 relative max-w-full m-14 rounded-lg -z-20 -mt-23"></Card>
 
           {/* Fade overlay blending into the white background */}
-          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white to-transparent pointer-events-none z-50" />
+          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-linear-to-t from-white to-transparent pointer-events-none z-50" />
         </div>
       </div>
 
@@ -200,10 +217,10 @@ const Step4Card = () => {
 
       <div className="mt-4">
         <CardsBottomSection
-        stepNumber="04"
-        title="Take the Interview"
-        description="Attend the interview custom designed in Real Time as per your configurations."
-      />
+          stepNumber="04"
+          title="Take the Interview"
+          description="Attend the interview custom designed in Real Time as per your configurations."
+        />
       </div>
     </div>
   );
@@ -216,7 +233,7 @@ const Step5Card = () => {
       <div className="w-full rounded-none">
         <div className="relative bg-linear-to-t from-slate-100 to-gray-50 max-w-full overflow-hidden">
           <div className="flex w-full items-center justify-center scale-[90%]">
-           <FLoatingInterviewReportPanel />
+            <FLoatingInterviewReportPanel />
           </div>
           {/* Fade overlay blending into the white background */}
           <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white to-transparent pointer-events-none z-50" />
@@ -241,7 +258,7 @@ const Step6Card = () => {
       <div className="w-full rounded-none">
         <div className="relative pt-5 px-2 pb-4 bg-linear-to-t from-slate-100 to-gray-50 max-w-full overflow-hidden">
           <div className="flex w-full items-center justify-center">
-            <Image 
+            <Image
               src="https://ik.imagekit.io/mrityunjay/prepnova/ChatGPT%20Image%20May%202,%202026,%2003_31_40%20PM.png"
               alt="Report 1"
               width={800}
@@ -278,12 +295,9 @@ const CardsBottomSection = ({
 }: CardsBottomSectionProps) => {
   return (
     <div className="w-full bg-white p-6 -mt-8 flex flex-col items-start relative z-50">
-      {/* Step number bubble */}
       <div className="bg-linear-to-br shadow-[0_4px_15px_rgba(37,99,235,0.4)] from-blue-500 to-blue-600 text-white font-semibold text-base rounded-xl w-10 h-10 flex items-center justify-center mb-2">
         <h1>{stepNumber}</h1>
       </div>
-
-      {/* Step content */}
       <h2 className="text-lg font-semibold text-gray-900 mb-1">{title}</h2>
       <p className="text-sm text-gray-500">{description}</p>
     </div>
@@ -302,7 +316,11 @@ const STEPS = [
 export default function HowItWorks() {
   return (
     <div className="w-full mx-auto max-w-6xl">
-      <Headings subtitle="How it Solves?" title="How the entire flow works!" subheading="(Interactive Playground)" />
+      <Headings
+        subtitle="How it Solves?"
+        title="How the entire flow works!"
+        subheading="(Interactive Playground)"
+      />
 
       <div className="mt-16 relative w-full flex flex-wrap border-t border-l border-slate-200">
         {STEPS.map((step) => (
@@ -310,7 +328,6 @@ export default function HowItWorks() {
             key={step.num}
             className="relative w-full md:w-1/3 border-b border-r border-slate-200 flex flex-col items-center"
           >
-            {/* Blueprint Crosses at intersections */}
             <Cross className="-top-[8px] -left-[8px]" />
             <Cross className="-top-[8px] -right-[8px]" />
             <Cross className="-bottom-[8px] -left-[8px]" />
@@ -323,27 +340,6 @@ export default function HowItWorks() {
     </div>
   );
 }
-
-import {useState} from "react";
-import {TrashIcon} from "lucide-react";
-
-import {Input} from "@/components/ui/input";
-
-import {
-  buildDefaultInterviewSetup,
-  createFlowSection,
-  getSectionLabel,
-  INTERVIEW_SECTION_OPTIONS,
-} from "@/utils/interview-config";
-import type {
-  InterviewFlowSection,
-  InterviewSectionType,
-  InterviewSetupConfig,
-} from "@/utils/types";
-import {Screen} from "./screen";
-import AgentAvatar from "../ui/agent-avatar";
-import FLoatingInterviewReportPanel from "./floating-interview-analysis-panel";
-import Image from "next/image";
 
 function InterviewSetup12({role}: {role: string}) {
   const [config, setConfig] = useState<InterviewSetupConfig>(() =>

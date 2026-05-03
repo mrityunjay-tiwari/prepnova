@@ -1,11 +1,11 @@
 "use client";
 
-import type { Variants } from "motion/react";
-import { motion, useAnimation } from "motion/react";
-import type { HTMLAttributes } from "react";
-import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
+import type {Variants} from "motion/react";
+import {motion, useAnimation} from "motion/react";
+import type {HTMLAttributes} from "react";
+import {forwardRef, useCallback, useImperativeHandle, useRef} from "react";
 
-import { cn } from "@/lib/utils";
+import {cn} from "@/lib/utils";
 
 export interface MessageCircleIconHandle {
   startAnimation: () => void;
@@ -41,7 +41,7 @@ const ICON_VARIANTS: Variants = {
 const MessageCircleIcon = forwardRef<
   MessageCircleIconHandle,
   MessageCircleIconProps
->(({ onMouseEnter, onMouseLeave, className, size = 28, ...props }, ref) => {
+>(({onMouseEnter, onMouseLeave, className, size = 28, ...props}, ref) => {
   const controls = useAnimation();
   const isControlledRef = useRef(false);
 
@@ -62,7 +62,7 @@ const MessageCircleIcon = forwardRef<
         controls.start("animate");
       }
     },
-    [controls, onMouseEnter]
+    [controls, onMouseEnter],
   );
 
   const handleMouseLeave = useCallback(
@@ -73,7 +73,7 @@ const MessageCircleIcon = forwardRef<
         controls.start("normal");
       }
     },
-    [controls, onMouseLeave]
+    [controls, onMouseLeave],
   );
 
   return (
@@ -104,4 +104,4 @@ const MessageCircleIcon = forwardRef<
 
 MessageCircleIcon.displayName = "MessageCircleIcon";
 
-export { MessageCircleIcon };
+export {MessageCircleIcon};

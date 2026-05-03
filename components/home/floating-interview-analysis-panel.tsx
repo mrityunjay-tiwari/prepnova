@@ -26,7 +26,6 @@ export default function FLoatingInterviewReportPanel() {
                 <div className="rounded dark:border-0 border border-sidebar-border/70 bg-white/80 p-2.5 shadow-2xl">
                   <div className="mb-0.5 flex items-center justify-between">
                     <div className="flex items-center gap-0.5 text-sm font-medium text-slate-800">
-                      {/* <Sparkles className="h-3 w-3" /> */}
                       Last Answer Feedback
                     </div>
                     <span className="rounded-md bg-amber-100 px-1.5 py-0.5 text-[10px] text-amber-700">
@@ -50,7 +49,6 @@ export default function FLoatingInterviewReportPanel() {
                 <div className="rounded rounded-b-md dark:border-0 shadow-xl border border-sidebar-border/70 bg-white/85 p-3">
                   <div className="mb-0.5 flex items-center justify-between">
                     <div className="mb-2 text-sm flex items-center gap-2 font-medium text-slate-800">
-                      {/* <ScanEye className="h-4 w-4 text-emerald-600" /> */}
                       Posture & Presence
                     </div>
                     <span className="rounded-md bg-amber-100 px-1.5 py-0.5 text-[10px] text-amber-700">

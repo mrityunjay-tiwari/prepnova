@@ -3,9 +3,9 @@
 import {cn} from "@/lib/utils";
 import {XIcon} from "../hover-icons/close";
 import {MessageCircleIcon} from "../hover-icons/message-circle";
-import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "../ui/tooltip";
+import {Tooltip, TooltipContent, TooltipTrigger} from "../ui/tooltip";
 import {useEffect, useRef, useState} from "react";
-import {marker, sans} from "@/lib/fonts";
+import {sans} from "@/lib/fonts";
 import Image from "next/image";
 import {Button} from "../ui/button";
 import {SendIcon} from "lucide-react";
@@ -20,8 +20,6 @@ import {Spinner} from "../kibo-ui/spinner";
 import {CheckCheckIcon} from "../hover-icons/doublecheck";
 import {ChevronDownIcon} from "../hover-icons/down-arrow";
 import ChatReactions from "./chat-reactions";
-// import ReactMarkdown from "react-markdown";
-// import remarkGfm from "remark-gfm";
 import MarkDownRenderer from "./react-markdown";
 
 type MessageMeta = {
@@ -158,7 +156,6 @@ export default function ChatBotOpenButton() {
       setIsFormattingInput(false);
     }
   };
-  // console.log("transcript from chatbot comp", transcript);
 
   const getCurrentTime = () =>
     new Date().toLocaleTimeString("en-US", {
@@ -272,7 +269,6 @@ export default function ChatBotOpenButton() {
 
   return (
     <div className="fixed z-20 rounded-full  bottom-5 right-5 hover:cursor-pointer">
-     
       <Tooltip>
         <TooltipTrigger asChild>
           <div
@@ -280,9 +276,15 @@ export default function ChatBotOpenButton() {
             onClick={() => setExpanded(!expanded)}
           >
             {expanded ? (
-              <XIcon className="text-neutral-50 dark:text-neutral-950" size={18} />
+              <XIcon
+                className="text-neutral-50 dark:text-neutral-950"
+                size={18}
+              />
             ) : (
-              <MessageCircleIcon className="text-neutral-50 dark:text-neutral-950" size={18} />
+              <MessageCircleIcon
+                className="text-neutral-50 dark:text-neutral-950"
+                size={18}
+              />
             )}
           </div>
         </TooltipTrigger>
@@ -398,7 +400,7 @@ export default function ChatBotOpenButton() {
                       return (
                         <div
                           key={`${message.id}-${index}`}
-                          className="max-w-[80%] break-words overflow-hidden"
+                          className="max-w-[80%] wrap-break-word overflow-hidden"
                         >
                           <div
                             className={cn(

@@ -1,7 +1,6 @@
 "use client";
-import React, { useRef } from "react";
-import {User, Database} from "lucide-react";
-import {Highlighter} from "../ui/highlighter";
+import React, {useRef} from "react";
+import {User} from "lucide-react";
 import Headings from "./headings";
 import SystemNodePopover from "./system-node-popover";
 import {
@@ -14,18 +13,14 @@ import {
   WorkflowForProgressReport,
   WorkflowForUser,
   WorkflowForVoiceSession,
-  WritingPadForFrontendExperience,
 } from "./workflow-node";
 import InvoiceNode from "./invoice-node";
 import {RiNextjsFill} from "react-icons/ri";
-import {IoShieldHalfSharp} from "react-icons/io5";
 import AgentAvatar from "../ui/agent-avatar";
-import {BiShield} from "react-icons/bi";
 import {TbShieldCheck} from "react-icons/tb";
 import {FaCode} from "react-icons/fa6";
 import {BsDatabase} from "react-icons/bs";
-import { AiOutlineDeliveredProcedure } from "react-icons/ai";
-
+import {AiOutlineDeliveredProcedure} from "react-icons/ai";
 import {AnimatedBeam} from "../ui/animated-beam";
 
 export default function Technical() {
@@ -60,21 +55,29 @@ export default function Technical() {
       </h1>
 
       {/* Placeholder container for the system design diagram */}
-      <div 
+      <div
         ref={containerRef}
         className="relative w-full min-h-auto flex flex-col items-start justify-around border border-slate-100 rounded-xl bg-slate-50/50 p-8 gap-8 overflow-hidden"
       >
         <div className="flex items-start justify-around w-full relative z-10">
-          <div ref={userRef}><UserNode /></div>
+          <div ref={userRef}>
+            <UserNode />
+          </div>
           {/* <SystemNodePopover /> */}
           <div className="flex items-start">
             <div className="flex flex-col items-center justify-center gap-24">
               <div className="flex gap-10">
-                <div ref={frontendRef}><FrontendExperience /></div>
+                <div ref={frontendRef}>
+                  <FrontendExperience />
+                </div>
               </div>
               <div className="flex gap-18 items-start">
-                <div ref={localRef}><LocalPresence /></div>
-                <div ref={voiceRef}><VoiceSessionLayer /></div>
+                <div ref={localRef}>
+                  <LocalPresence />
+                </div>
+                <div ref={voiceRef}>
+                  <VoiceSessionLayer />
+                </div>
               </div>
             </div>
             <div className="-ml-24" ref={dbRef}>
@@ -90,27 +93,95 @@ export default function Technical() {
           </div>
         </div>
         <div className="flex justify-around w-full mt-10 items-start relative z-10">
-          <div ref={progressRef}><ProgressMemory /></div>
-          <div ref={reportRef}><FinalReportGeneration /></div>
+          <div ref={progressRef}>
+            <ProgressMemory />
+          </div>
+          <div ref={reportRef}>
+            <FinalReportGeneration />
+          </div>
           <div className="flex flex-col items-center gap-5">
-            <div ref={engineRef}><InterviewStateEngine /></div>
+            <div ref={engineRef}>
+              <InterviewStateEngine />
+            </div>
           </div>
         </div>
         <div className="flex justify-end w-full mt-10 -ml-48 relative z-10">
-          <div ref={liveRef}><LiveEvalutationPipeline /></div>
+          <div ref={liveRef}>
+            <LiveEvalutationPipeline />
+          </div>
         </div>
 
         {/* Animated Connections */}
-        <AnimatedBeam containerRef={containerRef} fromRef={userRef} toRef={frontendRef} duration={3} pathType="straight-horizontal" startAnchor="top" endAnchor="top" startYOffset={68} />
-        <AnimatedBeam containerRef={containerRef} fromRef={frontendRef} toRef={dbRef} duration={3} pathOpacity={0.2} pathColor="rgba(0,0,0,0.2)" gradientStartColor="rgba(0,0,0,0)" gradientStopColor="rgba(0,0,0,0.4)" />
-        <AnimatedBeam containerRef={containerRef} fromRef={frontendRef} toRef={localRef} duration={3} />
-        <AnimatedBeam containerRef={containerRef} fromRef={frontendRef} toRef={voiceRef} duration={3} />
-        <AnimatedBeam containerRef={containerRef} fromRef={localRef} toRef={reportRef} duration={4} />
-        <AnimatedBeam containerRef={containerRef} fromRef={voiceRef} toRef={engineRef} duration={3} />
-        <AnimatedBeam containerRef={containerRef} fromRef={engineRef} toRef={reportRef} duration={3} />
-        <AnimatedBeam containerRef={containerRef} fromRef={reportRef} toRef={liveRef} duration={4} reverse />
-        <AnimatedBeam containerRef={containerRef} fromRef={liveRef} toRef={progressRef} duration={4} />
-        <AnimatedBeam containerRef={containerRef} fromRef={progressRef} toRef={frontendRef} duration={5} pathType="l-shape-up-right" />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={userRef}
+          toRef={frontendRef}
+          duration={3}
+          pathType="straight-horizontal"
+          startAnchor="top"
+          endAnchor="top"
+          startYOffset={68}
+        />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={frontendRef}
+          toRef={dbRef}
+          duration={3}
+          pathOpacity={0.2}
+          pathColor="rgba(0,0,0,0.2)"
+          gradientStartColor="rgba(0,0,0,0)"
+          gradientStopColor="rgba(0,0,0,0.4)"
+        />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={frontendRef}
+          toRef={localRef}
+          duration={3}
+        />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={frontendRef}
+          toRef={voiceRef}
+          duration={3}
+        />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={localRef}
+          toRef={reportRef}
+          duration={4}
+        />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={voiceRef}
+          toRef={engineRef}
+          duration={3}
+        />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={engineRef}
+          toRef={reportRef}
+          duration={3}
+        />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={reportRef}
+          toRef={liveRef}
+          duration={4}
+          reverse
+        />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={liveRef}
+          toRef={progressRef}
+          duration={4}
+        />
+        <AnimatedBeam
+          containerRef={containerRef}
+          fromRef={progressRef}
+          toRef={frontendRef}
+          duration={5}
+          pathType="l-shape-up-right"
+        />
       </div>
     </div>
   );
@@ -150,8 +221,6 @@ const LocalPresence = () => {
           <TbShieldCheck className="size-8" />
         </h1>
       </div>
-
-      {/* Use absolute positioning so this doesn't push down the workflow list */}
       <div className="absolute left-52 top-8 z-20">
         <SystemNodePopover />
       </div>
@@ -177,9 +246,12 @@ const VoiceSessionLayer = () => {
 const LiveEvalutationPipeline = () => {
   return (
     <div className="flex flex-col items-center">
-        <div className="bg-white border border-slate-200 shadow-sm rounded-lg p-1.5 pr-3 flex items-center gap-2 mb-2 w-max">
+      <div className="bg-white border border-slate-200 shadow-sm rounded-lg p-1.5 pr-3 flex items-center gap-2 mb-2 w-max">
         <div className="w-8 h-8 bg-[#ffecff] rounded-md flex items-center justify-center shrink-0">
-          <AiOutlineDeliveredProcedure className="w-4 h-4 text-[#d406ae]" strokeWidth={2} />
+          <AiOutlineDeliveredProcedure
+            className="w-4 h-4 text-[#d406ae]"
+            strokeWidth={2}
+          />
         </div>
         <div className="flex flex-col items-start justify-center">
           <span className="text-sm font-medium text-slate-800">
@@ -188,7 +260,7 @@ const LiveEvalutationPipeline = () => {
           <span className="text-xs text-slate-500 font-medium">Pipeline</span>
         </div>
       </div>
-      
+
       <WorkflowForLiveEvaluationReport />
     </div>
   );
@@ -200,7 +272,7 @@ const FinalReportGeneration = () => {
       <div className="rounded-xl text-xs flex items-center justify-center mb-2">
         <InvoiceNode />
       </div>
-       <div className="absolute left-52 top-18 z-20">
+      <div className="absolute left-52 top-18 z-20">
         <SystemNodePopover />
       </div>
 
@@ -246,7 +318,6 @@ const ProgressMemory = () => {
         </div>
       </div>
 
-      {/* Use absolute positioning so this doesn't push down the workflow list */}
       <div className="absolute left-52 top-8 z-20">
         <SystemNodePopover />
       </div>

@@ -1,11 +1,10 @@
 import type {Metadata} from "next";
-import {Cormorant_Garamond, Geist, Geist_Mono, Sen, Ubuntu} from "next/font/google";
+import {Geist, Geist_Mono, Sen} from "next/font/google";
 import "./globals.css";
 import {ThemeProvider} from "@/components/ui/theme-provider";
-import BgGradient from "@/components/home/bg-gradient";
 import LayoutWrapper from "@/components/home/layout-wrapper";
-import { auth } from "@/utils/auth";
-import { Navbar } from "@/components/navbar/nav";
+import {auth} from "@/utils/auth";
+import {Navbar} from "@/components/navbar/nav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,13 +19,13 @@ const geistMono = Geist_Mono({
 const sen = Sen({
   variable: "--font-sans",
   subsets: ["latin"],
-  weight: ['400', '500', '600', '700', '800']
-})
+  weight: ["400", "500", "600", "700", "800"],
+});
 
 export const metadata: Metadata = {
   title: "Prepnova",
   description:
-    "Prepnova is an AI-powered interview coaching platform that analyzes your answers, body language, and engagement in real time — then turns every session into measurable growth.",
+    "Prepnova is an AI-powered interview coaching platform that analyzes your answers, body language, and engagement in real time and then turns every session into measurable growth.",
 };
 
 export default async function RootLayout({
@@ -37,9 +36,7 @@ export default async function RootLayout({
   const user = await auth();
   return (
     <html lang="en">
-      <body
-        className={`${sen.className} hide-scrollbar antialiased`}
-      >
+      <body className={`${sen.className} hide-scrollbar antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
