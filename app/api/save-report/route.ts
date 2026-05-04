@@ -25,6 +25,7 @@ export async function POST(req: Request) {
         },
       });
       
+      console.log("Report saved successfully", savedReport.id)
       return Response.json({ success: true, id: savedReport.id });
 
     } catch (prismaError: unknown) {

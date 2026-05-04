@@ -1,7 +1,7 @@
 
 import {UIMessage, streamText, convertToModelMessages} from 'ai'
 import { openrouter } from "@openrouter/ai-sdk-provider";
-import { DOCUMIND_AI_SYSTEM_PROMPT } from '@/utils/system-prompt';
+import { PREPNOVA_AI_SYSTEM_PROMPT } from '@/utils/system-prompt';
 
 export async function POST(req: Request) {
     try{
@@ -10,7 +10,7 @@ export async function POST(req: Request) {
         const result = await streamText({
             model: openrouter("openai/gpt-oss-120b:free"),
             messages: await convertToModelMessages(messages),
-            system: DOCUMIND_AI_SYSTEM_PROMPT
+            system: PREPNOVA_AI_SYSTEM_PROMPT
         })
                     
         return result.toUIMessageStreamResponse()

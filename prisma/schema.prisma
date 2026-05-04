@@ -60,35 +60,27 @@ model VerificationToken {
 
 model InterviewReport {
   id                String   @id @default(cuid())
-
   userId            String
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
   role              String?
   seniority         String?
-
   technicalScore    Float
   problemSolvingScore Float
   communicationScore Float
   confidenceScore   Float
   behavioralScore   Float
-
   overallScore      Float
   readinessLevel    String?
-
   postureMin        Float
   postureMax        Float
   postureAvg        Float
   postureSummary    String?
-
   strengths         String[]
   improvementAreas  String[]
   actionPlan        Json?
   communicationSummary String?
   sectionBreakdown  Json?
   flowUsed          Json?
-
   finalSummary      String
-
   createdAt         DateTime @default(now())
 }

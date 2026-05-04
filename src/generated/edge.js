@@ -222,7 +222,8 @@ const config = {
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../.env"
+    "rootEnvPath": null,
+    "schemaEnvPath": "../../.env"
   },
   "relativePath": "../../prisma",
   "clientVersion": "6.19.2",
@@ -231,7 +232,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -240,8 +240,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id            String    @id @default(cuid())\n  name          String?\n  email         String    @unique\n  createdAt     DateTime  @default(now())\n  updatedAt     DateTime  @updatedAt\n  image         String?\n  emailVerified DateTime?\n  accounts      Account[]\n  sessions      Session[]\n\n  interviews InterviewReport[]\n}\n\nmodel Account {\n  userId            String\n  type              String\n  provider          String\n  providerAccountId String\n  refresh_token     String?\n  access_token      String?\n  expires_at        Int?\n  token_type        String?\n  scope             String?\n  id_token          String?\n  session_state     String?\n  createdAt         DateTime @default(now())\n  updatedAt         DateTime @updatedAt\n  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@id([provider, providerAccountId])\n}\n\nmodel Session {\n  sessionToken String   @unique\n  userId       String\n  expires      DateTime\n  createdAt    DateTime @default(now())\n  updatedAt    DateTime @updatedAt\n  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n}\n\nmodel VerificationToken {\n  identifier String\n  token      String\n  expires    DateTime\n\n  @@id([identifier, token])\n}\n\nmodel InterviewReport {\n  id String @id @default(cuid())\n\n  userId String\n  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  role      String?\n  seniority String?\n\n  technicalScore      Float\n  problemSolvingScore Float\n  communicationScore  Float\n  confidenceScore     Float\n  behavioralScore     Float\n\n  overallScore   Float\n  readinessLevel String?\n\n  postureMin     Float\n  postureMax     Float\n  postureAvg     Float\n  postureSummary String?\n\n  strengths            String[]\n  improvementAreas     String[]\n  actionPlan           Json?\n  communicationSummary String?\n  sectionBreakdown     Json?\n  flowUsed             Json?\n\n  finalSummary String\n\n  createdAt DateTime @default(now())\n}\n",
-  "inlineSchemaHash": "3ab04e6182a1ddb774f82df04ba4a64064efca78134e36bf31d08e82c64fd8c0",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id            String    @id @default(cuid())\n  name          String?\n  email         String    @unique\n  createdAt     DateTime  @default(now())\n  updatedAt     DateTime  @updatedAt\n  image         String?\n  emailVerified DateTime?\n  accounts      Account[]\n  sessions      Session[]\n\n  interviews InterviewReport[]\n}\n\nmodel Account {\n  userId            String\n  type              String\n  provider          String\n  providerAccountId String\n  refresh_token     String?\n  access_token      String?\n  expires_at        Int?\n  token_type        String?\n  scope             String?\n  id_token          String?\n  session_state     String?\n  createdAt         DateTime @default(now())\n  updatedAt         DateTime @updatedAt\n  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@id([provider, providerAccountId])\n}\n\nmodel Session {\n  sessionToken String   @unique\n  userId       String\n  expires      DateTime\n  createdAt    DateTime @default(now())\n  updatedAt    DateTime @updatedAt\n  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n}\n\nmodel VerificationToken {\n  identifier String\n  token      String\n  expires    DateTime\n\n  @@id([identifier, token])\n}\n\nmodel InterviewReport {\n  id                   String   @id @default(cuid())\n  userId               String\n  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n  role                 String?\n  seniority            String?\n  technicalScore       Float\n  problemSolvingScore  Float\n  communicationScore   Float\n  confidenceScore      Float\n  behavioralScore      Float\n  overallScore         Float\n  readinessLevel       String?\n  postureMin           Float\n  postureMax           Float\n  postureAvg           Float\n  postureSummary       String?\n  strengths            String[]\n  improvementAreas     String[]\n  actionPlan           Json?\n  communicationSummary String?\n  sectionBreakdown     Json?\n  flowUsed             Json?\n  finalSummary         String\n  createdAt            DateTime @default(now())\n}\n",
+  "inlineSchemaHash": "c714155560ca68e7a18bbeb855fda7af550f685cc6365e547511c272ab9dd1e6",
   "copyEngine": true
 }
 config.dirname = '/'

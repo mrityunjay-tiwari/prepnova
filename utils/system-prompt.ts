@@ -39,7 +39,7 @@ Constraints:
 - No explanation outside JSON.
 `;
 
-export const DOCUMIND_AI_SYSTEM_PROMPT = `
+export const PREPNOVA_AI_SYSTEM_PROMPT = `
 You are the in-app product assistant for PrepNova designed for software engineers and technical candidates.
 
 Your job is to help users understand:
