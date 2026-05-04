@@ -13,6 +13,8 @@ const features = [
       "Get detailed feedback on your answers, communication with executionable insights.",
     image:
       "https://ik.imagekit.io/mrityunjay/prepnova/ChatGPT%20Image%20May%202,%202026,%2003_31_40%20PM.png",
+    darkImage:
+      "https://ik.imagekit.io/mrityunjay/prepnova/ChatGPT%20Image%20May%203,%202026,%2009_31_20%20PM.png",
   },
   {
     id: 2,
@@ -21,6 +23,8 @@ const features = [
       "Track your progress over time and get detailed insights on your performance.",
     image:
       "https://ik.imagekit.io/mrityunjay/prepnova/ChatGPT%20Image%20May%202,%202026,%2003_28_14%20PM.png",
+    darkImage:
+      "https://ik.imagekit.io/mrityunjay/prepnova/ChatGPT%20Image%20May%203,%202026,%2009_26_21%20PM.png",
   },
 ];
 
@@ -82,7 +86,7 @@ export function FeatureShowcase() {
       />
 
       <div
-        className="flex flex-col md:flex-row gap-2 md:gap-4"
+        className="flex flex-col md:flex-row gap-2 md:gap-4 mt-5 md:mt-0"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -98,24 +102,34 @@ export function FeatureShowcase() {
               )}
               onClick={() => handleCardClick(index)}
             >
-              <div
-                className={cn(
-                  "relative w-full rounded-xl overflow-hidden transition-all duration-700 ease-in-out bg-white border-b border-l shadow-md",
-                  "h-[250px] sm:h-[350px] md:h-[400px]",
-                )}
-              >
-                <Image
-                  src={feature.image}
-                  alt={feature.title}
-                  fill
+                <div
                   className={cn(
-                    "object-contain transition-transform duration-1000",
-                    isActive ? "scale-100" : "scale-105",
+                    "relative w-full rounded-xl overflow-hidden transition-all duration-700 ease-in-out bg-white dark:bg-zinc-950 border-b border-l border-slate-200 dark:border-zinc-800 shadow-md",
+                    "h-[250px] sm:h-[350px] md:h-[400px]",
                   )}
-                  priority={index === 0}
-                />
+                >
+                  <Image
+                    src={feature.image}
+                    alt={feature.title}
+                    fill
+                    className={cn(
+                      "object-contain transition-transform duration-1000 dark:hidden",
+                      isActive ? "scale-100" : "scale-105",
+                    )}
+                    priority={index === 0}
+                  />
+                  <Image
+                    src={feature.darkImage}
+                    alt={feature.title}
+                    fill
+                    className={cn(
+                      "object-contain transition-transform duration-1000 hidden dark:block",
+                      isActive ? "scale-100" : "scale-105",
+                    )}
+                    priority={index === 0}
+                  />
 
-                <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white to-transparent pointer-events-none" />
+                  <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white dark:from-zinc-950 to-transparent pointer-events-none" />
 
                 <div className="absolute bottom-3 left-3 md:bottom-4 md:left-4 bg-linear-to-br shadow-[0_4px_15px_rgba(37,99,235,0.4)] from-blue-500 to-blue-600 text-white font-semibold text-base rounded-xl w-10 h-10 flex items-center justify-center mb-1">
                   {String(index + 1).padStart(2, "0")}
@@ -134,11 +148,11 @@ export function FeatureShowcase() {
                   {feature.title}
                 </h3>
 
-                  {/* Progress bar container */}
-                <div className="relative mt-2.5 mb-2.5 h-px w-full bg-slate-200 overflow-hidden">
+                 {/* Progress bar container */}
+                <div className="relative mt-2.5 mb-2.5 h-px w-full bg-slate-200 dark:bg-zinc-800 overflow-hidden">
                   {isActive && (
                     <div
-                      className="absolute top-0 left-0 h-full bg-slate-900 transition-none"
+                      className="absolute top-0 left-0 h-full bg-slate-900 dark:bg-zinc-100 transition-none"
                       style={{width: `${progress}%`}}
                     />
                   )}

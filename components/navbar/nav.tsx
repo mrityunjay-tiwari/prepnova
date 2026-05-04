@@ -62,8 +62,8 @@ export const Navbar = ({user}: {user?: Session | null}) => {
                         "https://ik.imagekit.io/mrityunjay/prepnova/teach__10_-removebg-preview.png"
                       }
                       alt="logo"
-                      width={40}
-                      height={40}
+                      width={30}
+                      height={30}
                     />
                   </div>
                   <div className="hidden dark:flex md:dark:hidden items-center">
@@ -73,8 +73,8 @@ export const Navbar = ({user}: {user?: Session | null}) => {
                         "https://ik.imagekit.io/mrityunjay/prepnova/teach__10_-removebg-preview.png"
                       }
                       alt="logo"
-                      width={40}
-                      height={40}
+                      width={30}
+                      height={30}
                     />
                   </div>
                 </Link>

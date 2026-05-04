@@ -21,9 +21,9 @@ export function WorkflowNode({mainStatus, subStatuses}: WorkflowNodeProps) {
   return (
     <div className="w-fit min-w-[100px] max-w-[230px]">
       {/* Main Card */}
-      <div className="bg-white border border-slate-200/80 rounded-lg px-2.5 py-1.5 shadow-[0_2px_10px_rgba(0,0,0,0.04)] flex items-center gap-3 relative z-10">
+      <div className="bg-white dark:bg-zinc-950 border border-slate-200/80 dark:border-zinc-800 rounded-lg px-2.5 py-1.5 shadow-[0_2px_10px_rgba(0,0,0,0.04)] flex items-center gap-3 relative z-10">
         {mainStatus.icon}
-        <span className="font-medium text-slate-900 text-sm">
+        <span className="font-medium text-slate-900 dark:text-zinc-100 text-sm">
           {mainStatus.text}
         </span>
       </div>
@@ -35,21 +35,21 @@ export function WorkflowNode({mainStatus, subStatuses}: WorkflowNodeProps) {
             const isLast = index === subStatuses.length - 1;
             return (
               <div key={index} className="relative pl-10">
-                <div className="absolute top-0 left-[23px] w-[17px] h-1/2 border-l border-b border-dashed border-slate-300 rounded-bl-[16px]" />
+                <div className="absolute top-0 left-[23px] w-[17px] h-1/2 border-l border-b border-dashed border-slate-300 dark:border-zinc-700 rounded-bl-[16px]" />
 
                 {!isLast && (
-                  <div className="absolute top-1/2 left-[23px] w-px h-[calc(100%+12px)] border-l border-dashed border-slate-300" />
+                  <div className="absolute top-1/2 left-[23px] w-px h-[calc(100%+12px)] border-l border-dashed border-slate-300 dark:border-zinc-700" />
                 )}
 
                 {index === 0 && (
-                  <div className="absolute top-[-12px] left-[23px] w-px h-[12px] border-l border-dashed border-slate-300" />
+                  <div className="absolute top-[-12px] left-[23px] w-px h-[12px] border-l border-dashed border-slate-300 dark:border-zinc-700" />
                 )}
 
-                <div className="bg-white border border-slate-200/80 rounded-lg px-2.5 py-1 shadow-[0_2px_8px_rgba(0,0,0,0.02)] flex items-center gap-3 relative z-10">
+                <div className="bg-white dark:bg-zinc-950 border border-slate-200/80 dark:border-zinc-800 rounded-lg px-2.5 py-1 shadow-[0_2px_8px_rgba(0,0,0,0.02)] flex items-center gap-3 relative z-10">
                   {status.icon}
-                  <span className="text-slate-600 text-xs">{status.text}</span>
+                  <span className="text-slate-600 dark:text-zinc-400 text-xs">{status.text}</span>
                   {status.time && (
-                    <span className="text-slate-400 text-[13.5px] ml-1">
+                    <span className="text-slate-400 dark:text-zinc-500 text-[13.5px] ml-1">
                       {status.time}
                     </span>
                   )}
@@ -229,10 +229,10 @@ export type DatabaseTableNodeProps = {
 
 export function DatabaseTableNode({title, items}: DatabaseTableNodeProps) {
   return (
-    <div className="bg-white border border-slate-200/80 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] w-fit min-w-[160px] max-w-[210px] font-sans flex flex-col relative z-10">
+    <div className="bg-white dark:bg-zinc-950 border border-slate-200/80 dark:border-zinc-800 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] w-fit min-w-[160px] max-w-[210px] font-sans flex flex-col relative z-10">
       {/* Title */}
-      <div className="py-1 border-b border-slate-100 flex items-center justify-center">
-        <span className="font-medium text-slate-900 text-sm">{title}</span>
+      <div className="py-1 border-b border-slate-100 dark:border-zinc-800 flex items-center justify-center">
+        <span className="font-medium text-slate-900 dark:text-zinc-100 text-sm">{title}</span>
       </div>
 
       {/* List */}
@@ -244,9 +244,9 @@ export function DatabaseTableNode({title, items}: DatabaseTableNodeProps) {
           return (
             <div key={index} className="flex items-start gap-1.5">
               <div
-                className={`w-2 h-2 shrink-0 rounded-full mt-1 ${isPrimary ? "bg-[#06b6d4]" : "bg-[#a5f3fc]"}`}
+                className={`w-2 h-2 shrink-0 rounded-full mt-1 ${isPrimary ? "bg-[#06b6d4]" : "bg-[#a5f3fc] dark:bg-[#06b6d4]/30"}`}
               />
-              <span className="text-slate-600 text-xs break-words">{name}</span>
+              <span className="text-slate-600 dark:text-zinc-400 text-xs break-words">{name}</span>
             </div>
           );
         })}

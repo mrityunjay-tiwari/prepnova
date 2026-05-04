@@ -9,6 +9,8 @@ import HowItWorks from "@/components/home/how-it-works";
 import CTA from "@/components/home/cta";
 import Technical from "@/components/home/technical";
 import ChatBotOpenButton from "@/components/chatbot/chatbot-openButton";
+import {Faqs} from "@/components/home/faqs";
+import { MobileTechnical } from "@/components/home/mobile-technical";
 
 export default async function Home() {
   return (
@@ -18,7 +20,7 @@ export default async function Home() {
           <HeroSection />
         </div>
       </BgGradient>
-      <div className="-mt-92">
+      <div className="mt-8 md:-mt-92">
         <Screen />
       </div>
 
@@ -28,7 +30,13 @@ export default async function Home() {
         <HowItWorks />
       </div>
       <PostInterviewTab />
-      <Technical />
+      <div className="hidden md:block">
+        <Technical />
+      </div>
+      <div className="md:hidden">
+        <MobileTechnical />
+      </div>
+      <Faqs />
       <CTA />
       <Footer />
       <ChatBotOpenButton />

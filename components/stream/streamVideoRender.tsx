@@ -29,6 +29,7 @@ import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {PanelLeft, UserRound} from "lucide-react";
 import {PiStarFourFill} from "react-icons/pi";
@@ -41,6 +42,7 @@ import {IconType} from "react-icons/lib";
 import {PiSealQuestionThin} from "react-icons/pi";
 import {Separator} from "../ui/separator";
 import {AnimatedThemeToggler} from "../ui/animated-theme-toggler";
+import React from "react";
 
 export default function StreamVideoCallRender({
   config,
@@ -62,22 +64,25 @@ export default function StreamVideoCallRender({
 
   if (!client || !call || !isReady) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen w-full gap-4">
+      <div className="flex flex-col items-center justify-center min-h-screen w-full gap-4 px-4">
         <motion.div
           initial={{opacity: 0, y: 10}}
           animate={{opacity: 1, y: 0}}
-          className="flex flex-col items-center gap-4"
+          className="flex flex-col items-center gap-4 text-center"
         >
-          <div className="p-3 border dark:border-zinc-800 border-gray-300 bg-muted/20">
-            <div className="p-3 border dark:border-zinc-800 border-gray-200 bg-background shadow-sm">
+          <div className="p-3 border dark:border-zinc-800 border-gray-300 bg-muted/20 dark:bg-zinc-900/20">
+            <div className="p-3 border dark:border-zinc-800 border-gray-200 bg-background dark:bg-zinc-950 shadow-sm">
               <Spinner className="h-8 w-8 text-blue-950 dark:text-zinc-200" />
             </div>
           </div>
-          <p className="text-xl font-bold tracking-tight text-blue-950 dark:text-zinc-100 animate-pulse">
+          <p className="text-lg md:text-xl font-bold tracking-tight text-blue-950 dark:text-zinc-100 animate-pulse">
             Configuring interview session...
           </p>
-          <p className="text-xl font-bold tracking-tight text-blue-900 dark:text-zinc-300">
+          <p className="text-base md:text-xl font-semibold tracking-tight text-blue-900 dark:text-zinc-300 max-w-[280px] md:max-w-none mx-auto">
             Best Of Luck, Your Interview is about to start!
+          </p>
+          <p className="text-sm md:text-base font-semibold tracking-tight text-blue-900 dark:text-zinc-300 max-w-[280px] md:max-w-none mx-auto">
+            (Must avoid background noise for best experience.)
           </p>
         </motion.div>
       </div>
@@ -109,6 +114,7 @@ const InterviewLayout = ({
   userId: string;
   userName: string;
 }) => {
+  const [hasClickedNudge, setHasClickedNudge] = React.useState(false);
   const {useCallCallingState, useLocalParticipant, useRemoteParticipants} =
     useCallStateHooks();
   const callingState = useCallCallingState();
@@ -213,9 +219,15 @@ const InterviewLayout = ({
                 </div>
                 <div className="flex items-center gap-2">
                   <AnimatedThemeToggler />
-                  <SidebarTrigger className="inline-flex text-sm font-semibold text-blue-950 dark:text-zinc-200 shadow-sm backdrop-blur">
-                    <PanelLeft className="mr-2 h-4 w-4" />
-                  </SidebarTrigger>
+                  <div className="relative">
+                    <SidebarTrigger 
+                      onClick={() => setHasClickedNudge(true)}
+                      className="inline-flex text-sm font-semibold text-blue-950 dark:text-zinc-200 shadow-sm backdrop-blur"
+                    >
+                      <PanelLeft className="mr-2 h-4 w-4" />
+                    </SidebarTrigger>
+                    <MobileFeedbackNudge hidden={hasClickedNudge} />
+                  </div>
                 </div>
               </div>
 
@@ -262,7 +274,7 @@ const InterviewLayout = ({
             >
               <SidebarHeader className="p-2.5">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sidebar-foreground flex items-center gap-2">
+                  <h3 className="text-sidebar-foreground dark:text-zinc-100 flex items-center gap-2">
                     <PiStarFourFill className="w-3.5 h-3.5 backdrop-brightness-200 text-neutral-700 dark:text-neutral-300" />
                     Live Interview Feedback
                   </h3>
@@ -271,7 +283,7 @@ const InterviewLayout = ({
               <Separator />
               <SidebarContent className="p-2.5 items-center justify-center">
                 <SidebarGroup className="p-0">
-                  <SidebarGroupLabel className="px-2 text-sm text-sidebar-foreground/65 flex items-center">
+                  <SidebarGroupLabel className="px-2 text-sm text-sidebar-foreground/65 dark:text-zinc-400 flex items-center">
                     Live Guidance
                   </SidebarGroupLabel>
                   <SidebarGroupContent className="px-1">
@@ -299,7 +311,7 @@ const InterviewLayout = ({
                 </SidebarGroup>
 
                 <SidebarGroup className="p-0 pt-4">
-                  <SidebarGroupLabel className="px-2 text-sm dark:text-neutral-500 text-sidebar-foreground/65">
+                  <SidebarGroupLabel className="px-2 text-sm dark:text-zinc-400 text-sidebar-foreground/65">
                     Presence Tracking
                   </SidebarGroupLabel>
                   <SidebarGroupContent className="px-1">
@@ -330,7 +342,7 @@ const InterviewLayout = ({
                             ref={canvasRef}
                             width={400}
                             height={300}
-                            className="absolute inset-0 w-full h-full object-cover z-10"
+                            className="absolute inset-0 w-full h-full object-cover z-10 dark:opacity-80"
                           />
                         </div>
                       )}
@@ -364,6 +376,20 @@ function formatElapsedTime(totalSeconds: number) {
   const seconds = totalSeconds % 60;
 
   return `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+function MobileFeedbackNudge({ hidden }: { hidden: boolean }) {
+  const { isMobile, openMobile } = useSidebar();
+  if (!isMobile || openMobile || hidden) return null;
+
+  return (
+    <div className="absolute top-10 right-0 animate-bounce z-[100] md:hidden">
+      <div className="bg-sky-600 dark:bg-sky-500 text-white text-[11px] px-3 py-1.5 rounded-lg shadow-xl font-medium whitespace-nowrap relative border border-sky-400">
+         Click here to see feedbacks
+        <div className="absolute -top-1.5 right-3 w-3 h-3 bg-sky-600 dark:bg-sky-500 rotate-45 border-l border-t border-sky-400 rounded-sm" />
+      </div>
+    </div>
+  );
 }
 
 const InterviewStageTile = ({
@@ -400,7 +426,7 @@ const InterviewStageTile = ({
           <div className="flex h-full items-center justify-center text-sm font-medium text-white/60">
             <div className="text-center">
               <AgentAvatar seed="Interviewer" size={80} />
-              <p className="mt-2 text-neutral-500 text-sm dark:text-neutral-400">
+              <p className="mt-2 text-neutral-500 text-sm dark:text-zinc-400">
                 Interviewer
               </p>
             </div>

@@ -11,13 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {Input} from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import BasicDropdown from "@/components/ui/basic-dropdown";
 import {
   buildDefaultInterviewSetup,
   createFlowSection,
@@ -82,25 +76,30 @@ export default function InterviewSetup({
   };
 
   return (
-    <div className="w-full px-4 py-8 md:px-6">
+    <div className="w-full px-0.5 py-8 md:px-6">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-3.5">
-        <div className="space-y-1">
-          <p className="text-xs font-bold uppercase flex items-center gap-1 text-blue-900/55 dark:text-blue-400/80">
-            <FaCubesStacked className="w-2.5 h-2.5" />
-            Interview Setup
-          </p>
-          <div className="flex justify-between items-baseline">
+        <div className="space-y-2 md:space-y-1">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-bold uppercase flex items-center gap-1 text-blue-900/55 dark:text-blue-400/80">
+              <FaCubesStacked className="w-2.5 h-2.5" />
+              Interview Setup
+            </p>
+            <div className="md:hidden">
+              <AnimatedThemeToggler />
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-baseline gap-2 md:gap-0">
             <div>
-              <h1 className="text-3xl font-bold text-blue-950 dark:text-zinc-50">
+              <h1 className="text-2xl md:text-3xl font-bold text-blue-950 dark:text-zinc-50 leading-tight">
                 Configure your interview flow before the call starts!
               </h1>
-              <p className="max-w-3xl text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+              <p className="max-w-3xl text-sm leading-6 text-zinc-600 dark:text-zinc-400 mt-2 md:mt-0">
                 Select the target level you are preparing to let us decide the
-                type of question to be asked! <br /> And configure for how much
+                type of question to be asked! <br className="hidden md:block" /> And configure for how much
                 time and what all sections to be discussed in your interview.
               </p>
             </div>
-            <div>
+            <div className="hidden md:block">
               <AnimatedThemeToggler />
             </div>
           </div>
@@ -132,31 +131,26 @@ export default function InterviewSetup({
                   <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
                     Preparing for
                   </p>
-                  <Select
-                    value={config.seniority}
-                    onValueChange={(value) =>
+                  <BasicDropdown
+                    items={INTERVIEW_SENIORITY_OPTIONS.map((opt) => ({
+                      id: opt,
+                      label: opt,
+                    }))}
+                    label="Select level"
+                    defaultValue={config.seniority}
+                    onChange={(item) =>
                       setConfig((current) => ({
                         ...current,
-                        seniority: value as InterviewSeniority,
+                        seniority: item.id as InterviewSeniority,
                       }))
                     }
-                  >
-                    <SelectTrigger className="w-full rounded-sm">
-                      <SelectValue placeholder="Select level" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {INTERVIEW_SENIORITY_OPTIONS.map((option) => (
-                        <SelectItem key={option} value={option}>
-                          {option}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    className="w-full [&>button]:rounded-sm"
+                  />
                 </div>
               </div>
 
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 md:gap-0">
                   <div>
                     <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
                       Interview flow
@@ -166,22 +160,18 @@ export default function InterviewSetup({
                       guardrails.
                     </p>
                   </div>
-                  <Select
-                    onValueChange={(value) =>
-                      addSection(value as InterviewSectionType)
+                  <BasicDropdown
+                    items={INTERVIEW_SECTION_OPTIONS.map((opt) => ({
+                      id: opt.type,
+                      label: opt.label,
+                    }))}
+                    label="Add section"
+                    resetAfterSelect={true}
+                    onChange={(item) =>
+                      addSection(item.id as InterviewSectionType)
                     }
-                  >
-                    <SelectTrigger className="w-[220px] rounded-sm border shadow-lg">
-                      <SelectValue placeholder="Add section" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {INTERVIEW_SECTION_OPTIONS.map((option) => (
-                        <SelectItem key={option.type} value={option.type}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    className="w-full md:w-[220px] [&>button]:rounded-sm [&>button]:shadow-lg"
+                  />
                 </div>
 
                 <div className="space-y-3">
@@ -217,17 +207,22 @@ export default function InterviewSetup({
                           </Button>
                         </div>
 
-                        <div className="grid gap-3 md:grid-cols-[1.1fr_0.7fr_0.7fr_0.7fr]">
-                          <div className="space-y-2">
+                        <div className="grid gap-3 grid-cols-3 md:grid-cols-[1.1fr_0.7fr_0.7fr_0.7fr]">
+                          <div className="space-y-2 col-span-3 md:col-span-1">
                             <p className="text-xs font-semibold uppercase text-zinc-500 dark:text-zinc-400">
                               Section type
                             </p>
-                            <Select
-                              value={section.type}
-                              onValueChange={(value) =>
+                            <BasicDropdown
+                              items={INTERVIEW_SECTION_OPTIONS.map((opt) => ({
+                                id: opt.type,
+                                label: opt.label,
+                              }))}
+                              label="Select type"
+                              defaultValue={section.type}
+                              onChange={(item) =>
                                 updateSection(section.id, () => {
                                   const next = createFlowSection(
-                                    value as InterviewSectionType,
+                                    item.id as InterviewSectionType,
                                   );
                                   return {
                                     ...next,
@@ -235,30 +230,17 @@ export default function InterviewSetup({
                                   };
                                 })
                               }
-                            >
-                              <SelectTrigger className="w-full rounded-sm">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {INTERVIEW_SECTION_OPTIONS.map((option) => (
-                                  <SelectItem
-                                    key={option.type}
-                                    value={option.type}
-                                  >
-                                    {option.label}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                              className="w-full [&>button]:rounded-sm"
+                            />
                           </div>
 
-                          <div className="space-y-2">
+                          <div className="space-y-2 col-span-1">
                             <p className="text-xs font-semibold uppercase text-zinc-500 dark:text-zinc-400">
-                              Minutes
+                              Mins
                             </p>
                             <Input
                               type="number"
-                              className="rounded-sm"
+                              className="rounded-sm px-2 text-center md:px-3 md:text-left"
                               min={5}
                               max={45}
                               value={section.durationMinutes}
@@ -273,13 +255,13 @@ export default function InterviewSetup({
                             />
                           </div>
 
-                          <div className="space-y-2">
+                          <div className="space-y-2 col-span-1">
                             <p className="text-xs font-semibold uppercase text-zinc-500 dark:text-zinc-400">
                               Min Qs
                             </p>
                             <Input
                               type="number"
-                              className="rounded-sm"
+                              className="rounded-sm px-2 text-center md:px-3 md:text-left"
                               min={1}
                               max={25}
                               value={section.minQuestions}
@@ -292,13 +274,13 @@ export default function InterviewSetup({
                             />
                           </div>
 
-                          <div className="space-y-2">
+                          <div className="space-y-2 col-span-1">
                             <p className="text-xs font-semibold uppercase text-zinc-500 dark:text-zinc-400">
                               Max Qs
                             </p>
                             <Input
                               type="number"
-                              className="rounded-sm"
+                              className="rounded-sm px-2 text-center md:px-3 md:text-left"
                               min={1}
                               max={30}
                               value={section.maxQuestions}
@@ -364,7 +346,7 @@ export default function InterviewSetup({
 
               <Button
                 size={"lg"}
-                className="mt-2 w-full rounded-full"
+                className="mt-2 w-full rounded-full transition-transform active:scale-95"
                 onClick={() => onStart(config)}
               >
                 <Plus className="h-4 w-4" />

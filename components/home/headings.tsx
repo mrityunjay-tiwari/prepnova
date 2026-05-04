@@ -14,20 +14,20 @@ export default function Headings({title, subtitle, subheading}: THeadingProps) {
           <Button
             variant={"outline"}
             size={"lg"}
-            className="hidden md:block rounded-none md:rounded-full shadow-lg"
+            className="hidden md:block rounded-md md:rounded-full shadow-lg"
           >
             <span className="font-semibold">{subtitle}</span>
           </Button>
           <Button
             variant={"outline"}
             size={"sm"}
-            className="md:hidden rounded-xs md:rounded-full shadow-lg"
+            className="md:hidden rounded-lg md:rounded-full shadow-lg"
           >
             <span className="font-semibold">{subtitle}</span>
           </Button>
         </div>
-        <div className="flex flex-col justify-center items-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-medium mt-4 text-center">
+        <div className="flex flex-col justify-center items-center mb-0 md:mb-8">
+          <h1 className="text-xl md:text-4xl font-medium mt-4 text-center">
             {title}
           </h1>
           <Highlighter action="underline" color="#FF9800">

@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {cn} from "@/lib/utils";
+import BasicDropdown from "../ui/basic-dropdown";
 
 const Cross = ({className}: {className?: string}) => (
   <div
@@ -35,22 +36,22 @@ const Cross = ({className}: {className?: string}) => (
       className,
     )}
   >
-    <div className="w-full h-[0.8px] bg-slate-200 absolute" />
-    <div className="h-full w-[0.8px] bg-slate-200 absolute" />
+    <div className="w-full h-[0.8px] bg-slate-200 dark:bg-zinc-800 absolute" />
+    <div className="h-full w-[0.8px] bg-slate-200 dark:bg-zinc-800 absolute" />
   </div>
 );
 
 const Step1Card = () => {
   return (
-    <div className="w-full flex flex-col rounded-none items-center">
+    <div className="w-full flex flex-col rounded-none items-center bg-white dark:bg-zinc-900">
       {/* Illustration Section */}
       <div className="w-full rounded-none">
-        <div className="relative pt-10 pb-4 px-2 bg-linear-to-t from-slate-100 to-gray-50 max-w-full overflow-hidden">
-          <Card className="inset-0 relative max-w-full m-2 z-40 p-1 py-3 bg-white">
+        <div className="relative pt-10 pb-4 px-2 bg-linear-to-t from-slate-100 to-gray-50 dark:from-zinc-900/50 dark:to-zinc-800/50 max-w-full overflow-hidden">
+          <Card className="inset-0 relative max-w-full m-2 z-40 p-1 py-3 bg-white dark:bg-zinc-950 dark:border-zinc-800">
             <CardContent className="">
               <div className="flex w-full items-center gap-2">
                 {/* Icon */}
-                <div className="bg-gray-100 flex items-center justify-center w-8 h-8 rounded-md text-gray-700 font-semibold shrink-0">
+                <div className="bg-gray-100 dark:bg-zinc-800 flex items-center justify-center w-8 h-8 rounded-md text-gray-700 dark:text-zinc-300 font-semibold shrink-0">
                   R.
                 </div>
 
@@ -59,15 +60,15 @@ const Step1Card = () => {
             </CardContent>
           </Card>
 
-          <Card className="inset-0 relative max-w-full m-4 rounded-lg z-30 -mt-13"></Card>
-          <Card className="inset-0 relative max-w-full m-6 rounded-lg z-20 -mt-15"></Card>
-          <Card className="inset-0 relative max-w-full m-8 rounded-lg z-10 -mt-17"></Card>
-          <Card className="inset-0 relative max-w-full m-10 rounded-lg z-0 -mt-19"></Card>
-          <Card className="inset-0 relative max-w-full m-12 rounded-lg -z-10 -mt-21"></Card>
-          <Card className="inset-0 relative max-w-full m-14 rounded-lg -z-20 -mt-23"></Card>
+          <Card className="inset-0 relative max-w-full m-4 rounded-lg z-30 -mt-13 dark:bg-zinc-950 dark:border-zinc-800"></Card>
+          <Card className="inset-0 relative max-w-full m-6 rounded-lg z-20 -mt-15 dark:bg-zinc-950 dark:border-zinc-800"></Card>
+          <Card className="inset-0 relative max-w-full m-8 rounded-lg z-10 -mt-17 dark:bg-zinc-950 dark:border-zinc-800"></Card>
+          <Card className="inset-0 relative max-w-full m-10 rounded-lg z-0 -mt-19 dark:bg-zinc-950 dark:border-zinc-800"></Card>
+          <Card className="inset-0 relative max-w-full m-12 rounded-lg -z-10 -mt-21 dark:bg-zinc-950 dark:border-zinc-800"></Card>
+          <Card className="inset-0 relative max-w-full m-14 rounded-lg -z-20 -mt-23 dark:bg-zinc-950 dark:border-zinc-800"></Card>
 
           {/* Fade overlay blending into the white background */}
-          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-linear-to-t from-white to-transparent pointer-events-none z-50" />
+          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-linear-to-t from-white dark:from-zinc-900 to-transparent pointer-events-none z-50" />
         </div>
       </div>
 
@@ -82,24 +83,31 @@ const Step1Card = () => {
   );
 };
 
+const ROLE_ITEMS = [
+  {id: "react-developer", label: "React Developer"},
+  {id: "full-stack-developer", label: "Full Stack Developer"},
+  {id: "frontend-developer", label: "Frontend Developer"},
+  {id: "backend-developer", label: "Backend Developer"},
+  {id: "data-scientist", label: "Data Scientist"},
+];
+
+const TARGET_ITEMS = [
+  {id: "internship", label: "Internship"},
+  {id: "sde1", label: "SDE1"},
+  {id: "sde2", label: "SDE2"},
+  {id: "sde3", label: "SDE3"},
+  {id: "principal-engineer", label: "Principal Engineer"},
+  {id: "staff-engineer", label: "Staff Engineer"},
+];
+
 const Work1Card = () => {
   return (
     <div className="flex w-full items-center justify-center">
-      <Select>
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Choose role" />
-        </SelectTrigger>
-
-        <SelectContent>
-          <SelectItem value="react-developer">React Developer</SelectItem>
-          <SelectItem value="full-stack-developer">
-            Full Stack Developer
-          </SelectItem>
-          <SelectItem value="frontend-developer">Frontend Developer</SelectItem>
-          <SelectItem value="backend-developer">Backend Developer</SelectItem>
-          <SelectItem value="data-scientist">Data Scientist</SelectItem>
-        </SelectContent>
-      </Select>
+      <BasicDropdown
+        items={ROLE_ITEMS}
+        label="Choose role"
+        className="w-full !block"
+      />
     </div>
   );
 };
@@ -107,35 +115,26 @@ const Work1Card = () => {
 const Work2Card = () => {
   return (
     <div className="flex w-full items-center justify-center">
-      <Select>
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Choose Target" />
-        </SelectTrigger>
-
-        <SelectContent>
-          <SelectItem value="internship">Internship</SelectItem>
-          <SelectItem value="sde1">SDE1</SelectItem>
-          <SelectItem value="sde2">SDE2</SelectItem>
-          <SelectItem value="sde3">SDE3</SelectItem>
-          <SelectItem value="data-scientist">Principal Engineer</SelectItem>
-          <SelectItem value="data-scientist">Staff Engineer</SelectItem>
-        </SelectContent>
-      </Select>
+      <BasicDropdown
+        items={TARGET_ITEMS}
+        label="Choose Target"
+        className="w-full !block"
+      />
     </div>
   );
 };
 
 const Step2Card = () => {
   return (
-    <div className="w-full flex flex-col rounded-none items-center">
+    <div className="w-full flex flex-col rounded-none items-center bg-white dark:bg-zinc-900">
       {/* Illustration Section */}
       <div className="w-full rounded-none">
-        <div className="relative pt-10 pb-4 px-2 bg-linear-to-t from-slate-100 to-gray-50 max-w-full overflow-hidden">
-          <Card className="inset-0 relative max-w-full m-2 z-40 p-1 py-3 bg-white">
+        <div className="relative pt-10 pb-4 px-2 bg-linear-to-t from-slate-100 to-gray-50 dark:from-zinc-900/50 dark:to-zinc-800/50 max-w-full overflow-hidden">
+          <Card className="inset-0 relative max-w-full m-2 z-40 p-1 py-3 bg-white dark:bg-zinc-950 dark:border-zinc-800">
             <CardContent className="">
               <div className="flex w-full items-center gap-2">
                 {/* Icon */}
-                <div className="bg-gray-100 flex items-center justify-center w-8 h-8 rounded-md text-gray-700 font-semibold shrink-0">
+                <div className="bg-gray-100 dark:bg-zinc-800 flex items-center justify-center w-8 h-8 rounded-md text-gray-700 dark:text-zinc-300 font-semibold shrink-0">
                   T.
                 </div>
 
@@ -144,15 +143,15 @@ const Step2Card = () => {
             </CardContent>
           </Card>
 
-          <Card className="inset-0 relative max-w-full m-4 rounded-lg z-30 -mt-13"></Card>
-          <Card className="inset-0 relative max-w-full m-6 rounded-lg z-20 -mt-15"></Card>
-          <Card className="inset-0 relative max-w-full m-8 rounded-lg z-10 -mt-17"></Card>
-          <Card className="inset-0 relative max-w-full m-10 rounded-lg z-0 -mt-19"></Card>
-          <Card className="inset-0 relative max-w-full m-12 rounded-lg -z-10 -mt-21"></Card>
-          <Card className="inset-0 relative max-w-full m-14 rounded-lg -z-20 -mt-23"></Card>
+          <Card className="inset-0 relative max-w-full m-4 rounded-lg z-30 -mt-13 dark:bg-zinc-950 dark:border-zinc-800"></Card>
+          <Card className="inset-0 relative max-w-full m-6 rounded-lg z-20 -mt-15 dark:bg-zinc-950 dark:border-zinc-800"></Card>
+          <Card className="inset-0 relative max-w-full m-8 rounded-lg z-10 -mt-17 dark:bg-zinc-950 dark:border-zinc-800"></Card>
+          <Card className="inset-0 relative max-w-full m-10 rounded-lg z-0 -mt-19 dark:bg-zinc-950 dark:border-zinc-800"></Card>
+          <Card className="inset-0 relative max-w-full m-12 rounded-lg -z-10 -mt-21 dark:bg-zinc-950 dark:border-zinc-800"></Card>
+          <Card className="inset-0 relative max-w-full m-14 rounded-lg -z-20 -mt-23 dark:bg-zinc-950 dark:border-zinc-800"></Card>
 
           {/* Fade overlay blending into the white background */}
-          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white to-transparent pointer-events-none z-50" />
+          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white dark:from-zinc-900 to-transparent pointer-events-none z-50" />
         </div>
       </div>
 
@@ -169,15 +168,15 @@ const Step2Card = () => {
 
 const Step3Card = () => {
   return (
-    <div className="w-full flex flex-col rounded-none items-center">
+    <div className="w-full flex flex-col rounded-none items-center bg-white dark:bg-zinc-900">
       {/* Illustration Section */}
       <div className="w-full rounded-none">
-        <div className="relative pt-2 pb-4 px-2 bg-linear-to-t from-slate-100 to-gray-50 max-w-full overflow-hidden">
+        <div className="relative pt-2 pb-4 px-2 bg-linear-to-t from-slate-100 to-gray-50 dark:from-zinc-900/50 dark:to-zinc-800/50 max-w-full overflow-hidden">
           <div className="flex w-full items-center justify-center">
             <InterviewSetup12 role="react-developer" />
           </div>
           {/* Fade overlay blending into the white background */}
-          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white to-transparent pointer-events-none z-50" />
+          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white dark:from-zinc-900 to-transparent pointer-events-none z-50" />
         </div>
       </div>
 
@@ -194,22 +193,22 @@ const Step3Card = () => {
 
 const Step4Card = () => {
   return (
-    <div className="w-full flex flex-col rounded-none items-center">
+    <div className="w-full flex flex-col rounded-none items-center bg-white dark:bg-zinc-900">
       {/* Illustration Section */}
       <div className="w-full rounded-none">
-        <div className="relative bg-linear-to-t from-slate-100 to-gray-50 max-w-full overflow-hidden">
+        <div className="relative bg-linear-to-t from-slate-100 to-gray-50 dark:from-zinc-900/50 dark:to-zinc-800/50 max-w-full overflow-hidden">
           <div className="flex w-full items-center justify-center">
-            <div className="w-full h-full rounded-none bg-gray-100 pt-10">
+            <div className="w-full h-full rounded-none bg-gray-100 dark:bg-zinc-950 pt-10 border dark:border-zinc-800">
               <div className="flex items-center justify-center w-full h-full pb-14">
                 <AgentAvatar size={100} seed="" />
               </div>
-              <div className="absolute bottom-3.5 left-3.5 z-[60] bg-black/30 text-white text-xs px-1 py-0.5 rounded-sm backdrop-blur-xl">
+              <div className="absolute bottom-3.5 left-3.5 z-[60] bg-black/30 text-white text-xs px-1 py-0.5 rounded-sm backdrop-blur-xl border border-white/10">
                 Kirosk (AI Interviewer)
               </div>
             </div>
           </div>
           {/* Fade overlay blending into the white background */}
-          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white to-transparent pointer-events-none z-50" />
+          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white dark:from-zinc-900 to-transparent pointer-events-none z-50" />
         </div>
       </div>
 
@@ -228,15 +227,15 @@ const Step4Card = () => {
 
 const Step5Card = () => {
   return (
-    <div className="w-full flex flex-col rounded-none items-center">
+    <div className="w-full flex flex-col rounded-none items-center bg-white dark:bg-zinc-900">
       {/* Illustration Section */}
       <div className="w-full rounded-none">
-        <div className="relative bg-linear-to-t from-slate-100 to-gray-50 max-w-full overflow-hidden">
+        <div className="relative bg-linear-to-t from-slate-100 to-gray-50 dark:from-zinc-900/50 dark:to-zinc-800/50 max-w-full overflow-hidden">
           <div className="flex w-full items-center justify-center scale-[90%]">
             <FLoatingInterviewReportPanel />
           </div>
           {/* Fade overlay blending into the white background */}
-          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white to-transparent pointer-events-none z-50" />
+          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white dark:from-zinc-900 to-transparent pointer-events-none z-50" />
         </div>
       </div>
 
@@ -253,25 +252,28 @@ const Step5Card = () => {
 
 const Step6Card = () => {
   return (
-    <div className="w-full flex flex-col rounded-none items-center">
-      {/* Illustration Section */}
+    <div className="w-full flex flex-col rounded-none items-center bg-white dark:bg-zinc-900">
       <div className="w-full rounded-none">
-        <div className="relative pt-5 px-2 pb-4 bg-linear-to-t from-slate-100 to-gray-50 max-w-full overflow-hidden">
+        <div className="relative pt-5 px-2 pb-4 bg-linear-to-t from-slate-100 to-gray-50 dark:from-zinc-900/50 dark:to-zinc-800/50 max-w-full overflow-hidden">
           <div className="flex w-full items-center justify-center">
+            <Image
+              src="https://ik.imagekit.io/mrityunjay/prepnova/ChatGPT%20Image%20May%203,%202026,%2009_31_20%20PM.png"
+              alt="Report 1"
+              width={800}
+              height={400}
+              className="hidden dark:block w-full h-full"
+            />
             <Image
               src="https://ik.imagekit.io/mrityunjay/prepnova/ChatGPT%20Image%20May%202,%202026,%2003_31_40%20PM.png"
               alt="Report 1"
               width={800}
               height={400}
-              className="w-full h-full"
+              className="w-full h-full dark:hidden"
             />
           </div>
-          {/* Fade overlay blending into the white background */}
-          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white to-transparent pointer-events-none z-50" />
+          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-white dark:from-zinc-900 to-transparent pointer-events-none z-50" />
         </div>
       </div>
-
-      {/* Step section */}
 
       <CardsBottomSection
         stepNumber="06"
@@ -294,12 +296,12 @@ const CardsBottomSection = ({
   description,
 }: CardsBottomSectionProps) => {
   return (
-    <div className="w-full bg-white p-6 -mt-8 flex flex-col items-start relative z-50">
-      <div className="bg-linear-to-br shadow-[0_4px_15px_rgba(37,99,235,0.4)] from-blue-500 to-blue-600 text-white font-semibold text-base rounded-xl w-10 h-10 flex items-center justify-center mb-2">
+    <div className="w-full bg-white dark:bg-zinc-900 p-6 -mt-8 flex flex-col items-start relative z-50">
+      <div className="bg-linear-to-br shadow-[0_4px_15px_rgba(37,99,235,0.4)] dark:shadow-[0_4px_15px_rgba(37,99,235,0.2)] from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-800 text-white font-semibold text-base rounded-xl w-10 h-10 flex items-center justify-center mb-2">
         <h1>{stepNumber}</h1>
       </div>
-      <h2 className="text-lg font-semibold text-gray-900 mb-1">{title}</h2>
-      <p className="text-sm text-gray-500">{description}</p>
+      <h2 className="text-lg font-semibold text-gray-900 dark:text-zinc-100 mb-1">{title}</h2>
+      <p className="text-sm text-gray-500 dark:text-zinc-400">{description}</p>
     </div>
   );
 };
@@ -315,18 +317,18 @@ const STEPS = [
 
 export default function HowItWorks() {
   return (
-    <div className="w-full mx-auto max-w-6xl">
+    <div className="w-[95%] mx-auto max-w-6xl mt-10 md:mt-0">
       <Headings
         subtitle="How it Solves?"
         title="How the entire flow works!"
         subheading="(Interactive Playground)"
       />
 
-      <div className="mt-16 relative w-full flex flex-wrap border-t border-l border-slate-200">
+      <div className="mt-5 md:mt-16 relative w-full flex flex-wrap border-t border-l border-slate-200 dark:border-zinc-800">
         {STEPS.map((step) => (
           <div
             key={step.num}
-            className="relative w-full md:w-1/3 border-b border-r border-slate-200 flex flex-col items-center"
+            className="relative w-full md:w-1/3 border-b border-r border-slate-200 dark:border-zinc-800 flex flex-col items-center bg-white dark:bg-zinc-900"
           >
             <Cross className="-top-[8px] -left-[8px]" />
             <Cross className="-top-[8px] -right-[8px]" />
@@ -383,29 +385,17 @@ function InterviewSetup12({role}: {role: string}) {
                   Interview flow
                 </p>
               </div>
-              <Select
-                onValueChange={(value) =>
-                  addSection(value as InterviewSectionType)
-                }
-              >
-                <SelectTrigger
-                  size="sm"
-                  className="rounded-sm border shadow-lg text-xs"
-                >
-                  <SelectValue placeholder="Add section" />
-                </SelectTrigger>
-                <SelectContent>
-                  {INTERVIEW_SECTION_OPTIONS.map((option) => (
-                    <SelectItem
-                      key={option.type}
-                      value={option.type}
-                      className="text-xs"
-                    >
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <BasicDropdown
+                items={INTERVIEW_SECTION_OPTIONS.map((opt) => ({
+                  id: opt.type,
+                  label: opt.label,
+                }))}
+                label="Add section"
+                resetAfterSelect={true}
+                onChange={(item) => addSection(item.id as InterviewSectionType)}
+                className="w-[120px] !block [&>button]:rounded-sm [&>button]:shadow-lg [&>button]:text-[10px] md:[&>button]:text-xs [&>button]:h-7 [&>button]:px-2 [&>button]:py-1 -mt-2"
+                dropdownClassName="[&_li>button]:min-h-[24px] [&_li>button]:px-2 [&_li>button]:py-1 [&_li>button]:text-[10px] [&_ul]:py-1 w-[120px]"
+              />
             </div>
 
             <div className="space-y-0.5">
@@ -440,12 +430,17 @@ function InterviewSetup12({role}: {role: string}) {
                         <p className="text-xs text-zinc-500 dark:text-zinc-400">
                           Section type
                         </p>
-                        <Select
-                          value={section.type}
-                          onValueChange={(value) =>
+                        <BasicDropdown
+                          items={INTERVIEW_SECTION_OPTIONS.map((opt) => ({
+                            id: opt.type,
+                            label: opt.label,
+                          }))}
+                          label="Select type"
+                          defaultValue={section.type}
+                          onChange={(item) =>
                             updateSection(section.id, () => {
                               const next = createFlowSection(
-                                value as InterviewSectionType,
+                                item.id as InterviewSectionType,
                               );
                               return {
                                 ...next,
@@ -453,25 +448,9 @@ function InterviewSetup12({role}: {role: string}) {
                               };
                             })
                           }
-                        >
-                          <SelectTrigger
-                            size="sm"
-                            className="w-full rounded-xs text-xs"
-                          >
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {INTERVIEW_SECTION_OPTIONS.map((option) => (
-                              <SelectItem
-                                key={option.type}
-                                value={option.type}
-                                className="text-xs"
-                              >
-                                {option.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                          className="w-full !block [&>button]:rounded-sm [&>button]:text-[10px] md:[&>button]:text-[11px] [&>button]:h-5 [&>button]:px-1.5 [&>button]:py-0 [&>button>span]:truncate [&>button>span]:max-w-[70px] [&_svg]:h-3 [&_svg]:w-3"
+                          dropdownClassName="[&_li>button]:min-h-[20px] [&_li>button]:px-2 [&_li>button]:py-0.5 [&_li>button]:text-[10px] [&_ul]:py-1"
+                        />
                       </div>
 
                       <div className="">
@@ -480,7 +459,7 @@ function InterviewSetup12({role}: {role: string}) {
                         </p>
                         <Input
                           type="number"
-                          className="rounded-xs h-5 text-xs"
+                          className="rounded-xs h-5 text-[11px]! px-1 py-0"
                           min={5}
                           max={45}
                           value={section.durationMinutes}

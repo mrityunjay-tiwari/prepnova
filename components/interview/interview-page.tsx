@@ -40,13 +40,13 @@ export default function InterviewPage({
 
   if (!role) {
     return (
-      <div className="min-h-screen bg-background mt-20 w-screen">
+      <div className="min-h-screen bg-background dark:bg-zinc-950 mt-20 w-full">
         <div className="container mx-auto md:px-8 px-4 max-w-6xl">
           <div className="mb-4">
             <Link href="/dashboard">
               <Button
                 variant="ghost"
-                className="gap-2 -ml-2 text-muted-foreground hover:text-primary transition-colors"
+                className="gap-2 -ml-2 text-muted-foreground dark:text-zinc-400 hover:text-primary dark:hover:text-zinc-100 transition-colors"
               >
                 <ChevronLeft className="h-4 w-4" />
                 Back to Dashboard
@@ -55,16 +55,16 @@ export default function InterviewPage({
           </div>
           <header className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
             <div className="space-y-2">
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-zinc-100">
                 Start Interview
               </h1>
-              <p className="text-muted-foreground text-md md:text-lg font-medium">
+              <p className="text-muted-foreground dark:text-zinc-400 text-md md:text-lg font-medium">
                 Select a role to begin your mock interview.
               </p>
             </div>
           </header>
 
-          <Separator className="mb-8" />
+          <Separator className="mb-8 dark:bg-zinc-800" />
 
           <div className="flex justify-self-center w-full">
             <JoinMeeting />

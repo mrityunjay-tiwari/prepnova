@@ -7,7 +7,7 @@ export default function LayoutWrapper({
   navbar,
 }: {
   children: React.ReactNode;
-  navbar: React.ReactNode;
+  navbar?: React.ReactNode;
 }) {
   const pathname = usePathname();
   const isInterviewPage = pathname.startsWith("/interview");

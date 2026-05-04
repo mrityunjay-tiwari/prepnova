@@ -6,9 +6,9 @@ export default function BgGradient({
   className?: string;
 }) {
   return (
-    <div className="min-h-[130vh] w-full bg-white dark:bg-black relative">
+    <div className="min-h-[10vh] md:min-h-[130vh] w-full bg-white dark:bg-black relative">
       <div
-        className="absolute rounded-b-2xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/8 bottom-0 left-0 w-[99%] h-[76vh] z-0 pointer-events-none
+        className="absolute rounded-b-2xl top-[60%] md:top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/8 bottom-0 left-0 w-[99%] h-[40vh] md:h-[76vh] z-0 pointer-events-none
                [mask-image:linear-gradient(to_top,black,transparent)]"
         style={{
           backgroundImage: `
@@ -25,7 +25,7 @@ export default function BgGradient({
 
       {/* Dark mode stripes */}
       <div
-        className="absolute bottom-0 left-0 w-full h-[50vh] z-0 pointer-events-none hidden dark:block
+        className="absolute bottom-0 md:bottom-0 left-0 w-full h-[40vh] md:h-[50vh] z-0 pointer-events-none hidden dark:block
                [mask-image:linear-gradient(to_top,white,transparent)]"
         style={{
           backgroundImage: `
