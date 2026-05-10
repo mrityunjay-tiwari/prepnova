@@ -185,24 +185,50 @@ export async function POST(req: Request) {
 
   const { callId, userId, role, postureStats, reason } = payload;
 
+  console.log("[FINALIZE] start", {
+    callId,
+    userId,
+    role,
+    reason,
+  });
+
   if (!callId || !userId || !role || !postureStats) {
+    console.log("[FINALIZE] missing_required_fields", {
+      callId,
+      userId,
+      role,
+      hasPostureStats: Boolean(postureStats),
+    });
     return new Response("Missing required fields", { status: 400 });
   }
 
   const existingStatus = finalizedInterviewCalls.get(callId);
   if (existingStatus === "in_progress" || existingStatus === "completed") {
+    console.log("[FINALIZE] duplicate_or_in_progress", {
+      callId,
+      existingStatus,
+      reason,
+    });
     return Response.json({ success: true, duplicate: true, reason });
   }
 
   finalizedInterviewCalls.set(callId, "in_progress");
 
   try {
+    console.log("[FINALIZE] ending_remote_call", { callId });
     await endRemoteInterview(callId);
+    console.log("[FINALIZE] remote_call_end_attempt_finished", { callId });
 
     const segments = await getSegmentsWithRetry(callId);
+    console.log("[FINALIZE] segments_fetched", {
+      callId,
+      segmentCount: segments.length,
+      sections: segments.map((segment) => segment.section_type),
+    });
 
     if (!segments.length) {
       finalizedInterviewCalls.delete(callId);
+      console.log("[FINALIZE] no_segments", { callId });
       return Response.json({
         success: true,
         finalized: false,
@@ -211,11 +237,25 @@ export async function POST(req: Request) {
     }
 
     const reportContext = await getReportContext(callId);
+    console.log("[FINALIZE] report_context_fetched", {
+      callId,
+      role: reportContext.role,
+      seniority: reportContext.seniority,
+      flowCount: reportContext.flow?.length ?? 0,
+      feedbackCount: reportContext.feedbackHistory?.length ?? 0,
+    });
     const transcript = buildTranscript(segments);
     const roleForReport = reportContext.role || role;
     const seniority = reportContext.seniority || "SDE1";
     const flow = reportContext.flow || [];
 
+    console.log("[FINALIZE] generating_report", {
+      callId,
+      transcriptLength: transcript.length,
+      roleForReport,
+      seniority,
+      flowCount: flow.length,
+    });
     const { object } = await generateObject({
       model: openrouter("openai/gpt-oss-20b:free"),
       schema: InterviewReportSchema,
@@ -230,7 +270,16 @@ export async function POST(req: Request) {
       }),
     });
     const report = object as InterviewReportResult;
+    console.log("[FINALIZE] report_generated", {
+      callId,
+      readinessLevel: report.readinessLevel,
+      overallScore: report.overallScore,
+      strengthsCount: report.strengths.length,
+      improvementsCount: report.improvementAreas.length,
+      sectionBreakdownCount: report.sectionBreakdown.length,
+    });
 
+    console.log("[FINALIZE] saving_report", { callId });
     const savedReport = await prisma.interviewReport.create({
       data: {
         userId,
@@ -257,6 +306,11 @@ export async function POST(req: Request) {
       },
     });
     finalizedInterviewCalls.set(callId, "completed");
+    console.log("[FINALIZE] report_saved", {
+      callId,
+      reportId: savedReport.id,
+      reason,
+    });
     return Response.json({
       success: true,
       finalized: true,
@@ -265,7 +319,11 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     finalizedInterviewCalls.delete(callId);
-    console.error("[API] Finalize interview failed", error);
+    console.error("[FINALIZE] failed", {
+      callId,
+      reason,
+      error,
+    });
     return new Response("Failed to finalize interview", { status: 500 });
   }
 }

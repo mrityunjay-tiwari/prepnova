@@ -117,6 +117,13 @@ export function useInterviewFinalization({
       if (!response.ok) {
         throw new Error(await response.text());
       }
+
+      const result = await response.json();
+      console.log("[FINALIZE_CLIENT] result", {
+        callId: payload.callId,
+        reason,
+        result,
+      });
     } catch (error) {
       isFinalizing.current = false;
       console.error("Interview finalization failed", error);

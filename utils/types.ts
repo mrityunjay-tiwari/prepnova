@@ -1,6 +1,7 @@
 export type InterviewSegment = {
   question: string;
   answer: string;
+  section_type?: string;
 };
 
 export type InterviewSectionType =
