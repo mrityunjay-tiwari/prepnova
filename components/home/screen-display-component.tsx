@@ -48,7 +48,7 @@ export default function ScreenDisplayComponent() {
       {/* Controls */}
       <div className="flex items-center justify-center gap-1.5 md:gap-3 shrink-0">
         <div className="flex items-center justify-center">
-          <Button size={"xs"} variant={"ghost"} className="hover:cursor-pointer flex items-center justify-center gap-1 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-800 px-1.5 md:px-2.5 py-0 rounded-l-full rounded-r-lg text-xs font-medium shadow-sm transition-all h-7 md:h-auto">
+          <Button size={"xs"} variant={"ghost"} className="hover:cursor-pointer flex items-center gap-1 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-800 px-1.5 md:px-2.5 py-1.5 rounded-l-full rounded-r-lg text-xs font-medium shadow-sm transition-all h-7 md:h-auto">
             <Video className="w-3 h-3 md:w-3.5 md:h-3.5 text-gray-700 dark:text-gray-300" />
             <span className="hidden sm:inline">Camera</span>
             <ChevronDown className="w-3 h-3 md:w-3.5 md:h-3.5 text-gray-500 hidden sm:inline" />

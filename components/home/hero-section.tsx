@@ -37,7 +37,7 @@ export default function HeroSection() {
         <h1 className="text-base md:text-xl text-neutral-500 dark:text-neutral-400">
           With our Interview Agent get exact Interview experience for your{" "}
           <br />
-          specific role with Real Time Feedback and Detailed Analysis.
+          specific role with Real Time Feedback and Post Detailed Analysis.
         </h1>
       </div>
       
