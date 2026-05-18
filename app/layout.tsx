@@ -25,7 +25,31 @@ const sen = Sen({
 export const metadata: Metadata = {
   title: "Prepnova",
   description:
-    "Prepnova is an AI-powered interview coaching platform that analyzes your answers, body language, and engagement in real time and then turns every session into measurable growth.",
+    "AI-powered mock interviews with adaptive feedback, structured reports, and measurable progress tracking.",
+  metadataBase: new URL("https://prepnova.site"),
+
+  openGraph: {
+    title: "Prepnova",
+    description: "AI-powered mock interviews with adaptive feedback, structured reports, and measurable progress tracking.",
+    url: "https://prepnova.site",
+    siteName: "Prepnova",
+    images: [
+      {
+        url: "https://ik.imagekit.io/mrityunjay/prepnova/prepnova-preview.png", 
+        width: 1200,
+        height: 630,
+      },
+    ],
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Prepnova",
+    description: "AI-powered mock interviews with adaptive feedback, structured reports, and measurable progress tracking.",
+    images: ["https://ik.imagekit.io/mrityunjay/prepnova/prepnova-preview.png"],
+  },
+
 };
 
 export default async function RootLayout({
