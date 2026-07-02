@@ -10,11 +10,12 @@ export default function LayoutWrapper({
   navbar?: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const isInterviewPage = pathname.startsWith("/interview");
+  const hideNavbar =
+    pathname.startsWith("/interview") || pathname.startsWith("/signin");
 
   return (
     <>
-      {!isInterviewPage && navbar}
+      {!hideNavbar && navbar}
       {children}
     </>
   );
