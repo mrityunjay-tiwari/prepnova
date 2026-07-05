@@ -1,40 +1,16 @@
-import { generateObject } from "ai";
-import { openrouter } from "@openrouter/ai-sdk-provider";
-import { prisma } from "@/prisma/src";
-import { InterviewReportSchema } from "@/app/api/structured-data/schema";
-import { INTERVIEW_EVALUATOR_SYSTEM_PROMPT } from "@/utils/system-prompt";
+import {prisma} from "@/prisma/src";
+import {Prisma} from "@/src/generated/client";
+import {generateAndSaveReportForDraft} from "@/utils/report-generation";
 import {buildInterviewApiUrl, INTERVIEW_API_BASE_URL} from "@/utils/interview-api";
 import type {
   FinalizeInterviewRequest,
   InterviewSegment,
-  InterviewReportResult,
   StoredInterviewFlowSection,
 } from "@/utils/types";
-
-const globalForInterviewFinalization = global as unknown as {
-  finalizedInterviewCalls?: Map<string, "in_progress" | "completed">;
-};
-
-const finalizedInterviewCalls =
-  globalForInterviewFinalization.finalizedInterviewCalls || new Map();
-
-if (!globalForInterviewFinalization.finalizedInterviewCalls) {
-  globalForInterviewFinalization.finalizedInterviewCalls =
-    finalizedInterviewCalls;
-}
 
 const END_CALL_TIMEOUT_MS = 5_000;
 const SEGMENTS_TIMEOUT_MS = 8_000;
 const REPORT_CONTEXT_TIMEOUT_MS = 5_000;
-
-function buildTranscript(segments: InterviewSegment[]) {
-  return segments
-    .map(
-      (segment, index) =>
-        `Q${index + 1}: ${segment.question}\nA${index + 1}: ${segment.answer}`,
-    )
-    .join("\n\n");
-}
 
 type RemoteReportContext = {
   role?: string;
@@ -137,42 +113,6 @@ async function getReportContext(callId: string): Promise<RemoteReportContext> {
   }
 }
 
-function buildReportPrompt({
-  role,
-  seniority,
-  flow,
-  feedbackHistory,
-  postureStats,
-  transcript,
-}: {
-  role: string;
-  seniority: string;
-  flow: StoredInterviewFlowSection[];
-  feedbackHistory: RemoteReportContext["feedbackHistory"];
-  postureStats: FinalizeInterviewRequest["postureStats"];
-  transcript: string;
-}) {
-  return `
-Role:
-${role}
-
-Target seniority:
-${seniority}
-
-Interview flow:
-${JSON.stringify(flow, null, 2)}
-
-Question-level feedback history:
-${JSON.stringify(feedbackHistory ?? [], null, 2)}
-
-Posture statistics:
-${JSON.stringify(postureStats, null, 2)}
-
-Interview transcript:
-${transcript}
-`;
-}
-
 export async function POST(req: Request) {
   let payload: FinalizeInterviewRequest;
 
@@ -180,17 +120,12 @@ export async function POST(req: Request) {
     payload = JSON.parse(await req.text()) as FinalizeInterviewRequest;
   } catch (error) {
     console.error("[API] Failed to parse finalize interview payload", error);
-    return new Response("Invalid JSON", { status: 400 });
+    return new Response("Invalid JSON", {status: 400});
   }
 
-  const { callId, userId, role, postureStats, reason } = payload;
+  const {callId, userId, role, postureStats, reason} = payload;
 
-  console.log("[FINALIZE] start", {
-    callId,
-    userId,
-    role,
-    reason,
-  });
+  console.log("[FINALIZE] start", {callId, userId, role, reason});
 
   if (!callId || !userId || !role || !postureStats) {
     console.log("[FINALIZE] missing_required_fields", {
@@ -199,36 +134,61 @@ export async function POST(req: Request) {
       role,
       hasPostureStats: Boolean(postureStats),
     });
-    return new Response("Missing required fields", { status: 400 });
+    return new Response("Missing required fields", {status: 400});
   }
 
-  const existingStatus = finalizedInterviewCalls.get(callId);
-  if (existingStatus === "in_progress" || existingStatus === "completed") {
-    console.log("[FINALIZE] duplicate_or_in_progress", {
+  // Idempotency at the DB level: exactly one durable draft per callId. This
+  // replaces the previous in-memory Map (which didn't survive across serverless
+  // instances) and prevents duplicate reports from the multiple exit paths.
+  const existing = await prisma.interviewDraft.findUnique({where: {callId}});
+  if (existing) {
+    console.log("[FINALIZE] duplicate_existing_draft", {
       callId,
-      existingStatus,
+      status: existing.status,
       reason,
     });
-    return Response.json({ success: true, duplicate: true, reason });
+    return Response.json({
+      success: true,
+      duplicate: true,
+      status: existing.status,
+      reportId: existing.reportId,
+      reason,
+    });
   }
 
-  finalizedInterviewCalls.set(callId, "in_progress");
+  let draft;
+  try {
+    draft = await prisma.interviewDraft.create({
+      data: {
+        callId,
+        userId,
+        role,
+        status: "PROCESSING",
+        postureStats: postureStats as unknown as Prisma.InputJsonValue,
+      },
+    });
+  } catch (error) {
+    // Unique-constraint race: another exit path created the draft first.
+    console.log("[FINALIZE] duplicate_draft_race", {callId, reason});
+    return Response.json({success: true, duplicate: true, reason});
+  }
 
   try {
-    console.log("[FINALIZE] ending_remote_call", { callId });
+    console.log("[FINALIZE] ending_remote_call", {callId});
     await endRemoteInterview(callId);
-    console.log("[FINALIZE] remote_call_end_attempt_finished", { callId });
 
     const segments = await getSegmentsWithRetry(callId);
     console.log("[FINALIZE] segments_fetched", {
       callId,
       segmentCount: segments.length,
-      sections: segments.map((segment) => segment.section_type),
     });
 
     if (!segments.length) {
-      finalizedInterviewCalls.delete(callId);
-      console.log("[FINALIZE] no_segments", { callId });
+      await prisma.interviewDraft.update({
+        where: {id: draft.id},
+        data: {status: "FAILED", error: "no_segments"},
+      });
+      console.log("[FINALIZE] no_segments", {callId});
       return Response.json({
         success: true,
         finalized: false,
@@ -237,93 +197,49 @@ export async function POST(req: Request) {
     }
 
     const reportContext = await getReportContext(callId);
-    console.log("[FINALIZE] report_context_fetched", {
-      callId,
-      role: reportContext.role,
-      seniority: reportContext.seniority,
-      flowCount: reportContext.flow?.length ?? 0,
-      feedbackCount: reportContext.feedbackHistory?.length ?? 0,
-    });
-    const transcript = buildTranscript(segments);
-    const roleForReport = reportContext.role || role;
-    const seniority = reportContext.seniority || "SDE1";
-    const flow = reportContext.flow || [];
 
-    console.log("[FINALIZE] generating_report", {
-      callId,
-      transcriptLength: transcript.length,
-      roleForReport,
-      seniority,
-      flowCount: flow.length,
-    });
-    const { object } = await generateObject({
-      model: openrouter("openai/gpt-oss-20b:free"),
-      schema: InterviewReportSchema,
-      system: INTERVIEW_EVALUATOR_SYSTEM_PROMPT,
-      prompt: buildReportPrompt({
-        role: roleForReport,
-        seniority,
-        flow,
-        feedbackHistory: reportContext.feedbackHistory,
-        postureStats,
-        transcript,
-      }),
-    });
-    const report = object as InterviewReportResult;
-    console.log("[FINALIZE] report_generated", {
-      callId,
-      readinessLevel: report.readinessLevel,
-      overallScore: report.overallScore,
-      strengthsCount: report.strengths.length,
-      improvementsCount: report.improvementAreas.length,
-      sectionBreakdownCount: report.sectionBreakdown.length,
-    });
-
-    console.log("[FINALIZE] saving_report", { callId });
-    const savedReport = await prisma.interviewReport.create({
+    // Durably persist the transcript BEFORE the fragile LLM step. From here on,
+    // even if generation (or the whole request) dies, the interview is safe and
+    // the report can be regenerated from the dashboard.
+    const updatedDraft = await prisma.interviewDraft.update({
+      where: {id: draft.id},
       data: {
-        userId,
-        role: roleForReport,
-        seniority,
-        technicalScore: report.technicalScore,
-        problemSolvingScore: report.problemSolvingScore,
-        communicationScore: report.communicationScore,
-        confidenceScore: report.confidenceScore,
-        behavioralScore: report.behavioralScore,
-        overallScore: report.overallScore,
-        readinessLevel: report.readinessLevel,
-        postureMin: postureStats.min,
-        postureMax: postureStats.max,
-        postureAvg: postureStats.avg,
-        postureSummary: report.postureSummary,
-        strengths: report.strengths,
-        improvementAreas: report.improvementAreas,
-        actionPlan: report.actionPlan,
-        communicationSummary: report.communicationSummary,
-        sectionBreakdown: report.sectionBreakdown,
-        flowUsed: flow,
-        finalSummary: report.finalSummary,
+        transcript: segments as unknown as Prisma.InputJsonValue,
+        reportContext: reportContext as unknown as Prisma.InputJsonValue,
+        role: reportContext.role || role,
+        seniority: reportContext.seniority || "SDE1",
       },
     });
-    finalizedInterviewCalls.set(callId, "completed");
-    console.log("[FINALIZE] report_saved", {
-      callId,
-      reportId: savedReport.id,
-      reason,
-    });
+    console.log("[FINALIZE] transcript_saved", {callId, draftId: draft.id});
+
+    const {reportId} = await generateAndSaveReportForDraft(updatedDraft);
+    console.log("[FINALIZE] report_saved", {callId, reportId, reason});
+
     return Response.json({
       success: true,
       finalized: true,
-      reportId: savedReport.id,
+      reportId,
       reason,
     });
   } catch (error) {
-    finalizedInterviewCalls.delete(callId);
-    console.error("[FINALIZE] failed", {
-      callId,
-      reason,
-      error,
+    await prisma.interviewDraft
+      .update({
+        where: {id: draft.id},
+        data: {
+          status: "FAILED",
+          error: error instanceof Error ? error.message : String(error),
+          attempts: {increment: 1},
+        },
+      })
+      .catch(() => {});
+    console.error("[FINALIZE] report_generation_failed", {callId, reason, error});
+
+    // The interview is safe in the draft; report is retryable. Return 200 so the
+    // client's beacon/unload path doesn't treat this as a hard failure.
+    return Response.json({
+      success: true,
+      finalized: false,
+      reason: "report_generation_failed",
     });
-    return new Response("Failed to finalize interview", { status: 500 });
   }
 }

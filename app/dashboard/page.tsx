@@ -1,6 +1,10 @@
 import {auth} from "@/utils/auth";
-import {getUserInterviewReports} from "@/app/actions/userReports";
+import {
+  getUserInterviewReports,
+  getUserInterviewDrafts,
+} from "@/app/actions/userReports";
 import {InterviewCard} from "@/components/dashboard/interview-card";
+import {DraftCard} from "@/components/dashboard/draft-card";
 import {History, Plus} from "lucide-react";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
@@ -14,7 +18,12 @@ export default async function DashboardPage() {
     redirect("/signin");
   }
 
-  const reports = await getUserInterviewReports(session.user.id);
+  const [reports, drafts] = await Promise.all([
+    getUserInterviewReports(session.user.id),
+    getUserInterviewDrafts(session.user.id),
+  ]);
+
+  const hasNothing = reports.length === 0 && drafts.length === 0;
 
   return (
     <div className="min-h-screen bg-background mt-20">
@@ -45,7 +54,7 @@ export default async function DashboardPage() {
 
         <Separator className="mb-4 md:mb-10" />
 
-        {reports.length === 0 ? (
+        {hasNothing ? (
           <div className="flex flex-col items-center justify-center py-20 px-4 border-2 border-dashed rounded-3xl bg-muted/30">
             <div className="bg-muted p-6 rounded-full mb-6">
               <History className="h-12 w-12 text-muted-foreground" />
@@ -62,10 +71,21 @@ export default async function DashboardPage() {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {reports.map((report) => (
-              <InterviewCard key={report.id} report={report} />
-            ))}
+          <div className="space-y-8">
+            {drafts.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {drafts.map((draft) => (
+                  <DraftCard key={draft.id} draft={draft} />
+                ))}
+              </div>
+            ) : null}
+            {reports.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {reports.map((report) => (
+                  <InterviewCard key={report.id} report={report} />
+                ))}
+              </div>
+            ) : null}
           </div>
         )}
       </main>
